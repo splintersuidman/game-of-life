@@ -1,0 +1,17 @@
+[package]
+authors = ["Splinter Suidman"]
+name = "game-of-life"
+version = "0.1.0"
+
+[[bin]]
+name = "game-of-life-window"
+path = "./src/window.rs"
+
+[[bin]]
+name = "game-of-life-cli"
+path = "./src/cli.rs"
+
+[dependencies]
+piston_window = "0.74.0"
+rand = "0.3.18"
+terminal_size = "0.1.7"
