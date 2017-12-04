@@ -92,8 +92,7 @@ fn main() {
             use piston_window::Key;
 
             match button {
-                Keyboard(Key::Escape) => std::process::exit(0),
-                Keyboard(Key::R) | Mouse(_) => game_of_life = game_of_life.random_init(chance),
+                Keyboard(Key::Space) | Mouse(_) => game_of_life = game_of_life.random_init(chance),
                 _ => (),
             }
         }
