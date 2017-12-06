@@ -29,7 +29,7 @@ Flags:
     Chance for randomly initialising board.
     Example: with '--chance 128' passed, cells will have a 50% chance of living.
     Default: 220.
-  --chance [c] : Option<u64>
+  --sleep [s] : u64
     The amount of milliseconds the thread sleeps between every frame.
     Default: None.
 ";
