@@ -36,8 +36,12 @@ Flags:
     Chance for randomly initialising board.
     Example: with '--chance 128' passed, cells will have a 50% chance of living.
     Default: 220.
-  --chance [c] : Option<u64>
+  --sleep [s] : u64
     The amount of milliseconds the thread sleeps between every frame.
+    Default: None.
+  --file [f] : path
+    The Life 1.06 file that contains the board.
+    If this flag is passed, the board will be initialised with the board in the given.
     Default: None.
 ```
 
@@ -56,4 +60,11 @@ Flags:
     Chance for randomly initialising board.
     Example: with '--chance 128' passed, cells will have a 50% chance of living.
     Default: 220.
+  --sleep [s] : u64
+    The amount of milliseconds the thread sleeps between every frame.
+    Default: None.
+  --file [f] : path
+    The Life 1.06 file that contains the board.
+    If this flag is passed, the board will be initialised with the board in the given.
+    Default: None.
 ```

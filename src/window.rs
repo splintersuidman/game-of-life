@@ -6,7 +6,7 @@ use std::env;
 use lib::GameOfLife;
 use piston_window::*;
 
-const HELP_MESSAGE: &str = "game-of-life v0.1.0
+const HELP_MESSAGE: &str = "game-of-life v0.2.0
 by Splinter Suidman
 
 game-of-life emulates John Conway's game of life.
@@ -32,6 +32,10 @@ Flags:
   --sleep [s] : u64
     The amount of milliseconds the thread sleeps between every frame.
     Default: None.
+  --file [f] : path
+    The Life 1.06 file that contains the board.
+    If this flag is passed, the board will be initialised with the board in the given.
+    Default: None.
 ";
 
 fn main() {
@@ -43,6 +47,7 @@ fn main() {
     let mut cell_width: u32 = 10;
     let mut chance: u8 = 220;
     let mut sleep: Option<u64> = None;
+    let mut file: Option<String> = None;
 
     // Command line arguments parsing.
     while let Some(arg) = args.next() {
@@ -66,13 +71,20 @@ fn main() {
             "--sleep" => if let Some(s) = args.next() {
                 sleep = Some(s.trim().parse::<u64>().unwrap());
             },
+            "--file" => if let Some(f) = args.next() {
+                file = Some(f);
+            },
             _ => {
                 println!("Error: unknowm flag `{}`", arg);
             }
         }
     }
 
-    let mut game_of_life = GameOfLife::new(width as usize, height as usize).random_init(chance);
+    let mut game_of_life = if let Some(f) = file {
+        GameOfLife::new(width as usize, height as usize).init_with_file(f).unwrap()
+    } else {
+        GameOfLife::new(width as usize, height as usize).init_randomly(chance)
+    };
 
     // Create window.
     let mut window: PistonWindow = WindowSettings::new(
@@ -92,7 +104,7 @@ fn main() {
             use piston_window::Key;
 
             match button {
-                Keyboard(Key::Space) | Mouse(_) => game_of_life = game_of_life.random_init(chance),
+                Keyboard(Key::Space) | Mouse(_) => game_of_life = game_of_life.init_randomly(chance),
                 _ => (),
             }
         }
@@ -101,14 +113,14 @@ fn main() {
         window.draw_2d(&e, |c, g| {
             clear([1.; 4], g);
 
-            for i in 0..game_of_life.board.len() {
-                for j in 0..game_of_life.board[i].len() {
-                    if game_of_life.board[i][j] {
+            for y in 0..game_of_life.board.len() {
+                for x in 0..game_of_life.board[y].len() {
+                    if game_of_life.board[y][x] {
                         rectangle(
                             [0., 0., 0., 1.],
                             [
-                                (i as f64) * (cell_width as f64),
-                                (j as f64) * (cell_width as f64),
+                                (x as f64) * (cell_width as f64),
+                                (y as f64) * (cell_width as f64),
                                 (cell_width as f64),
                                 (cell_width as f64),
                             ],

@@ -6,7 +6,7 @@ use lib::GameOfLife;
 use terminal_size::*;
 
 const ALIVE: char = '*';
-const HELP_MESSAGE: &str = "game-of-life v0.1.0
+const HELP_MESSAGE: &str = "game-of-life v0.2.0
 by Splinter Suidman
 
 game-of-life emulates John Conway's game of life.
@@ -27,6 +27,10 @@ Flags:
   --sleep [s] : u64
     The amount of milliseconds the thread sleeps between every frame.
     Default: None.
+  --file [f] : path
+    The Life 1.06 file that contains the board.
+    If this flag is passed, the board will be initialised with the board in the given.
+    Default: None.
 ";
 
 fn main() {
@@ -37,6 +41,7 @@ fn main() {
     let mut height: u16 = 0;
     let mut chance: u8 = 220;
     let mut sleep: Option<u64> = None;
+    let mut file: Option<String> = None;
 
     if let Some((Width(w), Height(h))) = terminal_size() {
         width = w - 1;
@@ -62,13 +67,20 @@ fn main() {
             "--sleep" => if let Some(s) = args.next() {
                 sleep = Some(s.trim().parse::<u64>().unwrap());
             },
+            "--file" => if let Some(f) = args.next() {
+                file = Some(f);
+            },
             _ => {
                 println!("Error: unknowm flag '{}'", arg);
             }
         }
     }
 
-    let mut game_of_life = GameOfLife::new(width as usize, height as usize).random_init(chance);
+    let mut game_of_life = if let Some(f) = file {
+        GameOfLife::new(width as usize, height as usize).init_with_file(f).unwrap()
+    } else {
+        GameOfLife::new(width as usize, height as usize).init_randomly(chance)
+    };
 
     loop {
         // Clear screen.
