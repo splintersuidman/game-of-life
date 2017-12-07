@@ -24,6 +24,9 @@ Flags:
     Chance for randomly initialising board.
     Example: with '--chance 128' passed, cells will have a 50% chance of living.
     Default: 220.
+  --sleep [s] : u64
+    The amount of milliseconds the thread sleeps between every frame.
+    Default: None.
 ";
 
 fn main() {
@@ -33,6 +36,7 @@ fn main() {
     let mut width: u16 = 0;
     let mut height: u16 = 0;
     let mut chance: u8 = 220;
+    let mut sleep: Option<u64> = None;
 
     if let Some((Width(w), Height(h))) = terminal_size() {
         width = w - 1;
@@ -55,6 +59,9 @@ fn main() {
             "--chance" => if let Some(c) = args.next() {
                 chance = c.trim().parse().unwrap();
             },
+            "--sleep" => if let Some(s) = args.next() {
+                sleep = Some(s.trim().parse::<u64>().unwrap());
+            },
             _ => {
                 println!("Error: unknowm flag '{}'", arg);
             }
@@ -71,5 +78,10 @@ fn main() {
 
         let output = game_of_life.to_string_with_alive(ALIVE);
         print!("{}", output);
+
+        if let Some(sleep) = sleep {
+            let sleep = std::time::Duration::from_millis(sleep);
+            std::thread::sleep(sleep);
+        }
     }
 }
