@@ -1,5 +1,5 @@
 # Game of Life [![Build Status](https://travis-ci.org/splintah/game-of-life.svg?branch=master)](https://travis-ci.org/splintah/game-of-life)
-A Game of Life emulation, both in a graphical window and in your terminal.
+A Game of Life emulation, both in a graphical window and in your terminal, with support for Life 1.06 files.
 
 ![Window Demo](./window-demo.png)
 
