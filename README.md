@@ -3,6 +3,12 @@ A Game of Life emulation, both in a graphical window and in your terminal, with 
 
 ![Window Demo](./window-demo.png)
 
+## Life 1.06 file support
+This program allows you to load cells from a [Life 1.06 file](http://www.conwaylife.com/wiki/Life_1.06).
+You can find a lot of patterns, and their Life 1.06 files, on the LifeWiki.
+There is a list of patterns [here](http://www.conwaylife.com/wiki/Category:Patterns).
+To do this, pass a file to the `--file` flag (see below for more flags).
+
 ## Installation
 [Install Rust](https://www.rust-lang.org/en-US/). Then run the following in your terminal:
 
