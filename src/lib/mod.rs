@@ -62,6 +62,8 @@ impl GameOfLife {
     /// A random u8 will be picked, and if it is greater than `chance`, the current cell will be
     /// alive.
     pub fn init_randomly(mut self, chance: u8) -> Self {
+        self = self.init_empty();
+
         for y in 1..self.height - 1 {
             for x in 1..self.width - 1 {
                 if rand::random::<u8>() > chance {
