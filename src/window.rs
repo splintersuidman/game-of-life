@@ -80,7 +80,7 @@ fn main() {
         }
     }
 
-    let mut game_of_life = if let Some(f) = file {
+    let mut game_of_life = if let Some(f) = file.clone() {
         GameOfLife::new(width as usize, height as usize).init_with_file(f).unwrap()
     } else {
         GameOfLife::new(width as usize, height as usize).init_randomly(chance)
@@ -104,7 +104,13 @@ fn main() {
             use piston_window::Key;
 
             match button {
-                Keyboard(Key::Space) | Mouse(_) => game_of_life = game_of_life.init_randomly(chance),
+                Keyboard(Key::Space) | Mouse(_) => {
+                    if let Some(f) = file.clone() {
+                        game_of_life = game_of_life.init_with_file(f).unwrap();
+                    } else {
+                        game_of_life = game_of_life.init_randomly(chance);
+                    }
+                },
                 _ => (),
             }
         }

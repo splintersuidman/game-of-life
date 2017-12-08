@@ -47,6 +47,17 @@ impl GameOfLife {
         s
     }
 
+    /// Init board with only dead cells.
+    /// All alive cells will be killed.
+    pub fn init_empty(mut self) -> Self {
+        for y in 1..self.height - 1 {
+            for x in 1..self.height - 1 {
+                self.board[y][x] = false;
+            }
+        }
+        self
+    }
+
     /// Randomly init the board, with a specified chance.
     /// A random u8 will be picked, and if it is greater than `chance`, the current cell will be
     /// alive.
@@ -83,6 +94,8 @@ impl GameOfLife {
         }
 
         let cell_rules = Parser::parse_life_106_file(contents)?;
+
+        self = self.init_empty();
 
         let origin = (self.width / 2, self.height / 2);
 
