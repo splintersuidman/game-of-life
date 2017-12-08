@@ -33,6 +33,11 @@ impl Parser {
         let mut cells: Vec<(isize, isize)> = Vec::new();
 
         for line in lines {
+            // Skip empty lines.
+            if line.is_empty() {
+                continue;
+            }
+
             let mut line_split = line.split_whitespace();
             let x = match line_split.next() {
                 None => return Err(format!("could not find x in `{}`", line)),
