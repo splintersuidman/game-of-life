@@ -1,10 +1,9 @@
 extern crate rand;
 
-mod life_106;
+mod parsers;
 
 use std::fs::File;
 use std::io::Read;
-use self::life_106::Parser;
 
 pub struct GameOfLife {
     pub board: Vec<Vec<bool>>,
@@ -91,11 +90,9 @@ impl GameOfLife {
             Err(e) => return Err(format!("could not read file to string: {}", e)),
         };
 
-        if !Parser::is_life_106_file(contents.clone()) {
-            return Err(format!("file is not a Life 1.06: missing header `#Life 1.06`"));
-        }
+        let file_type: parsers::FileType = parsers::FileType::from_filename(filename.as_ref());
 
-        let cell_rules = Parser::parse_life_106_file(contents)?;
+        let cell_rules = parsers::get_cell_rules(file_type, contents)?;
 
         self = self.init_empty();
 
