@@ -1,9 +1,11 @@
 mod plaintext;
 mod life_106;
+mod run_length_encoded;
 
 pub enum FileType {
     Life106,
     Plaintext,
+    RLE,
     Unknown(String),
     None,
 }
@@ -14,13 +16,14 @@ impl FileType {
         S: ToString
     {
         let name:String = s.to_string();
-        let extension: &str = match name.rfind(".") {
-            Some(x) => name.split_at(x+1).1, // exclude the `dot` as well
-            None => "",
+        let extension: String = match name.rfind(".") {
+            Some(x) => name[x+1..].to_lowercase(), // exclude the `dot` as well
+            None => String::from(""),
         };
-        match extension {
+        match extension.as_str() {
             "lif" | "life" => FileType::Life106,
             "cells" => FileType::Plaintext,
+            "rle" => FileType::RLE,
             "" => FileType::None,
             x => FileType::Unknown(x.to_string()),
         }
@@ -48,6 +51,9 @@ where
                 Err(format!("File was classified as a plaintext file (`.cells`) but it doesn't start with `!Name: `."))
             }
         },
+        FileType::RLE => {
+            run_length_encoded::Parser::parse_rle_file(contents)
+        }
         FileType::Unknown(s) => {
             Err(format!("Unknown and/or unsupported file type: `{}`", s))
         },

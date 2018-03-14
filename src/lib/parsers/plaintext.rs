@@ -25,12 +25,11 @@ impl Parser {
         let s = s.to_string();
         let lines = s.lines().skip_while( |x: &&str| x.starts_with("!") );
 
-        let mut cells:Vec<(isize, isize)> = Vec::new();
+        let mut cells: Vec<(isize, isize)> = Vec::new();
 
-        let mut y:isize = 0;
-        let mut x:isize = 0;
+        let mut y: isize = 0;
         for line in lines {
-            x = 0;
+            let mut x = 0;
             for token in line.chars() {
                 match token {
                     'O' => {
