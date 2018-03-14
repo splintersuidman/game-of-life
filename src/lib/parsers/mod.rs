@@ -45,7 +45,7 @@ where
             if plaintext::Parser::is_plaintext_file(contents.clone()) {
                 plaintext::Parser::parse_plaintext_file(contents)
             } else {
-                Err(format!("File was classified as a plaintext file ('.cells') but it doesn't start with `!Name: `."))
+                Err(format!("File was classified as a plaintext file (`.cells`) but it doesn't start with `!Name: `."))
             }
         },
         FileType::Unknown(s) => {
