@@ -1,9 +1,11 @@
 mod plaintext;
 mod life_106;
+mod life_105;
 mod run_length_encoded;
 
+/// Describes what type of file it is based on the file extension.
 pub enum FileType {
-    Life106,
+    Life,
     Plaintext,
     RLE,
     Unknown(String),
@@ -21,7 +23,7 @@ impl FileType {
             None => String::from(""),
         };
         match extension.as_str() {
-            "lif" | "life" => FileType::Life106,
+            "lif" | "life" => FileType::Life,
             "cells" => FileType::Plaintext,
             "rle" => FileType::RLE,
             "" => FileType::None,
@@ -37,11 +39,13 @@ where
 {
     let contents = contents.to_string();
     match file_type {
-        FileType::Life106 => {
+        FileType::Life => {
             if life_106::Parser::is_life_106_file(contents.clone()) {
                 life_106::Parser::parse_life_106_file(contents)
+            } else if life_105::Parser::is_life_105_file(contents.clone()) {
+                life_105::Parser::parse_life_105_file(contents)
             } else {
-                Err(format!("File was classified as Life 1.06 but it misses it's header: `#Life 1.06`"))
+                Err(format!("File was classified as Life but it misses all of the known headers: `#Life 1.06` and `#Life 1.05`."))
             }
         },
         FileType::Plaintext => {

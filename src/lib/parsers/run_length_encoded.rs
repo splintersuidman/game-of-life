@@ -1,6 +1,9 @@
 pub struct Parser;
 
 impl Parser {
+    /// This function parses the contents of a `.rle` file.
+    /// 
+    /// It functions using the description on [this]{http://golly.sourceforge.net/Help/formats.html#rle} website.
     pub fn parse_rle_file<S>(contents: S) -> Result< Vec<(isize, isize)>, String >
     where
         S: ToString
@@ -62,7 +65,7 @@ impl Parser {
                     '8' => amount = amount * 10 + 8,
                     '9' => amount = amount * 10 + 9,
                     '!' => {
-                        // The end of this file was reached
+                        // The end of this pattern was reached
                         return Ok(cells);
                     }
                     unknown => return Err(format!("Unexpected character `{}` while reading data from a `.rle` file.", unknown)),
@@ -75,6 +78,6 @@ impl Parser {
             }
         }
 
-        Err(format!("Pattern was not ended by a `!` in a `.rle` file."))
+        Ok(cells)
     }
 }

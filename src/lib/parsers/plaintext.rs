@@ -40,7 +40,7 @@ impl Parser {
                         // cell is dead here
                     },
                     a => {
-                        return Err(format!("Unexpected character `{}` while reading a plaintext file, expected `O` or `.`.", a))
+                        return Err(format!("Unexpected character `{}` while reading a plaintext file, expected `O` or `.`.", a));
                     }
                 }
                 x += 1;
