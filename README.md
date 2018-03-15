@@ -1,13 +1,18 @@
 # Game of Life [![Build Status](https://travis-ci.org/splintah/game-of-life.svg?branch=master)](https://travis-ci.org/splintah/game-of-life)
-A Game of Life emulation, both in a graphical window and in your terminal, with support for Life 1.06 files.
+A Game of Life emulation, both in a graphical window and in your terminal, with support for several file formats.
 
 ![Window Demo](./window-demo.png)
 
-## Life 1.06 file support
-This program allows you to load cells from a [Life 1.06 file](http://www.conwaylife.com/wiki/Life_1.06).
-You can find a lot of patterns, and their Life 1.06 files, on the LifeWiki.
+## File support
+This program supports the following file formats:
+- [Life 1.06 file](http://www.conwaylife.com/wiki/Life_1.06)
+- [Life 1.05 file](http://www.conwaylife.com/wiki/Life_1.05)
+- [Run Length Encoded file](http://www.conwaylife.com/wiki/Run_Length_Encoded)
+- [Plaintext file](http://www.conwaylife.com/wiki/Plaintext)
+
+You can find a lot of patterns, and their files, on the LifeWiki.
 There is a list of patterns [here](http://www.conwaylife.com/wiki/Category:Patterns).
-To do this, pass a file to the `--file` flag (see below for more flags).
+To use a file, pass it to the `--file` flag (see below for more flags).
 
 ## Installation
 [Install Rust](https://www.rust-lang.org/en-US/). Then run the following in your terminal:
@@ -46,8 +51,8 @@ Flags:
     The amount of milliseconds the thread sleeps between every frame.
     Default: None.
   --file [f] : path
-    The Life 1.06 file that contains the board.
-    If this flag is passed, the board will be initialised with the board in the given.
+    The file that contains the board.
+    If this flag is passed, the board will be initialised with the board in the given file.
     Default: None.
 ```
 
@@ -70,7 +75,7 @@ Flags:
     The amount of milliseconds the thread sleeps between every frame.
     Default: None.
   --file [f] : path
-    The Life 1.06 file that contains the board.
-    If this flag is passed, the board will be initialised with the board in the given.
+    The file that contains the board.
+    If this flag is passed, the board will be initialised with the board in the given file.
     Default: None.
 ```

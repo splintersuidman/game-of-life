@@ -33,7 +33,7 @@ Flags:
     The amount of milliseconds the thread sleeps between every frame.
     Default: None.
   --file [f] : path
-    The Life 1.06 file that contains the board.
+    The file that contains the board.
     If this flag is passed, the board will be initialised with the board in the given file.
     Default: None.
 ";

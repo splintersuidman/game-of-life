@@ -3,7 +3,7 @@ pub struct Parser;
 impl Parser {
     /// This function parses the contents of a `.rle` file.
     /// 
-    /// It functions using the description on [this]{http://golly.sourceforge.net/Help/formats.html#rle} website.
+    /// It functions using the description on [this](http://golly.sourceforge.net/Help/formats.html#rle) website.
     pub fn parse_rle_file<S>(contents: S) -> Result< Vec<(isize, isize)>, String >
     where
         S: ToString
