@@ -50,7 +50,7 @@ impl GameOfLife {
     /// All alive cells will be killed.
     pub fn init_empty(mut self) -> Self {
         for y in 1..self.height - 1 {
-            for x in 1..self.height - 1 {
+            for x in 1..self.width - 1 {
                 self.board[y][x] = false;
             }
         }
