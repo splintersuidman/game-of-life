@@ -95,6 +95,14 @@ fn main() {
         .build()
         .unwrap();
     
+    // Create font for displaying text.
+    // Font is located in the assets folder
+    let mut glyphs = {
+        let factory = window.factory.clone();
+        let texture_settings = TextureSettings::new();
+        Glyphs::new("assets/SourceCodePro-Regular.ttf", factory, texture_settings).unwrap()
+    };
+    
     // Set event loop settings
     let mut settings = window.get_event_settings();
     settings.set_ups(max_fps);
@@ -141,6 +149,15 @@ fn main() {
                     }
                 }
             }
+
+            text(
+                [0., 0., 0., 1.],
+                20,
+                &game_of_life.generation.to_string(),
+                &mut glyphs,
+                c.transform.trans(10.0, 30.0),
+                g,
+            ).expect("Could not draw text in window.");
 
             game_of_life.update();
         });

@@ -9,6 +9,7 @@ pub struct GameOfLife {
     pub board: Vec<Vec<bool>>,
     pub width: usize,
     pub height: usize,
+    pub generation: u64,
 }
 
 impl GameOfLife {
@@ -26,7 +27,8 @@ impl GameOfLife {
         GameOfLife {
             board,
             width: width as usize,
-            height: height as usize
+            height: height as usize,
+            generation: 0u64,
         }
     }
 
@@ -54,6 +56,7 @@ impl GameOfLife {
                 self.board[y][x] = false;
             }
         }
+        self.generation = 0u64;
         self
     }
 
@@ -112,6 +115,9 @@ impl GameOfLife {
 
     /// Update the board using the game of life rules.
     pub fn update(&mut self) {
+        // Update the generation counter
+        self.generation += 1;
+
         // Count neighbours for all cells.
         let mut neighbours: Vec<Vec<i32>> = Vec::new();
         for y in 1..self.height - 1 {
