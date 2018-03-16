@@ -29,9 +29,10 @@ Flags:
     Chance for randomly initialising board.
     Example: with '--chance 128' passed, cells will have a 50% chance of living.
     Default: 220.
-  --sleep [s] : u64
-    The amount of milliseconds the thread sleeps between every frame.
-    Default: None.
+  --max-fps [s] : u64
+    The amount of updates and frames that should be performed per second.
+    It is possible that this number is not reached because your computer can't handle it.
+    Default: 10.
   --file [f] : path
     The file that contains the board.
     If this flag is passed, the board will be initialised with the board in the given file.
@@ -46,7 +47,7 @@ fn main() {
     let mut height: u32 = 50;
     let mut cell_width: u32 = 10;
     let mut chance: u8 = 220;
-    let mut sleep: Option<u64> = None;
+    let mut max_fps: u64 = 10;
     let mut file: Option<String> = None;
 
     // Command line arguments parsing.
@@ -68,8 +69,8 @@ fn main() {
             "--chance" => if let Some(c) = args.next() {
                 chance = c.trim().parse().unwrap();
             },
-            "--sleep" => if let Some(s) = args.next() {
-                sleep = Some(s.trim().parse::<u64>().unwrap());
+            "--max-fps" => if let Some(s) = args.next() {
+                max_fps = s.trim().parse::<u64>().unwrap();
             },
             "--file" => if let Some(f) = args.next() {
                 file = Some(f);
@@ -93,11 +94,15 @@ fn main() {
     ).exit_on_esc(true)
         .build()
         .unwrap();
+    
+    // Set event loop settings
+    let mut settings = window.get_event_settings();
+    settings.set_ups(max_fps);
+    settings.set_max_fps(max_fps);
+    window.set_event_settings(settings);
 
     // Event loop.
     while let Some(e) = window.next() {
-        game_of_life.update();
-
         // Key press for resetting grid.
         if let Some(button) = e.press_args() {
             use piston_window::Button::{Keyboard, Mouse};
@@ -136,11 +141,9 @@ fn main() {
                     }
                 }
             }
-        });
 
-        if let Some(sleep) = sleep {
-            let sleep = std::time::Duration::from_millis(sleep);
-            std::thread::sleep(sleep);
-        }
+            game_of_life.update();
+        });
+        
     }
 }
