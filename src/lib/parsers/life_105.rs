@@ -21,7 +21,7 @@ impl Parser {
 
         // remove all lines beginning with "#", except the ones with "#P" because they give information about the blocks
         let lines = s.lines()
-            .filter(|x| !x.starts_with('#') | x.starts_with("#P"));
+            .filter(|x| !x.starts_with('#') || x.starts_with("#P"));
 
         let mut pattern = super::Pattern::empty();
         let mut y: isize = -1;
