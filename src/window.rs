@@ -70,7 +70,7 @@ fn main() {
                 chance = c.trim().parse().unwrap();
             },
             "--fps" => if let Some(s) = args.next() {
-                fps = s.trim().parse::<u64>().unwrap();
+                fps = s.trim().parse().unwrap();
             },
             "--file" => if let Some(f) = args.next() {
                 file = Some(f);
@@ -142,8 +142,8 @@ fn main() {
                     }
                 }
             }
-
-            game_of_life.update();
         });
+
+        game_of_life.update();
     }
 }
