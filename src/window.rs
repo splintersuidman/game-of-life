@@ -82,19 +82,20 @@ fn main() {
     }
 
     let mut game_of_life = if let Some(f) = file.clone() {
-        GameOfLife::new(width as usize, height as usize).init_with_file(f).unwrap()
+        GameOfLife::new(width as usize, height as usize)
+            .init_with_file(f)
+            .unwrap()
     } else {
         GameOfLife::new(width as usize, height as usize).init_randomly(chance)
     };
 
     // Create window.
-    let mut window: PistonWindow = WindowSettings::new(
-        "Game of Life",
-        [width * cell_width, height * cell_width],
-    ).exit_on_esc(true)
-        .build()
-        .unwrap();
-    
+    let mut window: PistonWindow =
+        WindowSettings::new("Game of Life", [width * cell_width, height * cell_width])
+            .exit_on_esc(true)
+            .build()
+            .unwrap();
+
     // Set event loop settings
     let mut settings = window.get_event_settings();
     settings.set_ups(fps);
@@ -115,7 +116,7 @@ fn main() {
                     } else {
                         game_of_life = game_of_life.init_randomly(chance);
                     }
-                },
+                }
                 _ => (),
             }
         }
@@ -144,6 +145,5 @@ fn main() {
 
             game_of_life.update();
         });
-        
     }
 }

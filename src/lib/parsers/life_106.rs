@@ -5,7 +5,7 @@ impl Parser {
     /// A file is a Life 1.06 file when the first line equals: `#Life 1.06`.
     pub fn is_life_106_file<S>(s: S) -> bool
     where
-        S: ToString
+        S: ToString,
     {
         let s = s.to_string();
         let mut lines = s.lines();
@@ -24,7 +24,7 @@ impl Parser {
     /// Parse a Life 1.06 file to a `Pattern`.
     pub fn parse_life_106_file<S>(s: S) -> Result<super::Pattern, String>
     where
-        S: ToString
+        S: ToString,
     {
         let s = s.to_string();
         // Skip first line, because it is the header.

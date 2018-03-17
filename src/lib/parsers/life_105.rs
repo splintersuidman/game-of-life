@@ -3,7 +3,7 @@ pub struct Parser;
 impl Parser {
     pub fn is_life_105_file<S>(s: S) -> bool
     where
-        S: ToString
+        S: ToString,
     {
         let s = s.to_string();
 
@@ -13,14 +13,15 @@ impl Parser {
         }
     }
 
-    pub fn parse_life_105_file<S>(s: S) -> Result< super::Pattern, String>
+    pub fn parse_life_105_file<S>(s: S) -> Result<super::Pattern, String>
     where
-        S: ToString
+        S: ToString,
     {
         let s = s.to_string();
 
         // remove all lines beginning with "#", except the ones with "#P" because they give information about the blocks
-        let lines = s.lines().filter(|x| !x.starts_with("#") | x.starts_with("#P"));
+        let lines = s.lines()
+            .filter(|x| !x.starts_with("#") | x.starts_with("#P"));
 
         let mut pattern = super::Pattern::empty();
         let mut y: isize = -1;
@@ -45,11 +46,11 @@ impl Parser {
                     match token {
                         '.' => {
                             // cell is dead here
-                        },
+                        }
                         '*' => {
                             // cell is alive here
                             pattern.cells.push((x, y));
-                        },
+                        }
                         c => {
                             return Err(format!("Unexpected character `{}` while reading a Life 1.05 file, expected `.` or `*`.", c));
                         }

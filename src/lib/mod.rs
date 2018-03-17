@@ -76,7 +76,7 @@ impl GameOfLife {
     /// Init the game of life board from a file.
     pub fn init_with_file<S>(mut self, filename: S) -> Result<Self, String>
     where
-        S: AsRef<str>
+        S: AsRef<str>,
     {
         let pattern = parsers::Pattern::from_file(filename).unwrap();
         let cell_rules = pattern.cells;

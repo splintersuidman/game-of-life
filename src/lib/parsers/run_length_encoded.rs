@@ -2,11 +2,11 @@ pub struct Parser;
 
 impl Parser {
     /// This function parses the contents of a `.rle` file.
-    /// 
+    ///
     /// It functions using the description on [this](http://golly.sourceforge.net/Help/formats.html#rle) website.
-    pub fn parse_rle_file<S>(contents: S) -> Result< super::Pattern, String >
+    pub fn parse_rle_file<S>(contents: S) -> Result<super::Pattern, String>
     where
-        S: ToString
+        S: ToString,
     {
         let contents = contents.to_string();
         let mut pattern = super::Pattern::empty();
@@ -39,7 +39,7 @@ impl Parser {
                             x += amount;
                             amount = 0;
                         }
-                    },
+                    }
                     'o' | 'A' => {
                         // on state
                         if amount == 0 {
@@ -48,12 +48,12 @@ impl Parser {
                             x += 1;
                         } else {
                             for i in 0..amount {
-                                pattern.cells.push((x+i, y));
+                                pattern.cells.push((x + i, y));
                             }
                             x += amount;
                             amount = 0;
                         }
-                    },
+                    }
                     '0' => amount *= 10,
                     '1' => amount = amount * 10 + 1,
                     '2' => amount = amount * 10 + 2,
@@ -68,7 +68,12 @@ impl Parser {
                         // The end of this pattern was reached
                         return Ok(pattern);
                     }
-                    unknown => return Err(format!("Unexpected character `{}` while reading data from a `.rle` file.", unknown)),
+                    unknown => {
+                        return Err(format!(
+                            "Unexpected character `{}` while reading data from a `.rle` file.",
+                            unknown
+                        ))
+                    }
                 }
             }
             if amount != 0 {
