@@ -136,10 +136,8 @@ impl GameOfLife {
                     if number_of_neighbours < 2 || number_of_neighbours > 3 {
                         self.board[y][x] = false;
                     }
-                } else {
-                    if number_of_neighbours == 3 {
-                        self.board[y][x] = true;
-                    }
+                } else if number_of_neighbours == 3 {
+                    self.board[y][x] = true;
                 }
             }
         }

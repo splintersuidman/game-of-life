@@ -11,11 +11,7 @@ impl Parser {
         let mut lines = s.lines();
 
         if let Some(s) = lines.next() {
-            if s == "#Life 1.06" {
-                true
-            } else {
-                false
-            }
+            s == "#Life 1.06"
         } else {
             false
         }

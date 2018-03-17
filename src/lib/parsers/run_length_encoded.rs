@@ -12,7 +12,7 @@ impl Parser {
         let mut pattern = super::Pattern::empty();
 
         // remove all of the lines starting with `#`
-        let mut lines = contents.lines().filter(|x| !x.starts_with("#"));
+        let mut lines = contents.lines().filter(|x| !x.starts_with('#'));
 
         let _header = match lines.next() {
             Some(v) => v,

@@ -23,18 +23,17 @@ impl Parser {
         S: ToString,
     {
         let s = s.to_string();
-        let lines = s.lines().skip_while(|x: &&str| x.starts_with("!"));
+        let lines = s.lines().skip_while(|x: &&str| x.starts_with('!'));
 
         let mut pattern = super::Pattern::empty();
 
         let mut y: isize = 0;
         for line in lines {
-            let mut x = 0;
-            for token in line.chars() {
+            for (x, token) in line.chars().enumerate() {
                 match token {
                     'O' => {
                         // cell is alive here
-                        pattern.cells.push((x, y));
+                        pattern.cells.push((x as isize, y));
                     }
                     '.' => {
                         // cell is dead here
@@ -43,11 +42,10 @@ impl Parser {
                         return Err(format!("Unexpected character `{}` while reading a plaintext file, expected `O` or `.`.", a));
                     }
                 }
-                x += 1;
             }
             y += 1;
         }
 
-        return Ok(pattern);
+        Ok(pattern)
     }
 }
