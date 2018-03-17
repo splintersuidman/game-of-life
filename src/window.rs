@@ -29,7 +29,7 @@ Flags:
     Chance for randomly initialising board.
     Example: with '--chance 128' passed, cells will have a 50% chance of living.
     Default: 220.
-  --max-fps [s] : u64
+  --fps [s] : u64
     The amount of updates and frames that should be performed per second.
     It is possible that this number is not reached because your computer can't handle it.
     Default: 10.
@@ -47,7 +47,7 @@ fn main() {
     let mut height: u32 = 50;
     let mut cell_width: u32 = 10;
     let mut chance: u8 = 220;
-    let mut max_fps: u64 = 10;
+    let mut fps: u64 = 10;
     let mut file: Option<String> = None;
 
     // Command line arguments parsing.
@@ -69,8 +69,8 @@ fn main() {
             "--chance" => if let Some(c) = args.next() {
                 chance = c.trim().parse().unwrap();
             },
-            "--max-fps" => if let Some(s) = args.next() {
-                max_fps = s.trim().parse::<u64>().unwrap();
+            "--fps" => if let Some(s) = args.next() {
+                fps = s.trim().parse::<u64>().unwrap();
             },
             "--file" => if let Some(f) = args.next() {
                 file = Some(f);
@@ -95,18 +95,10 @@ fn main() {
         .build()
         .unwrap();
     
-    // Create font for displaying text.
-    // Font is located in the assets folder
-    let mut glyphs = {
-        let factory = window.factory.clone();
-        let texture_settings = TextureSettings::new();
-        Glyphs::new("assets/SourceCodePro-Regular.ttf", factory, texture_settings).unwrap()
-    };
-    
     // Set event loop settings
     let mut settings = window.get_event_settings();
-    settings.set_ups(max_fps);
-    settings.set_max_fps(max_fps);
+    settings.set_ups(fps);
+    settings.set_max_fps(fps);
     window.set_event_settings(settings);
 
     // Event loop.
@@ -149,15 +141,6 @@ fn main() {
                     }
                 }
             }
-
-            text(
-                [0., 0., 0., 1.],
-                20,
-                &game_of_life.generation.to_string(),
-                &mut glyphs,
-                c.transform.trans(10.0, 30.0),
-                g,
-            ).expect("Could not draw text in window.");
 
             game_of_life.update();
         });

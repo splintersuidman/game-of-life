@@ -25,7 +25,7 @@ impl GameOfLife {
             board,
             width: width as usize,
             height: height as usize,
-            generation: 0u64,
+            generation: 0,
         }
     }
 
@@ -53,7 +53,7 @@ impl GameOfLife {
                 self.board[y][x] = false;
             }
         }
-        self.generation = 0u64;
+        self.generation = 0;
         self
     }
 
