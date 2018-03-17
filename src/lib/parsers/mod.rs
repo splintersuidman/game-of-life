@@ -19,7 +19,7 @@ impl FileType {
     {
         let name: String = s.to_string();
         let extension: String = match name.rfind('.') {
-            Some(x) => name[x + 1..].to_lowercase(), // exclude the `dot` as well
+            Some(x) => name[x + 1..].to_lowercase(), // Exclude the `dot` as well.
             None => String::from(""),
         };
         match extension.as_str() {

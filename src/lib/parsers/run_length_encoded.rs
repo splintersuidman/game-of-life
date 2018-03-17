@@ -11,7 +11,7 @@ impl Parser {
         let contents = contents.to_string();
         let mut pattern = super::Pattern::empty();
 
-        // remove all of the lines starting with `#`
+        // Remove all of the lines starting with `#`
         let mut lines = contents.lines().filter(|x| !x.starts_with('#'));
 
         let _header = match lines.next() {
@@ -31,9 +31,9 @@ impl Parser {
             for c in line.chars() {
                 match c {
                     'b' | '.' => {
-                        // off state
+                        // Off state
                         if amount == 0 {
-                            // not preceded by a number
+                            // Not preceded by a number
                             x += 1;
                         } else {
                             x += amount;
@@ -41,9 +41,9 @@ impl Parser {
                         }
                     }
                     'o' | 'A' => {
-                        // on state
+                        // On state
                         if amount == 0 {
-                            // not preceded by a number
+                            // Not preceded by a number
                             pattern.cells.push((x, y));
                             x += 1;
                         } else {

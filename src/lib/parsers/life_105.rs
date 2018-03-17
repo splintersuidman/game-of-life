@@ -19,7 +19,7 @@ impl Parser {
     {
         let s = s.to_string();
 
-        // remove all lines beginning with "#", except the ones with "#P" because they give information about the blocks
+        // Remove all lines beginning with "#", except the ones with "#P" because they give information about the blocks
         let lines = s.lines()
             .filter(|x| !x.starts_with('#') || x.starts_with("#P"));
 
@@ -45,10 +45,10 @@ impl Parser {
                 for token in line.chars() {
                     match token {
                         '.' => {
-                            // cell is dead here
+                            // Cell is dead here
                         }
                         '*' => {
-                            // cell is alive here
+                            // Cell is alive here
                             pattern.cells.push((x, y));
                         }
                         c => {

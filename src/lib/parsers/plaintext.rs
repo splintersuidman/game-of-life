@@ -32,11 +32,11 @@ impl Parser {
             for (x, token) in line.chars().enumerate() {
                 match token {
                     'O' => {
-                        // cell is alive here
+                        // Cell is alive here
                         pattern.cells.push((x as isize, y));
                     }
                     '.' => {
-                        // cell is dead here
+                        // Cell is dead here
                     }
                     a => {
                         return Err(format!("Unexpected character `{}` while reading a plaintext file, expected `O` or `.`.", a));
