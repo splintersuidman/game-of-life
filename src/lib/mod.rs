@@ -2,9 +2,6 @@ extern crate rand;
 
 mod parsers;
 
-use std::fs::File;
-use std::io::Read;
-
 pub struct GameOfLife {
     pub board: Vec<Vec<bool>>,
     pub width: usize,
@@ -76,26 +73,13 @@ impl GameOfLife {
         self
     }
 
-    /// Init the game of life board from a Life 1.06 file.
+    /// Init the game of life board from a file.
     pub fn init_with_file<S>(mut self, filename: S) -> Result<Self, String>
     where
         S: AsRef<str>
     {
-        // Read file and get rules from them.
-        let mut file = match File::open(filename.as_ref()) {
-            Ok(f) => f,
-            Err(e) => return Err(format!("could not open file: {}", e)),
-        };
-
-        let mut contents = String::new();
-        match file.read_to_string(&mut contents) {
-            Ok(_) => (),
-            Err(e) => return Err(format!("could not read file to string: {}", e)),
-        };
-
-        let file_type: parsers::FileType = parsers::FileType::from_filename(filename.as_ref());
-
-        let cell_rules = parsers::get_cell_rules(file_type, contents)?;
+        let pattern = parsers::Pattern::from_file(filename).unwrap();
+        let cell_rules = pattern.cells;
 
         self = self.init_empty();
 

@@ -21,8 +21,8 @@ impl Parser {
         }
     }
 
-    /// Parse a Life 1.06 file to a `Vec<(isize, isize)>`.
-    pub fn parse_life_106_file<S>(s: S) -> Result<Vec<(isize, isize)>, String>
+    /// Parse a Life 1.06 file to a `Pattern`.
+    pub fn parse_life_106_file<S>(s: S) -> Result<super::Pattern, String>
     where
         S: ToString
     {
@@ -30,7 +30,7 @@ impl Parser {
         // Skip first line, because it is the header.
         let lines = s.lines().skip(1);
 
-        let mut cells: Vec<(isize, isize)> = Vec::new();
+        let mut pattern = super::Pattern::empty();
 
         for line in lines {
             // Skip empty lines.
@@ -57,9 +57,9 @@ impl Parser {
                 Ok(v) => v,
             };
 
-            cells.push((x, y));
+            pattern.cells.push((x, y));
         }
 
-        Ok(cells)
+        Ok(pattern)
     }
 }

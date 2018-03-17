@@ -4,11 +4,12 @@ impl Parser {
     /// This function parses the contents of a `.rle` file.
     /// 
     /// It functions using the description on [this](http://golly.sourceforge.net/Help/formats.html#rle) website.
-    pub fn parse_rle_file<S>(contents: S) -> Result< Vec<(isize, isize)>, String >
+    pub fn parse_rle_file<S>(contents: S) -> Result< super::Pattern, String >
     where
         S: ToString
     {
         let contents = contents.to_string();
+        let mut pattern = super::Pattern::empty();
 
         // remove all of the lines starting with `#`
         let mut lines = contents.lines().filter(|x| !x.starts_with("#"));
@@ -23,7 +24,6 @@ impl Parser {
         let data: String = lines.collect();
         let data = data.split('$');
 
-        let mut cells: Vec<(isize, isize)> = Vec::new();
         let mut y: isize = 0;
         for line in data {
             let mut amount: isize = 0;
@@ -44,11 +44,11 @@ impl Parser {
                         // on state
                         if amount == 0 {
                             // not preceded by a number
-                            cells.push((x, y));
+                            pattern.cells.push((x, y));
                             x += 1;
                         } else {
                             for i in 0..amount {
-                                cells.push((x+i, y));
+                                pattern.cells.push((x+i, y));
                             }
                             x += amount;
                             amount = 0;
@@ -66,7 +66,7 @@ impl Parser {
                     '9' => amount = amount * 10 + 9,
                     '!' => {
                         // The end of this pattern was reached
-                        return Ok(cells);
+                        return Ok(pattern);
                     }
                     unknown => return Err(format!("Unexpected character `{}` while reading data from a `.rle` file.", unknown)),
                 }
@@ -78,6 +78,6 @@ impl Parser {
             }
         }
 
-        Ok(cells)
+        Ok(pattern)
     }
 }

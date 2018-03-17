@@ -18,14 +18,14 @@ impl Parser {
     }
 
     /// Parse a plaintext file to a `Vec<(isize, isize)>`.
-    pub fn parse_plaintext_file<S>(s: S) -> Result<Vec<(isize, isize)>, String>
+    pub fn parse_plaintext_file<S>(s: S) -> Result<super::Pattern, String>
     where
         S: ToString
     {
         let s = s.to_string();
         let lines = s.lines().skip_while( |x: &&str| x.starts_with("!") );
 
-        let mut cells: Vec<(isize, isize)> = Vec::new();
+        let mut pattern = super::Pattern::empty();
 
         let mut y: isize = 0;
         for line in lines {
@@ -34,7 +34,7 @@ impl Parser {
                 match token {
                     'O' => {
                         // cell is alive here
-                        cells.push((x, y));
+                        pattern.cells.push((x, y));
                     },
                     '.' => {
                         // cell is dead here
@@ -48,6 +48,6 @@ impl Parser {
             y += 1;
         }
 
-        return Ok(cells);
+        return Ok(pattern);
     }
 }

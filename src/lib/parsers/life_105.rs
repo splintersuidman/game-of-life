@@ -13,7 +13,7 @@ impl Parser {
         }
     }
 
-    pub fn parse_life_105_file<S>(s: S) -> Result< Vec<(isize, isize)>, String>
+    pub fn parse_life_105_file<S>(s: S) -> Result< super::Pattern, String>
     where
         S: ToString
     {
@@ -22,7 +22,7 @@ impl Parser {
         // remove all lines beginning with "#", except the ones with "#P" because they give information about the blocks
         let lines = s.lines().filter(|x| !x.starts_with("#") | x.starts_with("#P"));
 
-        let mut cells: Vec<(isize, isize)> = Vec::new();
+        let mut pattern = super::Pattern::empty();
         let mut y: isize = -1;
         let mut base_x: isize = 0;
         for line in lines {
@@ -48,7 +48,7 @@ impl Parser {
                         },
                         '*' => {
                             // cell is alive here
-                            cells.push((x, y));
+                            pattern.cells.push((x, y));
                         },
                         c => {
                             return Err(format!("Unexpected character `{}` while reading a Life 1.05 file, expected `.` or `*`.", c));
@@ -59,6 +59,6 @@ impl Parser {
             }
         }
 
-        Ok(cells)
+        Ok(pattern)
     }
 }
