@@ -78,19 +78,18 @@ impl GameOfLife {
     where
         S: AsRef<str>,
     {
-        let pattern = parsers::Pattern::from_file(filename).unwrap();
-        let cell_rules = pattern.cells;
+        let rules = parsers::Parser::parse_file(filename)?;
 
         self = self.init_empty();
 
         let origin = (self.width / 2, self.height / 2);
 
-        for (x, y) in cell_rules {
-            let x = x + origin.0 as isize;
-            let y = y + origin.1 as isize;
+        for (x, y) in rules {
+            let x = (x + origin.0 as isize) as usize;
+            let y = (y + origin.1 as isize) as usize;
 
-            if x > 0 && x < self.width as isize && y > 0 && y < self.height as isize {
-                self.board[y as usize][x as usize] = true;
+            if x > 0 && x < self.width && y > 0 && y < self.height {
+                self.board[y][x] = true;
             }
         }
 
