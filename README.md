@@ -47,9 +47,10 @@ Flags:
     Chance for randomly initialising board.
     Example: with '--chance 128' passed, cells will have a 50% chance of living.
     Default: 220.
-  --fps [s] : u64
+  --fps [f] : u64
     The amount of updates and frames that should be performed per second.
     It is possible that this number is not reached because your computer can't handle it.
+    Default: 10.
   --file [f] : path
     The file that contains the board.
     If this flag is passed, the board will be initialised with the board in the given file.
