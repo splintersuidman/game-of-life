@@ -102,6 +102,9 @@ fn main() {
     settings.set_max_fps(fps);
     window.set_event_settings(settings);
 
+    // Convert cell_width to f64.
+    let cell_width = f64::from(cell_width);
+
     // Event loop.
     while let Some(e) = window.next() {
         // Key press for resetting grid.
@@ -131,10 +134,10 @@ fn main() {
                         rectangle(
                             [0., 0., 0., 1.],
                             [
-                                (x as f64) * (cell_width as f64),
-                                (y as f64) * (cell_width as f64),
-                                (cell_width as f64),
-                                (cell_width as f64),
+                                (x as f64) * cell_width,
+                                (y as f64) * cell_width,
+                                cell_width,
+                                cell_width,
                             ],
                             c.transform,
                             g,
