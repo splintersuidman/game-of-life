@@ -35,7 +35,6 @@ You may want to move these executables into a folder in your path.
 ### Window
 
 ```text
-
 Press Escape to exit, press Space or a mouse button to reinitialise grid.
 
 Flags:
