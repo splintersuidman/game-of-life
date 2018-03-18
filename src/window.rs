@@ -11,7 +11,7 @@ by Splinter Suidman
 
 game-of-life emulates John Conway's game of life.
 
-Press Escape to exit, press Space or a mouse button to reinitialise grid randomly.
+Press Escape to exit, press Space or a mouse button to reinitialise grid.
 
 Flags:
   --help | -h

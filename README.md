@@ -1,10 +1,13 @@
 # Game of Life [![Build Status](https://travis-ci.org/splintah/game-of-life.svg?branch=master)](https://travis-ci.org/splintah/game-of-life)
+
 A Game of Life emulation, both in a graphical window and in your terminal, with support for several file formats.
 
 ![Window Demo](./window-demo.png)
 
 ## File support
+
 This program supports the following file formats:
+
 - [Life 1.06 file](http://www.conwaylife.com/wiki/Life_1.06)
 - [Life 1.05 file](http://www.conwaylife.com/wiki/Life_1.05)
 - [Run Length Encoded file](http://www.conwaylife.com/wiki/Run_Length_Encoded)
@@ -15,6 +18,7 @@ There is a list of patterns [here](http://www.conwaylife.com/wiki/Category:Patte
 To use a file, pass it to the `--file` flag (see below for more flags).
 
 ## Installation
+
 [Install Rust](https://www.rust-lang.org/en-US/). Then run the following in your terminal:
 
 ```bash
@@ -27,9 +31,11 @@ The executables are now located in `target/release/`.
 You may want to move these executables into a folder in your path.
 
 ## Usage
+
 ### Window
-```
-Press Escape to exit, press Space or a mouse button to reinitialise grid randomly.
+
+```text
+Press Escape to exit, press Space or a mouse button to reinitialise grid.
 
 Flags:
   --help | -h
@@ -50,7 +56,7 @@ Flags:
   --fps [f] : u64
     The amount of updates and frames that should be performed per second.
     It is possible that this number is not reached because your computer can't handle it.
-    Default: 10.
+    Default: 24.
   --file [f] : path
     The file that contains the board.
     If this flag is passed, the board will be initialised with the board in the given file.
@@ -58,7 +64,8 @@ Flags:
 ```
 
 ### CLI
-```
+
+```text
 Flags:
   --help | -h
     Show this screen.
