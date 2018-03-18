@@ -145,8 +145,8 @@ fn main() {
                     }
                 }
             }
-        });
 
-        game_of_life.update();
+            game_of_life.update();
+        });
     }
 }
