@@ -35,32 +35,49 @@ You may want to move these executables into a folder in your path.
 ### Window
 
 ```text
+
 Press Escape to exit, press Space or a mouse button to reinitialise grid.
 
 Flags:
-  --help | -h
+  --help
     Show this screen.
-  --width [w] : u32
+  --width [w] | -w [w]
+    : u32
     Change the width of the board (in cells).
     Default: 50.
-  --height [h] : u32
+  --height [h] | -h [h]
+    : u32
     Change the height of the board (in cells).
     Default: 50.
-  --cell-width [cw] : u32
+  --cell-width [cw] | -cw [cw]
+    : u32
     Change width of a cell (in pixels).
     Default: 10.
-  --chance [c] : u8
+  --chance [c] | -ch [ch]
+    : u8
     Chance for randomly initialising board.
     Example: with '--chance 128' passed, cells will have a 50% chance of living.
     Default: 220.
-  --fps [f] : u64
+  --fps [f] | -fps [f]
+    : u64
     The amount of updates and frames that should be performed per second.
-    It is possible that this number is not reached because your computer can't handle it.
+    This is the maximum frames per second; that is, the actual fps could be less.
     Default: 24.
-  --file [f] : path
+  --file [f] | -f [f]
+    : path
     The file that contains the board.
     If this flag is passed, the board will be initialised with the board in the given file.
     Default: None.
+  --colour [c] | --color [c] | -c [c]
+    : u32
+    Change the foreground colour of the cells.
+    The colour should be passed as a hexidecimal RGB colour, example: FFFFFF for white, 000000 for black.
+    Default: FFFFFF (white).
+  --background [c] | -bg [c]
+    : u32
+    Change the background colour.
+    The colour should be passed as a hexidecimal RGB colour, example: FFFFFF for white, 000000 for black.
+    Default: 000000 (black).
 ```
 
 ### CLI

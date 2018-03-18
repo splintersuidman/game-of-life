@@ -6,7 +6,7 @@ use lib::GameOfLife;
 use terminal_size::*;
 
 const ALIVE: char = '*';
-const HELP_MESSAGE: &str = "game-of-life v0.2.0
+const HELP_MESSAGE: &str = "game-of-life v0.3.0
 by Splinter Suidman
 
 game-of-life emulates John Conway's game of life.
