@@ -57,14 +57,14 @@ impl Parser {
                 } else if Parser::is_life_105_file(contents) {
                     life_105::parse_life_105_file(contents)
                 } else {
-                    Err(format!("File was classified as Life but it misses all of the known headers: `#Life 1.06` and `#Life 1.05`."))
+                    Err(String::from("File was classified as Life but it misses all of the known headers: `#Life 1.06` and `#Life 1.05`."))
                 }
             }
             FileType::PlainText => {
                 if Parser::is_plaintext_file(contents) {
                     plaintext::parse_plaintext_file(contents)
                 } else {
-                    Err(format!("File was classified as a plaintext file (`.cells`) but it doesn't start with `!Name: `."))
+                    Err(String::from("File was classified as a plaintext file (`.cells`) but it doesn't start with `!Name: `."))
                 }
             }
             FileType::RLE => run_length_encoded::parse_rle_file(contents),

@@ -17,12 +17,12 @@ pub fn parse_life_105_file<S: ToString>(s: &S) -> Result<Vec<(isize, isize)>, St
 
             base_x = match data.next() {
                 Some(x) => x.parse().expect("Could not read data for x"),
-                None => return Err(format!("Could not find data for x in line starting with `#P` while reading a Life 1.05 file.")),
+                None => return Err(String::from("Could not find data for x in line starting with `#P` while reading a Life 1.05 file.")),
             };
 
             y = match data.next() {
                 Some(x) => x.parse().expect("Could not read data for x"),
-                None => return Err(format!("Could not find data for x in line starting with `#P` while reading a Life 1.05 file.")),
+                None => return Err(String::from("Could not find data for x in line starting with `#P` while reading a Life 1.05 file.")),
             };
         } else {
             for token in line.chars() {

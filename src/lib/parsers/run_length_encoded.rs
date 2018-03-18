@@ -8,7 +8,7 @@ pub fn parse_rle_file<S: ToString>(s: &S) -> Result<Vec<(isize, isize)>, String>
 
     let _header = match lines.next() {
         Some(v) => v,
-        None => return Err(format!("The header for this `.rle` file could not be found because there were no (uncommented) lines.")),
+        None => return Err(String::from("The header for this `.rle` file could not be found because there were no (uncommented) lines.")),
     };
 
     // TODO: process header information
