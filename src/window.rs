@@ -32,7 +32,7 @@ Flags:
   --fps [f] : u64
     The amount of updates and frames that should be performed per second.
     It is possible that this number is not reached because your computer can't handle it.
-    Default: 10.
+    Default: 24.
   --file [f] : path
     The file that contains the board.
     If this flag is passed, the board will be initialised with the board in the given file.
@@ -47,7 +47,7 @@ fn main() {
     let mut height: u32 = 50;
     let mut cell_width: u32 = 10;
     let mut chance: u8 = 220;
-    let mut fps: u64 = 10;
+    let mut fps: u64 = 24;
     let mut file: Option<String> = None;
 
     // Command line arguments parsing.
