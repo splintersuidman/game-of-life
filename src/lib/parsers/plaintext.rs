@@ -28,3 +28,16 @@ pub fn parse_plaintext_file<S: AsRef<str>>(s: &S) -> Result<Vec<(isize, isize)>,
 
     Ok(cells)
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_correct_file() {
+        unimplemented!()
+    }
+
+    #[test]
+    fn test_incorrect_file() {
+        unimplemented!()
+    }
+}
