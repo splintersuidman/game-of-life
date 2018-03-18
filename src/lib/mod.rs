@@ -1,10 +1,6 @@
 extern crate rand;
 
-mod life_106;
-
-use std::fs::File;
-use std::io::Read;
-use self::life_106::Parser;
+mod parsers;
 
 pub struct GameOfLife {
     pub board: Vec<Vec<bool>>,
@@ -27,7 +23,7 @@ impl GameOfLife {
         GameOfLife {
             board,
             width: width as usize,
-            height: height as usize
+            height: height as usize,
         }
     }
 
@@ -51,7 +47,7 @@ impl GameOfLife {
     /// All alive cells will be killed.
     pub fn init_empty(mut self) -> Self {
         for y in 1..self.height - 1 {
-            for x in 1..self.height - 1 {
+            for x in 1..self.width - 1 {
                 self.board[y][x] = false;
             }
         }
@@ -74,39 +70,23 @@ impl GameOfLife {
         self
     }
 
-    /// Init the game of life board from a Life 1.06 file.
+    /// Init the game of life board from a file.
     pub fn init_with_file<S>(mut self, filename: S) -> Result<Self, String>
     where
-        S: AsRef<str>
+        S: AsRef<str>,
     {
-        // Read file and get rules from them.
-        let mut file = match File::open(filename.as_ref()) {
-            Ok(f) => f,
-            Err(e) => return Err(format!("could not open file: {}", e)),
-        };
-
-        let mut contents = String::new();
-        match file.read_to_string(&mut contents) {
-            Ok(_) => (),
-            Err(e) => return Err(format!("could not read file to string: {}", e)),
-        };
-
-        if !Parser::is_life_106_file(contents.clone()) {
-            return Err(format!("file is not a Life 1.06: missing header `#Life 1.06`"));
-        }
-
-        let cell_rules = Parser::parse_life_106_file(contents)?;
+        let rules = parsers::Parser::parse_file(filename)?;
 
         self = self.init_empty();
 
         let origin = (self.width / 2, self.height / 2);
 
-        for (x, y) in cell_rules {
-            let x = x + origin.0 as isize;
-            let y = y + origin.1 as isize;
+        for (x, y) in rules {
+            let x = (x + origin.0 as isize) as usize;
+            let y = (y + origin.1 as isize) as usize;
 
-            if x > 0 && x < self.width as isize && y > 0 && y < self.height as isize {
-                self.board[y as usize][x as usize] = true;
+            if x > 0 && x < self.width && y > 0 && y < self.height {
+                self.board[y][x] = true;
             }
         }
 
@@ -149,10 +129,8 @@ impl GameOfLife {
                     if number_of_neighbours < 2 || number_of_neighbours > 3 {
                         self.board[y][x] = false;
                     }
-                } else {
-                    if number_of_neighbours == 3 {
-                        self.board[y][x] = true;
-                    }
+                } else if number_of_neighbours == 3 {
+                    self.board[y][x] = true;
                 }
             }
         }

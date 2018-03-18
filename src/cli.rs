@@ -28,8 +28,8 @@ Flags:
     The amount of milliseconds the thread sleeps between every frame.
     Default: None.
   --file [f] : path
-    The Life 1.06 file that contains the board.
-    If this flag is passed, the board will be initialised with the board in the given.
+    The file that contains the board.
+    If this flag is passed, the board will be initialised with the board in the given file.
     Default: None.
 ";
 
@@ -77,7 +77,9 @@ fn main() {
     }
 
     let mut game_of_life = if let Some(f) = file {
-        GameOfLife::new(width as usize, height as usize).init_with_file(f).unwrap()
+        GameOfLife::new(width as usize, height as usize)
+            .init_with_file(f)
+            .unwrap()
     } else {
         GameOfLife::new(width as usize, height as usize).init_randomly(chance)
     };
