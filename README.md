@@ -13,9 +13,9 @@ This program supports the following file formats:
 - [Run Length Encoded file](http://www.conwaylife.com/wiki/Run_Length_Encoded)
 - [Plaintext file](http://www.conwaylife.com/wiki/Plaintext)
 
-You can find a lot of patterns, and their files, on the LifeWiki.
+You can find a lot of patterns, and their files, on the [LifeWiki](http://www.conwaylife.com/wiki).
 There is a list of patterns [here](http://www.conwaylife.com/wiki/Category:Patterns).
-To use a file, pass it to the `--file` flag (see below for more flags).
+To use a file, pass it to the `--file` flag (see [below](#usage) for more flags).
 
 ## Installation
 
