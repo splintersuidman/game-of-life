@@ -21,12 +21,18 @@ pub fn parse_life_105_file<S: AsRef<str>>(s: &S) -> Result<Vec<(isize, isize)>, 
             let mut data = line.split_whitespace().skip(1);
 
             base_x = match data.next() {
-                Some(x) => x.parse().expect("Could not read data for x"),
+                Some(x) => match x.parse() {
+                    Ok(x) => x,
+                    Err(e) => return Err(format!("Could not read data for x: {}", e)),
+                }
                 None => return Err(String::from("Could not find data for x in line starting with `#P` while reading a Life 1.05 file.")),
             };
 
             y = match data.next() {
-                Some(x) => x.parse().expect("Could not read data for x"),
+                Some(y) => match y.parse() {
+                    Ok(y) => y,
+                    Err(e) => return Err(format!("Could not read data for y: {}.", e))
+                },
                 None => return Err(String::from("Could not find data for x in line starting with `#P` while reading a Life 1.05 file.")),
             };
         } else {
