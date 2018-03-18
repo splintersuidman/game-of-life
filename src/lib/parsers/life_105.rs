@@ -2,7 +2,6 @@ pub fn is_life_105_file<S: AsRef<str>>(s: &S) -> bool {
     s.as_ref().starts_with("#Life 1.05")
 }
 
-/// TODO: docs.
 pub fn parse_life_105_file<S: AsRef<str>>(s: &S) -> Result<Vec<(isize, isize)>, String> {
     let s = s.as_ref();
 
