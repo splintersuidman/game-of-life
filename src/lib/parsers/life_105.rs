@@ -1,8 +1,13 @@
-/// TODO: docs.
-pub fn parse_life_105_file<S: ToString>(s: &S) -> Result<Vec<(isize, isize)>, String> {
-    let s = s.to_string();
+pub fn is_life_105_file<S: AsRef<str>>(s: &S) -> bool {
+    s.as_ref().starts_with("#Life 1.05")
+}
 
-    // Remove all lines beginning with "#", except the ones with "#P" because they give information about the blocks
+/// TODO: docs.
+pub fn parse_life_105_file<S: AsRef<str>>(s: &S) -> Result<Vec<(isize, isize)>, String> {
+    let s = s.as_ref();
+
+    // Remove all lines beginning with "#", except the ones with "#P" because they give information
+    // about the blocks.
     let lines = s.lines()
         .filter(|x| !x.starts_with('#') || x.starts_with("#P"));
 
@@ -27,11 +32,10 @@ pub fn parse_life_105_file<S: ToString>(s: &S) -> Result<Vec<(isize, isize)>, St
         } else {
             for token in line.chars() {
                 match token {
-                    '.' => {
-                        // Cell is dead here
-                    }
+                    // Cell is dead.
+                    '.' => {}
+                    // Cell is alive.
                     '*' => {
-                        // Cell is alive here
                         cells.push((x, y));
                     }
                     c => {

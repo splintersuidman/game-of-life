@@ -1,27 +1,29 @@
+pub fn is_plaintext_file<S: AsRef<str>>(s: &S) -> bool {
+    s.as_ref().starts_with("!Name:")
+}
+
 /// TODO: docs.
-pub fn parse_plaintext_file<S: ToString>(s: &S) -> Result<Vec<(isize, isize)>, String> {
-    let s = s.to_string();
-    let lines = s.lines().skip_while(|x: &&str| x.starts_with('!'));
+pub fn parse_plaintext_file<S: AsRef<str>>(s: &S) -> Result<Vec<(isize, isize)>, String> {
+    let s = s.as_ref();
 
-    let mut cells: Vec<(isize, isize)> = Vec::new();
+    let lines = s.lines().skip_while(|x| x.starts_with('!'));
 
-    let mut y: isize = 0;
-    for line in lines {
+    let mut cells = Vec::new();
+
+    for (y, line) in lines.enumerate() {
         for (x, token) in line.chars().enumerate() {
             match token {
+                // Cell is alive.
                 'O' => {
-                    // Cell is alive here
-                    cells.push((x as isize, y));
+                    cells.push((x as isize, y as isize));
                 }
-                '.' => {
-                    // Cell is dead here
-                }
+                // Cell is dead.
+                '.' => {}
                 a => {
                     return Err(format!("Unexpected character `{}` while reading a plaintext file, expected `O` or `.`.", a));
                 }
             }
         }
-        y += 1;
     }
 
     Ok(cells)
