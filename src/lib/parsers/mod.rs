@@ -11,8 +11,7 @@ pub enum FileType {
 }
 
 impl FileType {
-    pub fn from_filename<S: ToString>(s: &S) -> Option<FileType>
-    {
+    pub fn from_filename<S: ToString>(s: &S) -> Option<FileType> {
         let s = s.to_string();
         if s.ends_with("lif") || s.ends_with("life") {
             Some(FileType::Life)
@@ -42,39 +41,45 @@ impl Parser {
             Err(e) => return Err(format!("Could not open file: {}", e)),
         };
 
-        let mut contents = String::new();
+        let mut contents: &mut String = &mut String::new();
         match file.read_to_string(&mut contents) {
             Ok(_) => (),
             Err(e) => return Err(format!("Could not read file to string: {}", e)),
         };
 
-    //     let file_type: FileType = FileType::from_filename(filename.as_ref());
+        let file_type: FileType =
+            FileType::from_filename(&filename.as_ref()).expect("Unrecognised file type.");
 
-    //     let pattern: Result<Pattern, String> = match file_type {
-    //         FileType::Life => {
-    //             if life_106::Parser::is_life_106_file(contents.clone()) {
-    //                 life_106::Parser::parse_life_106_file(contents)
-    //             } else if life_105::Parser::is_life_105_file(contents.clone()) {
-    //                 life_105::Parser::parse_life_105_file(contents)
-    //             } else {
-    //                 Err(format!("File was classified as Life but it misses all of the known headers: `#Life 1.06` and `#Life 1.05`."))
-    //             }
-    //         }
-    //         FileType::Plaintext => {
-    //             if plaintext::Parser::is_plaintext_file(contents.clone()) {
-    //                 plaintext::Parser::parse_plaintext_file(contents)
-    //             } else {
-    //                 Err(format!("File was classified as a plaintext file (`.cells`) but it doesn't start with `!Name: `."))
-    //             }
-    //         }
-    //         FileType::RLE => run_length_encoded::Parser::parse_rle_file(contents),
-    //         FileType::Unknown(s) => Err(format!("Unknown and/or unsupported file type: `{}`", s)),
-    //         FileType::None => Err(format!("File doesn't appear to have a file extension.")),
-    //     };
+        match file_type {
+            FileType::Life => {
+                if Parser::is_life_106_file(contents) {
+                    life_106::parse_life_106_file(contents)
+                } else if Parser::is_life_105_file(contents) {
+                    life_105::parse_life_105_file(contents)
+                } else {
+                    Err(format!("File was classified as Life but it misses all of the known headers: `#Life 1.06` and `#Life 1.05`."))
+                }
+            }
+            FileType::PlainText => {
+                if Parser::is_plaintext_file(contents) {
+                    plaintext::parse_plaintext_file(contents)
+                } else {
+                    Err(format!("File was classified as a plaintext file (`.cells`) but it doesn't start with `!Name: `."))
+                }
+            }
+            FileType::RLE => run_length_encoded::parse_rle_file(contents),
+        }
+    }
 
-    //     let pattern: Pattern = pattern.unwrap();
+    fn is_life_106_file<S: ToString>(s: &S) -> bool {
+        s.to_string().starts_with("#Life 1.06")
+    }
 
-    //     Ok(pattern)
-        unimplemented!()
+    fn is_life_105_file<S: ToString>(s: &S) -> bool {
+        s.to_string().starts_with("#Life 1.05")
+    }
+
+    fn is_plaintext_file<S: ToString>(s: &S) -> bool {
+        s.to_string().starts_with("!Name:")
     }
 }
