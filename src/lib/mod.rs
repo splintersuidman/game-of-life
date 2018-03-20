@@ -75,13 +75,13 @@ impl GameOfLife {
     where
         S: AsRef<str>,
     {
-        let rules = parsers::Parser::parse_file(filename)?;
+        let rules = parsers::Pattern::from_file(filename)?;
 
         self = self.init_empty();
 
         let origin = (self.width / 2, self.height / 2);
 
-        for (x, y) in rules {
+        for (x, y) in rules.cells {
             let x = (x + origin.0 as isize) as usize;
             let y = (y + origin.1 as isize) as usize;
 
