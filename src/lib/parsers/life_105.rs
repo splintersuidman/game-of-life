@@ -2,7 +2,7 @@ pub fn is_life_105_file<S: AsRef<str>>(s: &S) -> bool {
     s.as_ref().starts_with("#Life 1.05")
 }
 
-pub fn parse_life_105_file<S: AsRef<str>>(s: &S) -> Result<Vec<(isize, isize)>, String> {
+pub fn parse_life_105_file<S: AsRef<str>>(s: &S) -> Result<super::Pattern, String> {
     let s = s.as_ref();
 
     // Remove all lines beginning with "#", except the ones with "#P" because they give information
@@ -10,7 +10,7 @@ pub fn parse_life_105_file<S: AsRef<str>>(s: &S) -> Result<Vec<(isize, isize)>, 
     let lines = s.lines()
         .filter(|x| !x.starts_with('#') || x.starts_with("#P"));
 
-    let mut cells: Vec<(isize, isize)> = Vec::new();
+    let mut pattern = super::Pattern::empty();
     let mut y: isize = -1;
     let mut base_x: isize = 0;
     for line in lines {
@@ -41,7 +41,7 @@ pub fn parse_life_105_file<S: AsRef<str>>(s: &S) -> Result<Vec<(isize, isize)>, 
                     '.' => {}
                     // Cell is alive.
                     '*' => {
-                        cells.push((x, y));
+                        pattern.cells.push((x, y));
                     }
                     c => {
                         return Err(format!("Unexpected character `{}` while reading a Life 1.05 file, expected `.` or `*`.", c));
@@ -52,7 +52,7 @@ pub fn parse_life_105_file<S: AsRef<str>>(s: &S) -> Result<Vec<(isize, isize)>, 
         }
     }
 
-    Ok(cells)
+    Ok(pattern)
 }
 
 #[cfg(test)]

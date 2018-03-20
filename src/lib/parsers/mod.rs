@@ -29,10 +29,15 @@ impl FileType {
     }
 }
 
-pub struct Parser;
+pub struct Pattern {
+    pub cells: Vec<(isize, isize)>,
+    pub name: Option<String>,
+    pub description: Option<String>,
+    pub author: Option<String>,
+}
 
-impl Parser {
-    pub fn parse_file<S: AsRef<str>>(filename: S) -> Result<Vec<(isize, isize)>, String> {
+impl Pattern {
+    pub fn from_file<S: AsRef<str>>(filename: S) -> Result<Pattern, String> {
         let filename = filename.as_ref();
 
         // Read file and get rules from them.
@@ -67,6 +72,15 @@ impl Parser {
                 }
             }
             FileType::RLE => run_length_encoded::parse_rle_file(&contents),
+        }
+    }
+
+    pub fn empty() -> Pattern {
+        Pattern {
+            cells: Vec::new(),
+            name: None,
+            description: None,
+            author: None,
         }
     }
 }
