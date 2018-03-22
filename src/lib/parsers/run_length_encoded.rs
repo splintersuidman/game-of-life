@@ -3,6 +3,43 @@ pub fn parse_rle_file<S: ToString>(s: &S) -> Result<super::Pattern, String> {
     let s = s.to_string();
     let mut pattern = super::Pattern::empty();
 
+    // Metadata
+    let metadata = s.lines().take_while(|x| x.starts_with('#'));
+    
+    for line in metadata {
+        let mut linedata = line.chars().skip(1);
+        match linedata.next() {
+            Some('N') => {
+                // Name
+                let name: String = linedata.collect();
+                let name: &str = name.trim();
+                if name != "" {
+                    pattern.name = Some(String::from(name));
+                }
+            }
+            Some('C') | Some('c') => {
+                // Comment or description
+                let description: String = linedata.collect();
+                let description: &str = description.trim();
+                if let Some(d) = pattern.description {
+                    pattern.description = Some(format!("{}\n{}", d, description));
+                } else {
+                    pattern.description = Some(String::from(description));
+                }
+            }
+            Some('O') => {
+                // Author
+                let author: String = linedata.collect();
+                let author: &str = author.trim();
+                pattern.author = Some(String::from(author));
+            }
+            Some(unknown_char) => {
+                return Err(format!("Unknown combination #{} in metadata of .rle file.", unknown_char));
+            }
+            None => {}
+        }
+    }
+
     // Remove all of the lines starting with `#`
     let mut lines = s.lines().skip_while(|x| x.starts_with('#'));
 

@@ -6,6 +6,7 @@ pub struct GameOfLife {
     pub board: Vec<Vec<bool>>,
     pub width: usize,
     pub height: usize,
+    pub name: Option<String>,
 }
 
 impl GameOfLife {
@@ -24,6 +25,7 @@ impl GameOfLife {
             board,
             width: width as usize,
             height: height as usize,
+            name: None,
         }
     }
 
@@ -75,13 +77,16 @@ impl GameOfLife {
     where
         S: AsRef<str>,
     {
-        let rules = parsers::Pattern::from_file(filename)?;
+        let pattern = parsers::Pattern::from_file(filename)?;
+        if let Some(name) = pattern.name {
+            self.name = Some(name);
+        }
 
         self = self.init_empty();
 
         let origin = (self.width / 2, self.height / 2);
 
-        for (x, y) in rules.cells {
+        for (x, y) in pattern.cells {
             let x = (x + origin.0 as isize) as usize;
             let y = (y + origin.1 as isize) as usize;
 

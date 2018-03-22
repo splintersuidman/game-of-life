@@ -5,13 +5,36 @@ pub fn is_plaintext_file<S: AsRef<str>>(s: &S) -> bool {
 pub fn parse_plaintext_file<S: AsRef<str>>(s: &S) -> Result<super::Pattern, String> {
     let s = s.as_ref();
 
-    let _metadata = s.lines().take_while(|x| x.starts_with('!'));
+    let mut pattern = super::Pattern::empty();
 
-    // TODO: process metadata
+    let mut metadata = s.lines().take_while(|x| x.starts_with('!'));
+
+    // Process name (!Name: name)
+    if let Some(name) = metadata.next() {
+        // exlude the "!Name:" and remove surrounding whitespace
+        let name: &str = name[6..].trim();
+        pattern.name = Some(String::from(name));
+    }
+
+    // Process comments (lines starting with '!')
+    for description in metadata {
+        // Check for other information
+        if description.starts_with("!Author:") {
+            let description = description[8..].trim();
+            pattern.author = Some(String::from(description));
+        } else {
+            // Default, this line is a description
+            let description = description[1..].trim();
+            // and add to earlier description lines
+            if let Some(d) = pattern.description {
+                pattern.description = Some(format!("{}\n{}", d, description));
+            } else {
+                pattern.description = Some(String::from(description));
+            }
+        }
+    }
 
     let lines = s.lines().skip_while(|x| x.starts_with('!'));
-
-    let mut pattern = super::Pattern::empty();
 
     for (y, line) in lines.enumerate() {
         for (x, token) in line.chars().enumerate() {
