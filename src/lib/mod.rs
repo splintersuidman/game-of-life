@@ -1,7 +1,7 @@
 extern crate rand;
 extern crate rayon;
 
-mod parsers;
+pub mod parsers;
 
 use self::rayon::prelude::*;
 
