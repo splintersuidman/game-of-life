@@ -76,13 +76,13 @@ fn main() {
         }
     }
 
-    let mut game_of_life = if let Some(f) = file {
-        GameOfLife::new(width as usize, height as usize)
-            .init_with_file(f)
-            .unwrap()
+    let mut game_of_life = GameOfLife::new(width as usize, height as usize);
+
+    if let Some(f) = file {
+        game_of_life.init_with_file(f).unwrap();
     } else {
-        GameOfLife::new(width as usize, height as usize).init_randomly(chance)
-    };
+        game_of_life.init_randomly(chance);
+    }
 
     loop {
         // Clear screen.

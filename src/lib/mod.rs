@@ -1,6 +1,9 @@
 extern crate rand;
+extern crate rayon;
 
 mod parsers;
+
+use self::rayon::prelude::*;
 
 pub struct GameOfLife {
     pub board: Vec<Vec<bool>>,
@@ -11,14 +14,9 @@ pub struct GameOfLife {
 impl GameOfLife {
     /// Return a new GameOfLife instance.
     pub fn new(width: usize, height: usize) -> GameOfLife {
-        let mut board: Vec<Vec<bool>> = Vec::new();
-        for _ in 0..height {
-            let mut row: Vec<bool> = Vec::new();
-            for _ in 0..width {
-                row.push(false);
-            }
-            board.push(row);
-        }
+        let board: Vec<Vec<bool>> = (0..height)
+            .map(|_| (0..width).map(|_| false).collect())
+            .collect();
 
         GameOfLife {
             board,
@@ -45,7 +43,7 @@ impl GameOfLife {
 
     /// Init board with only dead cells.
     /// All alive cells will be killed.
-    pub fn init_empty(mut self) -> Self {
+    pub fn init_empty(&mut self) -> &mut Self {
         for y in 1..self.height - 1 {
             for x in 1..self.width - 1 {
                 self.board[y][x] = false;
@@ -57,27 +55,37 @@ impl GameOfLife {
     /// Randomly init the board, with a specified chance.
     /// A random u8 will be picked, and if it is greater than `chance`, the current cell will be
     /// alive.
-    pub fn init_randomly(mut self, chance: u8) -> Self {
-        self = self.init_empty();
+    pub fn init_randomly(&mut self, chance: u8) -> &mut Self {
+        self.init_empty();
 
-        for y in 1..self.height - 1 {
-            for x in 1..self.width - 1 {
-                if rand::random::<u8>() > chance {
-                    self.board[y][x] = true;
-                }
-            }
-        }
+        let (width, height) = (self.width, self.height);
+
+        self.board = self.board
+            .par_iter_mut()
+            .enumerate()
+            .map(|(y, row)| {
+                row.par_iter()
+                    .enumerate()
+                    .map(|(x, _)| {
+                        // If random is bigger than chance, and cell isn't part of an edge: alive.
+                        rand::random::<u8>() > chance
+                            && (x != 0 && y != 0 && x != width - 1 && y != height - 1)
+                    })
+                    .collect()
+            })
+            .collect();
+
         self
     }
 
     /// Init the game of life board from a file.
-    pub fn init_with_file<S>(mut self, filename: S) -> Result<Self, String>
+    pub fn init_with_file<S>(&mut self, filename: S) -> Result<&mut Self, String>
     where
         S: AsRef<str>,
     {
         let rules = parsers::Parser::parse_file(filename)?;
 
-        self = self.init_empty();
+        self.init_empty();
 
         let origin = (self.width / 2, self.height / 2);
 
@@ -122,17 +130,27 @@ impl GameOfLife {
         }
 
         // Update cells based on their neighbour count.
-        for y in 1..self.height - 1 {
-            for x in 1..self.width - 1 {
-                let number_of_neighbours = neighbours[y - 1][x - 1];
-                if self.board[y][x] {
-                    if number_of_neighbours < 2 || number_of_neighbours > 3 {
-                        self.board[y][x] = false;
-                    }
-                } else if number_of_neighbours == 3 {
-                    self.board[y][x] = true;
-                }
-            }
-        }
+        let width = self.width;
+        self.board
+            .par_iter_mut()
+            .enumerate()
+            .skip(1)
+            .take(self.height - 2)
+            .for_each(|(y, row)| {
+                row.par_iter_mut()
+                    .enumerate()
+                    .skip(1)
+                    .take(width - 2)
+                    .for_each(|(x, cell)| {
+                        let number_of_neighbours = neighbours[y - 1][x - 1];
+                        if *cell {
+                            if number_of_neighbours < 2 || number_of_neighbours > 3 {
+                                *cell = false;
+                            }
+                        } else if number_of_neighbours == 3 {
+                            *cell = true;
+                        }
+                    });
+            });
     }
 }

@@ -11,7 +11,12 @@ path = "./src/window.rs"
 name = "game-of-life-cli"
 path = "./src/cli.rs"
 
+[lib]
+name = "game_of_life"
+path = "./src/lib/mod.rs"
+
 [dependencies]
 piston_window = "0.74.0"
 rand = "0.3.18"
 terminal_size = "0.1.7"
+rayon = "1.0"
