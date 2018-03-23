@@ -27,26 +27,3 @@ pub fn parse_plaintext_file<S: AsRef<str>>(s: &S) -> Result<Vec<(isize, isize)>,
 
     Ok(cells)
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_is_plaintext_file() {
-        assert!(is_plaintext_file(&"!Name: My name"));
-        assert!(!is_plaintext_file(&"No name"));
-    }
-
-    #[test]
-    fn test_correct_file() {
-        let file = "!Name: My name\n.O\n..O\nOOO";
-        assert!(parse_plaintext_file(&file).is_ok())
-    }
-
-    #[test]
-    fn test_incorrect_file() {
-        let file = "!Name: My name\n.O\n..Owrong characters\nOOO";
-        assert!(parse_plaintext_file(&file).is_err())
-    }
-}
