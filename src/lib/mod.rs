@@ -59,21 +59,12 @@ impl GameOfLife {
         self.init_empty();
 
         let (width, height) = (self.width, self.height);
-
-        self.board = self.board
-            .par_iter_mut()
-            .enumerate()
-            .map(|(y, row)| {
-                row.par_iter()
-                    .enumerate()
-                    .map(|(x, _)| {
-                        // If random is bigger than chance, and cell isn't part of an edge: alive.
-                        rand::random::<u8>() > chance
-                            && (x != 0 && y != 0 && x != width - 1 && y != height - 1)
-                    })
-                    .collect()
-            })
-            .collect();
+        self.board.par_iter_mut().enumerate().for_each(|(y, row)| {
+            row.par_iter_mut().enumerate().for_each(|(x, cell)| {
+                *cell = rand::random::<u8>() > chance
+                    && (x != 0 && y != 0 && x != width - 1 && y != height - 1)
+            });
+        });
 
         self
     }
