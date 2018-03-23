@@ -15,6 +15,10 @@ path = "./src/cli.rs"
 name = "game_of_life"
 path = "./src/lib/mod.rs"
 
+[features]
+# This feature is only used for benchmarks since the test crate is unstable.
+bench = []
+
 [dependencies]
 piston_window = "0.74.0"
 rand = "0.3.18"

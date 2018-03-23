@@ -1,5 +1,3 @@
-#![feature(test)]
-
 extern crate piston_window;
 
 mod lib;
