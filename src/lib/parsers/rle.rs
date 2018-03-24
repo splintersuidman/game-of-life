@@ -13,15 +13,15 @@ pub fn parse_rle_file<S: ToString>(s: &S) -> Result<Pattern, String> {
             Some('N') => {
                 // Name
                 let name: String = linedata.collect();
-                let name: &str = name.trim();
-                if name != "" {
+                let name = name.trim();
+                if !name.is_empty() {
                     pattern.name = Some(String::from(name));
                 }
             }
             Some('C') | Some('c') => {
                 // Comment or description
                 let description: String = linedata.collect();
-                let description: &str = description.trim();
+                let description = description.trim();
                 if let Some(d) = pattern.description {
                     pattern.description = Some(format!("{}\n{}", d, description));
                 } else {
@@ -31,11 +31,14 @@ pub fn parse_rle_file<S: ToString>(s: &S) -> Result<Pattern, String> {
             Some('O') => {
                 // Author
                 let author: String = linedata.collect();
-                let author: &str = author.trim();
+                let author = author.trim();
                 pattern.author = Some(String::from(author));
             }
             Some(unknown_char) => {
-                return Err(format!("Unknown combination #{} in metadata of .rle file.", unknown_char));
+                return Err(format!(
+                    "Unknown combination #{} in metadata of .rle file.",
+                    unknown_char
+                ));
             }
             None => {}
         }

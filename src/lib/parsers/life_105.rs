@@ -6,6 +6,7 @@ pub fn is_life_105_file<S: AsRef<str>>(s: &S) -> bool {
 
 pub fn parse_life_105_file<S: AsRef<str>>(s: &S) -> Result<Pattern, String> {
     let s = s.as_ref();
+
     let mut pattern = Pattern::new();
 
     let metadata: String = s.lines()
