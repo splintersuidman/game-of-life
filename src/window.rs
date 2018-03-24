@@ -124,7 +124,7 @@ fn main() {
 
     // Set event loop settings
     let mut settings = window.get_event_settings();
-    settings.set_ups(fps);
+    settings.set_ups(0);
     settings.set_max_fps(fps);
     window.set_event_settings(settings);
 
