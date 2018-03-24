@@ -1,11 +1,53 @@
-/// TODO: docs.
-pub fn parse_rle_file<S: ToString>(s: &S) -> Result<Vec<(isize, isize)>, String> {
+use super::*;
+
+pub fn parse_rle_file<S: ToString>(s: &S) -> Result<Pattern, String> {
     let s = s.to_string();
-    let mut cells: Vec<(isize, isize)> = Vec::new();
+    let mut pattern = Pattern::default();
+
+    // Metadata
+    let metadata = s.lines().take_while(|x| x.starts_with('#'));
+
+    for line in metadata {
+        let mut linedata = line.chars().skip(1);
+        match linedata.next() {
+            Some('N') => {
+                // Name
+                let name: String = linedata.collect();
+                let name = name.trim();
+                if !name.is_empty() {
+                    pattern.name = Some(String::from(name));
+                }
+            }
+            Some('C') | Some('c') => {
+                // Comment or description
+                let description: String = linedata.collect();
+                let description = description.trim();
+                if let Some(d) = pattern.description {
+                    pattern.description = Some(format!("{}\n{}", d, description));
+                } else {
+                    pattern.description = Some(String::from(description));
+                }
+            }
+            Some('O') => {
+                // Author
+                let author: String = linedata.collect();
+                let author = author.trim();
+                pattern.author = Some(String::from(author));
+            }
+            Some(unknown_char) => {
+                return Err(format!(
+                    "Unknown combination #{} in metadata of .rle file.",
+                    unknown_char
+                ));
+            }
+            None => {}
+        }
+    }
 
     // Remove all of the lines starting with `#`
-    let mut lines = s.lines().filter(|x| !x.starts_with('#'));
+    let mut lines = s.lines().skip_while(|x| x.starts_with('#'));
 
+    // x = m, y = n
     let _header = match lines.next() {
         Some(v) => v,
         None => return Err(String::from("The header for this `.rle` file could not be found because there were no (uncommented) lines.")),
@@ -36,11 +78,11 @@ pub fn parse_rle_file<S: ToString>(s: &S) -> Result<Vec<(isize, isize)>, String>
                     // On state
                     if amount == 0 {
                         // Not preceded by a number
-                        cells.push((x, y));
+                        pattern.cells.push((x, y));
                         x += 1;
                     } else {
                         for i in 0..amount {
-                            cells.push((x + i, y));
+                            pattern.cells.push((x + i, y));
                         }
                         x += amount;
                         amount = 0;
@@ -58,7 +100,7 @@ pub fn parse_rle_file<S: ToString>(s: &S) -> Result<Vec<(isize, isize)>, String>
                 '9' => amount = amount * 10 + 9,
                 '!' => {
                     // The end of this pattern was reached
-                    return Ok(cells);
+                    return Ok(pattern);
                 }
                 unknown => {
                     return Err(format!(
@@ -75,5 +117,5 @@ pub fn parse_rle_file<S: ToString>(s: &S) -> Result<Vec<(isize, isize)>, String>
         }
     }
 
-    Ok(cells)
+    Ok(pattern)
 }

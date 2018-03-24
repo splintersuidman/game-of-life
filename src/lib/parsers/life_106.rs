@@ -1,14 +1,16 @@
+use super::Pattern;
+
 pub fn is_life_106_file<S: AsRef<str>>(s: &S) -> bool {
     s.as_ref().starts_with("#Life 1.06")
 }
 
-pub fn parse_life_106_file<S: AsRef<str>>(s: &S) -> Result<Vec<(isize, isize)>, String> {
+pub fn parse_life_106_file<S: AsRef<str>>(s: &S) -> Result<Pattern, String> {
     let s = s.as_ref();
 
     // Skip first line, because it is the header.
     let lines = s.lines().skip(1);
 
-    let mut cells = Vec::new();
+    let mut pattern = Pattern::default();
 
     for line in lines.filter(|s| !s.is_empty()) {
         let mut line_split = line.split_whitespace();
@@ -31,8 +33,8 @@ pub fn parse_life_106_file<S: AsRef<str>>(s: &S) -> Result<Vec<(isize, isize)>, 
             Ok(v) => v,
         };
 
-        cells.push((x, y));
+        pattern.cells.push((x, y));
     }
 
-    Ok(cells)
+    Ok(pattern)
 }

@@ -115,9 +115,15 @@ fn main() {
         game_of_life.init_randomly(chance);
     }
 
+    let name = if let Some(ref n) = game_of_life.name {
+        format!("Game of Life - {}", n)
+    } else {
+        String::from("Game of Life")
+    };
+
     // Create window.
     let mut window: PistonWindow =
-        WindowSettings::new("Game of Life", [width * cell_width, height * cell_width])
+        WindowSettings::new(name, [width * cell_width, height * cell_width])
             .exit_on_esc(true)
             .build()
             .unwrap();
