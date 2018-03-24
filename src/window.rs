@@ -107,13 +107,13 @@ fn main() {
         }
     }
 
-    let mut game_of_life = if let Some(f) = file.clone() {
-        GameOfLife::new(width as usize, height as usize)
-            .init_with_file(f)
-            .unwrap()
+    let mut game_of_life = GameOfLife::new(width as usize, height as usize);
+
+    if let Some(f) = file.clone() {
+        game_of_life.init_with_file(f).unwrap();
     } else {
-        GameOfLife::new(width as usize, height as usize).init_randomly(chance)
-    };
+        game_of_life.init_randomly(chance);
+    }
 
     let name = if let &Some(ref n) = &game_of_life.name {
         format!("Game of Life - {}", n)
@@ -140,11 +140,11 @@ fn main() {
     // Convert colour to f64's.
     let bg_red: f32 = ((background & 0xFF0000) >> 16) as f32 / 255.0;
     let bg_green: f32 = ((background & 0x00FF00) >> 8) as f32 / 255.0;
-    let bg_blue: f32 = ((background & 0x0000FF)) as f32 / 255.0;
+    let bg_blue: f32 = (background & 0x0000FF) as f32 / 255.0;
 
     let fg_red: f32 = ((colour & 0xFF0000) >> 16) as f32 / 255.0;
     let fg_green: f32 = ((colour & 0x00FF00) >> 8) as f32 / 255.0;
-    let fg_blue: f32 = ((colour & 0x0000FF)) as f32 / 255.0;
+    let fg_blue: f32 = (colour & 0x0000FF) as f32 / 255.0;
 
     // Event loop.
     while let Some(e) = window.next() {
@@ -156,9 +156,9 @@ fn main() {
             match button {
                 Keyboard(Key::Space) | Mouse(_) => {
                     if let Some(f) = file.clone() {
-                        game_of_life = game_of_life.init_with_file(f).unwrap();
+                        game_of_life.init_with_file(f).unwrap();
                     } else {
-                        game_of_life = game_of_life.init_randomly(chance);
+                        game_of_life.init_randomly(chance);
                     }
                 }
                 _ => (),

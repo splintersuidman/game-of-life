@@ -1,10 +1,10 @@
 use std::fs::File;
 use std::io::Read;
 
-mod plaintext;
-mod life_106;
-mod life_105;
-mod run_length_encoded;
+pub mod plaintext;
+pub mod life_106;
+pub mod life_105;
+pub mod rle;
 
 /// Describes what type of file it is based on the file extension.
 pub enum FileType {
@@ -71,7 +71,7 @@ impl Pattern {
                     Err(String::from("File was classified as a plaintext file (`.cells`) but it doesn't start with `!Name: `."))
                 }
             }
-            FileType::RLE => run_length_encoded::parse_rle_file(&contents),
+            FileType::RLE => rle::parse_rle_file(&contents),
         }
     }
 
