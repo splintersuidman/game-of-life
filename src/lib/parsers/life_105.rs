@@ -4,13 +4,24 @@ pub fn is_life_105_file<S: AsRef<str>>(s: &S) -> bool {
 
 pub fn parse_life_105_file<S: AsRef<str>>(s: &S) -> Result<super::Pattern, String> {
     let s = s.as_ref();
+    let mut pattern = super::Pattern::empty();
+
+    let metadata: String = s.lines()
+        .filter(|x| x.starts_with("#D"))
+        .map(|x| format!("{}\n", x[2..].trim()))
+        .collect();
+    
+    if metadata.is_empty() {
+        pattern.description = None;
+    } else {
+        pattern.description = Some(metadata);
+    }
 
     // Remove all lines beginning with "#", except the ones with "#P" because they give information
     // about the blocks.
     let lines = s.lines()
         .filter(|x| !x.starts_with('#') || x.starts_with("#P"));
 
-    let mut pattern = super::Pattern::empty();
     let mut y: isize = -1;
     let mut base_x: isize = 0;
     for line in lines {
