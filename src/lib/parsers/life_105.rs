@@ -1,16 +1,18 @@
+use super::Pattern;
+
 pub fn is_life_105_file<S: AsRef<str>>(s: &S) -> bool {
     s.as_ref().starts_with("#Life 1.05")
 }
 
-pub fn parse_life_105_file<S: AsRef<str>>(s: &S) -> Result<super::Pattern, String> {
+pub fn parse_life_105_file<S: AsRef<str>>(s: &S) -> Result<Pattern, String> {
     let s = s.as_ref();
-    let mut pattern = super::Pattern::empty();
+    let mut pattern = Pattern::new();
 
     let metadata: String = s.lines()
         .filter(|x| x.starts_with("#D"))
         .map(|x| format!("{}\n", x[2..].trim()))
         .collect();
-    
+
     if metadata.is_empty() {
         pattern.description = None;
     } else {

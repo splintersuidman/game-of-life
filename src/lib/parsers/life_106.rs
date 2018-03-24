@@ -1,14 +1,16 @@
+use super::Pattern;
+
 pub fn is_life_106_file<S: AsRef<str>>(s: &S) -> bool {
     s.as_ref().starts_with("#Life 1.06")
 }
 
-pub fn parse_life_106_file<S: AsRef<str>>(s: &S) -> Result<super::Pattern, String> {
+pub fn parse_life_106_file<S: AsRef<str>>(s: &S) -> Result<Pattern, String> {
     let s = s.as_ref();
 
     // Skip first line, because it is the header.
     let lines = s.lines().skip(1);
 
-    let mut pattern = super::Pattern::empty();
+    let mut pattern = Pattern::new();
 
     for line in lines.filter(|s| !s.is_empty()) {
         let mut line_split = line.split_whitespace();

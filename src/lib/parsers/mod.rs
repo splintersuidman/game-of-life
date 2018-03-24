@@ -37,6 +37,15 @@ pub struct Pattern {
 }
 
 impl Pattern {
+    pub fn new() -> Pattern {
+        Pattern {
+            cells: Vec::new(),
+            name: None,
+            description: None,
+            author: None,
+        }
+    }
+
     pub fn from_file<S: AsRef<str>>(filename: S) -> Result<Pattern, String> {
         let filename = filename.as_ref();
 
@@ -72,15 +81,6 @@ impl Pattern {
                 }
             }
             FileType::RLE => rle::parse_rle_file(&contents),
-        }
-    }
-
-    pub fn empty() -> Pattern {
-        Pattern {
-            cells: Vec::new(),
-            name: None,
-            description: None,
-            author: None,
         }
     }
 }

@@ -1,11 +1,12 @@
-/// TODO: docs.
-pub fn parse_rle_file<S: ToString>(s: &S) -> Result<super::Pattern, String> {
+use super::*;
+
+pub fn parse_rle_file<S: ToString>(s: &S) -> Result<Pattern, String> {
     let s = s.to_string();
-    let mut pattern = super::Pattern::empty();
+    let mut pattern = Pattern::new();
 
     // Metadata
     let metadata = s.lines().take_while(|x| x.starts_with('#'));
-    
+
     for line in metadata {
         let mut linedata = line.chars().skip(1);
         match linedata.next() {
