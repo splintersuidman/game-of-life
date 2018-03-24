@@ -2,7 +2,7 @@ use super::*;
 
 pub fn parse_rle_file<S: ToString>(s: &S) -> Result<Pattern, String> {
     let s = s.to_string();
-    let mut pattern = Pattern::new();
+    let mut pattern = Pattern::default();
 
     // Metadata
     let metadata = s.lines().take_while(|x| x.starts_with('#'));

@@ -29,6 +29,7 @@ impl FileType {
     }
 }
 
+#[derive(Default)]
 pub struct Pattern {
     pub cells: Vec<(isize, isize)>,
     pub name: Option<String>,
@@ -37,15 +38,6 @@ pub struct Pattern {
 }
 
 impl Pattern {
-    pub fn new() -> Pattern {
-        Pattern {
-            cells: Vec::new(),
-            name: None,
-            description: None,
-            author: None,
-        }
-    }
-
     pub fn from_file<S: AsRef<str>>(filename: S) -> Result<Pattern, String> {
         let filename = filename.as_ref();
 

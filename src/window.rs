@@ -115,7 +115,7 @@ fn main() {
         game_of_life.init_randomly(chance);
     }
 
-    let name = if let &Some(ref n) = &game_of_life.name {
+    let name = if let Some(ref n) = game_of_life.name {
         format!("Game of Life - {}", n)
     } else {
         String::from("Game of Life")

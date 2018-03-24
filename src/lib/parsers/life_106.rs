@@ -10,7 +10,7 @@ pub fn parse_life_106_file<S: AsRef<str>>(s: &S) -> Result<Pattern, String> {
     // Skip first line, because it is the header.
     let lines = s.lines().skip(1);
 
-    let mut pattern = Pattern::new();
+    let mut pattern = Pattern::default();
 
     for line in lines.filter(|s| !s.is_empty()) {
         let mut line_split = line.split_whitespace();
