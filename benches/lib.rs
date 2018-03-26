@@ -1,6 +1,6 @@
-#![cfg_attr(feature = "bench", feature(test))]
+#![cfg_attr(feature = "bench-gol", feature(test))]
 
-#[cfg(all(feature = "bench", test))]
+#[cfg(all(feature = "bench-gol", test))]
 mod benches {
     extern crate game_of_life;
     extern crate test;
@@ -8,7 +8,7 @@ mod benches {
     use self::game_of_life::GameOfLife;
     use self::test::Bencher;
 
-    const WIDTH: usize = 100;
+    const WIDTH: usize = 1000;
     const HEIGHT: usize = 100;
     const CHANCE: u8 = 128;
 

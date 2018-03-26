@@ -46,11 +46,10 @@ impl GameOfLife {
     /// Init board with only dead cells.
     /// All alive cells will be killed.
     pub fn init_empty(&mut self) -> &mut Self {
-        for y in 1..self.height - 1 {
-            for x in 1..self.width - 1 {
-                self.board[y][x] = false;
-            }
-        }
+        use std::iter;
+
+        self.board = iter::repeat(iter::repeat(false).take(self.width).collect()).take(self.height).collect();
+
         self
     }
 

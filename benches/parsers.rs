@@ -1,6 +1,6 @@
-#![cfg_attr(feature = "bench", feature(test))]
+#![cfg_attr(feature = "bench-parse", feature(test))]
 
-#[cfg(all(feature = "bench", test))]
+#[cfg(all(feature = "bench-parse", test))]
 mod benches {
 
     extern crate game_of_life;

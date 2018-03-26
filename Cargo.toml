@@ -17,7 +17,8 @@ path = "./src/lib/mod.rs"
 
 [features]
 # This feature is only used for benchmarks since the test crate is unstable.
-bench = []
+bench-gol = []
+bench-parse = []
 
 [dependencies]
 piston_window = "0.74.0"
