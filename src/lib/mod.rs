@@ -48,7 +48,9 @@ impl GameOfLife {
     pub fn init_empty(&mut self) -> &mut Self {
         use std::iter;
 
-        self.board = iter::repeat(iter::repeat(false).take(self.width).collect()).take(self.height).collect();
+        self.board = iter::repeat(iter::repeat(false).take(self.width).collect())
+            .take(self.height)
+            .collect();
 
         self
     }
@@ -57,15 +59,21 @@ impl GameOfLife {
     /// A random u8 will be picked, and if it is greater than `chance`, the current cell will be
     /// alive.
     pub fn init_randomly(&mut self, chance: u8) -> &mut Self {
+        use std::iter;
+        use self::rand::Rng;
+
         self.init_empty();
 
-        let (width, height) = (self.width, self.height);
-        self.board.par_iter_mut().enumerate().for_each(|(y, row)| {
-            row.par_iter_mut().enumerate().for_each(|(x, cell)| {
-                *cell = rand::random::<u8>() > chance
-                    && (x != 0 && y != 0 && x != width - 1 && y != height - 1)
-            });
-        });
+        let mut rng = rand::thread_rng();
+
+        self.board = iter::repeat(
+            iter::repeat(())
+                .map(|_| rng.gen())
+                .take(self.width)
+                .map(|c: u8| c > chance)
+                .collect(),
+        ).take(self.height)
+            .collect();
 
         self
     }
