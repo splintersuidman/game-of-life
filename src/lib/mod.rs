@@ -68,9 +68,8 @@ impl GameOfLife {
 
         self.board = iter::repeat(
             iter::repeat(())
-                .map(|_| rng.gen())
+                .map(|_| rng.gen::<u8>() > chance)
                 .take(self.width)
-                .map(|c: u8| c > chance)
                 .collect(),
         ).take(self.height)
             .collect();
