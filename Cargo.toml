@@ -21,7 +21,7 @@ bench-gol = []
 bench-parse = []
 
 [dependencies]
-piston_window = "0.74.0"
-rand = "0.3.18"
+piston_window = "0.77"
+rand = "0.4"
 terminal_size = "0.1.7"
 rayon = "1.0"
