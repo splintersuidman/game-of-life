@@ -137,14 +137,19 @@ fn main() {
     // Convert cell_width to f64.
     let cell_width = f64::from(cell_width);
 
-    // Convert colour to f64's.
-    let bg_red: f32 = ((background & 0xFF0000) >> 16) as f32 / 255.0;
-    let bg_green: f32 = ((background & 0x00FF00) >> 8) as f32 / 255.0;
-    let bg_blue: f32 = (background & 0x0000FF) as f32 / 255.0;
-
-    let fg_red: f32 = ((colour & 0xFF0000) >> 16) as f32 / 255.0;
-    let fg_green: f32 = ((colour & 0x00FF00) >> 8) as f32 / 255.0;
-    let fg_blue: f32 = (colour & 0x0000FF) as f32 / 255.0;
+    // Convert colours to arrays.
+    let background_colour = [
+        ((background & 0xFF0000) >> 16) as f32 / 255.0,
+        ((background & 0x00FF00) >> 8) as f32 / 255.0,
+        (background & 0x0000FF) as f32 / 255.0,
+        1.,
+    ];
+    let foreground_colour = [
+        ((colour & 0xFF0000) >> 16) as f32 / 255.0,
+        ((colour & 0x00FF00) >> 8) as f32 / 255.0,
+        (colour & 0x0000FF) as f32 / 255.0,
+        1.,
+    ];
 
     // Event loop.
     while let Some(e) = window.next() {
@@ -167,13 +172,13 @@ fn main() {
 
         // Drawing.
         window.draw_2d(&e, |c, g| {
-            clear([bg_red, bg_green, bg_blue, 1.], g);
+            clear(background_colour, g);
 
             for y in 0..game_of_life.board.len() {
                 for x in 0..game_of_life.board[y].len() {
                     if game_of_life.board[y][x] {
                         rectangle(
-                            [fg_red, fg_green, fg_blue, 1.],
+                            foreground_colour,
                             [
                                 (x as f64) * cell_width,
                                 (y as f64) * cell_width,
