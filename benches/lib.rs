@@ -11,7 +11,7 @@ mod benches {
     const WIDTH: usize = 1000;
     const HEIGHT: usize = 100;
     const CHANCE: u8 = 128;
-    const TEST_FILE: &str = include_str!("../examples/B-52_Bomber_105.life");
+    const TEST_FILE: &str = "./examples/B-52_Bomber_105.life";
 
     #[bench]
     fn bench_new(b: &mut Bencher) {
@@ -50,7 +50,7 @@ mod benches {
         let mut gol = GameOfLife::new(WIDTH, HEIGHT);
 
         b.iter(|| {
-            gol.init_with_file(&TEST_FILE);
+            gol.init_with_file(&TEST_FILE).unwrap();
         });
     }
 
