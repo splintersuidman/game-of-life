@@ -11,6 +11,7 @@ mod benches {
     const WIDTH: usize = 1000;
     const HEIGHT: usize = 100;
     const CHANCE: u8 = 128;
+    const TEST_FILE: &str = include_str!("../examples/B-52_Bomber_105.life");
 
     #[bench]
     fn bench_new(b: &mut Bencher) {
@@ -19,30 +20,46 @@ mod benches {
 
     #[bench]
     fn bench_to_string(b: &mut Bencher) {
-        b.iter(|| GameOfLife::new(WIDTH, HEIGHT).to_string_with_alive('*'));
+        let mut gol = GameOfLife::new(WIDTH, HEIGHT);
+        gol.init_randomly(CHANCE);
+        b.iter(|| {
+            gol.to_string_with_alive('*');
+        });
     }
 
     #[bench]
     fn bench_init_empty(b: &mut Bencher) {
+        let mut gol = GameOfLife::new(WIDTH, HEIGHT);
+
         b.iter(|| {
-            let mut gol = GameOfLife::new(WIDTH, HEIGHT);
             gol.init_empty();
         });
     }
 
     #[bench]
     fn bench_init_randomly(b: &mut Bencher) {
+        let mut gol = GameOfLife::new(WIDTH, HEIGHT);
+
         b.iter(|| {
-            let mut gol = GameOfLife::new(WIDTH, HEIGHT);
             gol.init_randomly(CHANCE);
         })
     }
 
     #[bench]
-    fn bench_update(b: &mut Bencher) {
+    fn bench_init_with_file(b: &mut Bencher) {
+        let mut gol = GameOfLife::new(WIDTH, HEIGHT);
+
         b.iter(|| {
-            let mut gol = GameOfLife::new(WIDTH, HEIGHT);
-            gol.init_randomly(CHANCE);
+            gol.init_with_file(&TEST_FILE);
+        });
+    }
+
+    #[bench]
+    fn bench_update(b: &mut Bencher) {
+        let mut gol = GameOfLife::new(WIDTH, HEIGHT);
+        gol.init_randomly(CHANCE);
+
+        b.iter(|| {
             gol.update();
         });
     }
