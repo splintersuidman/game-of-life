@@ -3,6 +3,8 @@ extern crate rayon;
 
 pub mod parsers;
 
+use std::iter;
+use self::rand::Rng;
 use self::rayon::prelude::*;
 
 pub struct GameOfLife {
@@ -15,8 +17,8 @@ pub struct GameOfLife {
 impl GameOfLife {
     /// Return a new GameOfLife instance.
     pub fn new(width: usize, height: usize) -> GameOfLife {
-        let board: Vec<Vec<bool>> = (0..height)
-            .map(|_| (0..width).map(|_| false).collect())
+        let board: Vec<Vec<bool>> = iter::repeat(iter::repeat(false).take(width).collect())
+            .take(height)
             .collect();
 
         GameOfLife {
@@ -46,8 +48,6 @@ impl GameOfLife {
     /// Init board with only dead cells.
     /// All alive cells will be killed.
     pub fn init_empty(&mut self) -> &mut Self {
-        use std::iter;
-
         self.board = iter::repeat(iter::repeat(false).take(self.width).collect())
             .take(self.height)
             .collect();
@@ -59,9 +59,6 @@ impl GameOfLife {
     /// A random u8 will be picked, and if it is greater than `chance`, the current cell will be
     /// alive.
     pub fn init_randomly(&mut self, chance: u8) -> &mut Self {
-        use std::iter;
-        use self::rand::Rng;
-
         self.init_empty();
 
         let mut rng = rand::thread_rng();
