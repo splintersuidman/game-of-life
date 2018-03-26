@@ -1,5 +1,5 @@
 [package]
-authors = ["Splinter Suidman"]
+authors = ["Splinter Suidman (splintah)", "Sybrand Aarnoutse (syberant)"]
 name = "game-of-life"
 version = "0.3.0"
 
