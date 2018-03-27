@@ -120,11 +120,12 @@ impl GameOfLife {
                     *cell = 0;
                     return;
                 }
+
                 let mut number_of_neighbours = 0;
-                for i in 0..3 {
-                    for j in 0..3 {
-                        let i: usize = (y as isize + i as isize - 1) as usize;
-                        let j: usize = (x as isize + j as isize - 1) as usize;
+                for i in -1..1 + 1 {
+                    for j in -1..1 + 1 {
+                        let i: usize = (y as isize + i as isize) as usize;
+                        let j: usize = (x as isize + j as isize) as usize;
                         if self.board[i][j] {
                             number_of_neighbours += 1;
                         }
@@ -134,6 +135,7 @@ impl GameOfLife {
                 if self.board[y][x] {
                     number_of_neighbours -= 1;
                 }
+
                 *cell = number_of_neighbours
             })
         });
