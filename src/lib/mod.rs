@@ -109,11 +109,17 @@ impl GameOfLife {
     /// Update the board using the game of life rules.
     pub fn update(&mut self) {
         // Count neighbours for all cells.
-        let mut neighbours: Vec<Vec<i32>> = Vec::new();
-        for y in 1..self.height - 1 {
-            let mut row: Vec<i32> = Vec::new();
+        let mut neighbours: Vec<Vec<i32>> = iter::repeat(())
+            .take(self.height)
+            .map(|_| iter::repeat(0).take(self.width).collect())
+            .collect();
 
-            for x in 1..self.width - 1 {
+        neighbours.par_iter_mut().enumerate().for_each(|(y, row)| {
+            row.par_iter_mut().enumerate().for_each(|(x, cell)| {
+                if x == 0 || y == 0 || x == self.width - 1 || y == self.height - 1 {
+                    *cell = 0;
+                    return;
+                }
                 let mut number_of_neighbours = 0;
                 for i in 0..3 {
                     for j in 0..3 {
@@ -128,11 +134,9 @@ impl GameOfLife {
                 if self.board[y][x] {
                     number_of_neighbours -= 1;
                 }
-
-                row.push(number_of_neighbours);
-            }
-            neighbours.push(row);
-        }
+                *cell = number_of_neighbours
+            })
+        });
 
         // Update cells based on their neighbour count.
         let width = self.width;
@@ -147,7 +151,7 @@ impl GameOfLife {
                     .skip(1)
                     .take(width - 2)
                     .for_each(|(x, cell)| {
-                        let number_of_neighbours = neighbours[y - 1][x - 1];
+                        let number_of_neighbours = neighbours[y][x];
                         if *cell {
                             if number_of_neighbours < 2 || number_of_neighbours > 3 {
                                 *cell = false;
