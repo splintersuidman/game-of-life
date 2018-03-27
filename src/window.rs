@@ -11,7 +11,7 @@ by Splinter Suidman
 
 game-of-life emulates John Conway's game of life.
 
-Press Escape to exit, press Space or a mouse button to reinitialise grid.
+Press Escape to exit, press C to toggle the cursor capture and press Space or a mouse button to reinitialise grid.
 
 Flags:
   --help
@@ -122,17 +122,21 @@ fn main() {
     };
 
     // Create window.
-    let window_width: i64 = 600;
-    let window_height: i64 = 600;
+    let mut window_width: i64 = 600;
+    let mut window_height: i64 = 600;
     let mut window: PistonWindow =
         WindowSettings::new(name, [window_width as u32, window_height as u32])
             .exit_on_esc(true)
             .build()
             .unwrap();
-    window.set_capture_cursor(true);
-    
-    let mut window_y: i64  = 0;
+
+    let mut window_y: i64 = 0;
     let mut window_x: i64 = 0;
+    let mut cells_on_width: i64 = window_width / cell_width as i64;
+    let mut cells_on_height: i64 = window_height / cell_width as i64;
+    let mut capture_cursor: bool = true;
+
+    window.set_capture_cursor(capture_cursor);
 
     // Set event loop settings
     let mut settings = window.get_event_settings();
@@ -141,7 +145,7 @@ fn main() {
     window.set_event_settings(settings);
 
     // Convert cell_width to f64.
-    let cell_width = f64::from(cell_width);
+    let cell_width_updated = f64::from(cell_width);
 
     // Convert colours to arrays.
     let background_colour = [
@@ -172,24 +176,60 @@ fn main() {
                         game_of_life.init_randomly(chance);
                     }
                 }
+                Keyboard(Key::C) => {
+                    capture_cursor = !capture_cursor;
+                    window.set_capture_cursor(capture_cursor);
+                }
                 _ => (),
             }
         }
 
+        // On window resize
+        e.resize(|width, height| {
+            window_width = width as i64;
+            window_height = height as i64;
+
+            cells_on_width = window_width / cell_width_updated as i64;
+            cells_on_height = window_height / cell_width_updated as i64;
+
+            if cells_on_width > game_of_life.width as i64 {
+                cells_on_width = game_of_life.width as i64;
+            }
+
+            if cells_on_height > game_of_life.height as i64 {
+                cells_on_height = game_of_life.height as i64;
+            }
+
+            if window_x + cells_on_width > game_of_life.width as i64 {
+                window_x = game_of_life.width as i64 - cells_on_width as i64;
+            }
+
+            if window_y + cells_on_height > game_of_life.height as i64 {
+                window_y = game_of_life.height as i64 - cells_on_height as i64;
+            }
+        });
+
+        // On mouse movement
         e.mouse_relative(|x, y| {
+            // If the cursor shouldn't be tracked
+            if !capture_cursor {
+                return;
+            }
+
+            // If the cursor should be tracked
             window_x -= x as i64;
             window_y -= y as i64;
 
             if window_x < 0 {
                 window_x = 0;
-            } else if window_x + window_width/cell_width as i64 > game_of_life.width as i64 {
-                window_x = game_of_life.width as i64 - window_width/cell_width as i64;
+            } else if window_x + cells_on_width > game_of_life.width as i64 {
+                window_x = game_of_life.width as i64 - cells_on_width as i64;
             }
 
             if window_y < 0 {
                 window_y = 0;
-            } else if window_y + window_height/cell_width as i64 > game_of_life.height as i64 {
-                window_y = game_of_life.height as i64 - window_height/cell_width as i64;
+            } else if window_y + cells_on_height > game_of_life.height as i64 {
+                window_y = game_of_life.height as i64 - cells_on_height as i64;
             }
         });
 
@@ -197,16 +237,16 @@ fn main() {
         window.draw_2d(&e, |c, g| {
             clear(background_colour, g);
 
-            for y in 0..(window_width/cell_width as i64) {
-                for x in 0..(window_height/cell_width as i64) {
-                    if game_of_life.board[(y+window_y) as usize][(x+window_x) as usize] {
+            for y in 0..cells_on_height {
+                for x in 0..cells_on_width {
+                    if game_of_life.board[(y + window_y) as usize][(x + window_x) as usize] {
                         rectangle(
                             foreground_colour,
                             [
-                                (x as f64) * cell_width,
-                                (y as f64) * cell_width,
-                                cell_width,
-                                cell_width,
+                                (x as f64) * cell_width_updated,
+                                (y as f64) * cell_width_updated,
+                                cell_width_updated,
+                                cell_width_updated,
                             ],
                             c.transform,
                             g,
