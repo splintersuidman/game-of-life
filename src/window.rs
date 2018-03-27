@@ -102,7 +102,7 @@ fn main() {
                 file = Some(f);
             },
             _ => {
-                println!("Error: unknowm flag `{}`", arg);
+                println!("Error: unknown flag `{}`", arg);
             }
         }
     }
@@ -122,11 +122,17 @@ fn main() {
     };
 
     // Create window.
+    let window_width: i64 = 600;
+    let window_height: i64 = 600;
     let mut window: PistonWindow =
-        WindowSettings::new(name, [width * cell_width, height * cell_width])
+        WindowSettings::new(name, [window_width as u32, window_height as u32])
             .exit_on_esc(true)
             .build()
             .unwrap();
+    window.set_capture_cursor(true);
+    
+    let mut window_y: i64  = 0;
+    let mut window_x: i64 = 0;
 
     // Set event loop settings
     let mut settings = window.get_event_settings();
@@ -170,13 +176,30 @@ fn main() {
             }
         }
 
+        e.mouse_relative(|x, y| {
+            window_x -= x as i64;
+            window_y -= y as i64;
+
+            if window_x < 0 {
+                window_x = 0;
+            } else if window_x + window_width/cell_width as i64 > game_of_life.width as i64 {
+                window_x = game_of_life.width as i64 - window_width/cell_width as i64;
+            }
+
+            if window_y < 0 {
+                window_y = 0;
+            } else if window_y + window_height/cell_width as i64 > game_of_life.height as i64 {
+                window_y = game_of_life.height as i64 - window_height/cell_width as i64;
+            }
+        });
+
         // Drawing.
         window.draw_2d(&e, |c, g| {
             clear(background_colour, g);
 
-            for y in 0..game_of_life.board.len() {
-                for x in 0..game_of_life.board[y].len() {
-                    if game_of_life.board[y][x] {
+            for y in 0..(window_width/cell_width as i64) {
+                for x in 0..(window_height/cell_width as i64) {
+                    if game_of_life.board[(y+window_y) as usize][(x+window_x) as usize] {
                         rectangle(
                             foreground_colour,
                             [
