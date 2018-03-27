@@ -61,22 +61,20 @@ impl GameOfLife {
     pub fn init_randomly(&mut self, chance: u8) -> &mut Self {
         let mut rng = rand::weak_rng();
 
-        self.board.iter_mut()
-            .for_each(|row: &mut Vec<bool>| {
-                row.iter_mut()
-                    .for_each(|cell| {
-                        *cell = rng.gen::<u8>() > chance;
-                    });
+        self.board.iter_mut().for_each(|row: &mut Vec<bool>| {
+            row.iter_mut().for_each(|cell| {
+                *cell = rng.gen::<u8>() > chance;
             });
-        
+        });
+
         for y in 1..self.height - 1 {
             self.board[y][0] = false;
-            self.board[y][self.width-1] = false;
+            self.board[y][self.width - 1] = false;
         }
 
         for x in 1..self.width - 1 {
             self.board[0][x] = false;
-            self.board[self.height-1][x] = false;
+            self.board[self.height - 1][x] = false;
         }
 
         self
