@@ -115,7 +115,7 @@ impl GameOfLife {
             .collect();
 
         neighbours.par_iter_mut().enumerate().for_each(|(y, row)| {
-            row.par_iter_mut().enumerate().for_each(|(x, cell)| {
+            row.iter_mut().enumerate().for_each(|(x, cell)| {
                 if x == 0 || y == 0 || x == self.width - 1 || y == self.height - 1 {
                     *cell = 0;
                     return;
