@@ -115,7 +115,7 @@ impl GameOfLife {
             .collect();
 
         neighbours.par_iter_mut().enumerate().for_each(|(y, row)| {
-            for (x, cell) in row.iter_mut().enumerate() {
+            row.iter_mut().enumerate().for_each(|(x, cell)| {
                 if x == 0 || y == 0 || x == self.width - 1 || y == self.height - 1 {
                     return;
                 }
@@ -136,7 +136,7 @@ impl GameOfLife {
                 }
 
                 *cell = number_of_neighbours
-            }
+            })
         });
 
         // Update cells based on their neighbour count.
