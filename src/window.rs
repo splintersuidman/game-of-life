@@ -1,111 +1,23 @@
+extern crate clap;
 extern crate piston_window;
 
 mod lib;
 
-use std::env;
 use lib::GameOfLife;
 use piston_window::*;
-
-const HELP_MESSAGE: &str = "game-of-life v0.3.0
-by Splinter Suidman
-
-game-of-life emulates John Conway's game of life.
-
-Press Escape to exit, press Space or a mouse button to reinitialise grid.
-
-Flags:
-  --help
-    Show this screen.
-  --width [w] | -w [w]
-    : u32
-    Change the width of the board (in cells).
-    Default: 50.
-  --height [h] | -h [h]
-    : u32
-    Change the height of the board (in cells).
-    Default: 50.
-  --cell-width [cw] | -cw [cw]
-    : u32
-    Change width of a cell (in pixels).
-    Default: 10.
-  --chance [c] | -ch [ch]
-    : u8
-    Chance for randomly initialising board.
-    Example: with '--chance 128' passed, cells will have a 50% chance of living.
-    Default: 220.
-  --fps [f] | -fps [f]
-    : u64
-    The amount of updates and frames that should be performed per second.
-    This is the maximum frames per second; that is, the actual fps could be less.
-    Default: 24.
-  --file [f] | -f [f]
-    : path
-    The file that contains the board.
-    If this flag is passed, the board will be initialised with the board in the given file.
-    Default: None.
-  --colour [c] | --color [c] | -c [c]
-    : u32
-    Change the foreground colour of the cells.
-    The colour should be passed as a hexidecimal RGB colour, example: FFFFFF for white, 000000 for black.
-    Default: FFFFFF (white).
-  --background [c] | -bg [c]
-    : u32
-    Change the background colour.
-    The colour should be passed as a hexidecimal RGB colour, example: FFFFFF for white, 000000 for black.
-    Default: 000000 (black).
-";
+use clap::{App, Arg};
 
 fn main() {
-    let mut args = env::args().skip(1);
-
-    // Defaults
-    let mut width: u32 = 50;
-    let mut height: u32 = 50;
-    let mut cell_width: u32 = 10;
-    let mut chance: u8 = 220;
-    let mut fps: u64 = 24;
-    let mut colour: u32 = 0x000000; // Black.
-    let mut background: u32 = 0xFFFFFF; // White.
-    let mut file: Option<String> = None;
-
-    // Command line arguments parsing.
-    while let Some(arg) = args.next() {
-        match arg.as_str() {
-            "--help" => {
-                println!("{}", HELP_MESSAGE);
-                std::process::exit(1);
-            }
-            "--width" | "-w" => if let Some(w) = args.next() {
-                width = w.trim().parse().unwrap();
-            },
-            "--height" | "-h" => if let Some(h) = args.next() {
-                height = h.trim().parse().unwrap();
-            },
-            "--cell-width" | "-cw" => if let Some(cw) = args.next() {
-                cell_width = cw.trim().parse().unwrap();
-            },
-            "--chance" | "-ch" => if let Some(c) = args.next() {
-                chance = c.trim().parse().unwrap();
-            },
-            "--colour" | "--color" | "-c" => if let Some(c) = args.next() {
-                // Parse hexadecimal.
-                colour = u32::from_str_radix(&c, 16).unwrap();
-            },
-            "--background" | "-bg" => if let Some(c) = args.next() {
-                // Parse hexadecimal.
-                background = u32::from_str_radix(&c, 16).unwrap();
-            },
-            "--fps" | "-fps" => if let Some(f) = args.next() {
-                fps = f.trim().parse().unwrap();
-            },
-            "--file" | "-f" => if let Some(f) = args.next() {
-                file = Some(f);
-            },
-            _ => {
-                println!("Error: unknowm flag `{}`", arg);
-            }
-        }
-    }
+    let Config {
+        width,
+        height,
+        cell_width,
+        chance,
+        fps,
+        file,
+        foreground,
+        background,
+    } = Config::parse();
 
     let mut game_of_life = GameOfLife::new(width as usize, height as usize);
 
@@ -137,20 +49,6 @@ fn main() {
     // Convert cell_width to f64.
     let cell_width = f64::from(cell_width);
 
-    // Convert colours to arrays.
-    let background_colour = [
-        ((background & 0xFF0000) >> 16) as f32 / 255.0,
-        ((background & 0x00FF00) >> 8) as f32 / 255.0,
-        (background & 0x0000FF) as f32 / 255.0,
-        1.,
-    ];
-    let foreground_colour = [
-        ((colour & 0xFF0000) >> 16) as f32 / 255.0,
-        ((colour & 0x00FF00) >> 8) as f32 / 255.0,
-        (colour & 0x0000FF) as f32 / 255.0,
-        1.,
-    ];
-
     // Event loop.
     while let Some(e) = window.next() {
         // Key press for resetting grid.
@@ -172,13 +70,13 @@ fn main() {
 
         // Drawing.
         window.draw_2d(&e, |c, g| {
-            clear(background_colour, g);
+            clear(background, g);
 
             for y in 0..game_of_life.board.len() {
                 for x in 0..game_of_life.board[y].len() {
                     if game_of_life.board[y][x] {
                         rectangle(
-                            foreground_colour,
+                            foreground,
                             [
                                 (x as f64) * cell_width,
                                 (y as f64) * cell_width,
@@ -194,5 +92,121 @@ fn main() {
 
             game_of_life.update();
         });
+    }
+}
+
+struct Config {
+    pub width: u32,
+    pub height: u32,
+    pub cell_width: u32,
+    pub chance: u8,
+    pub fps: u64,
+    pub file: Option<String>,
+    pub foreground: [f32; 4],
+    pub background: [f32; 4],
+}
+
+impl Config {
+    fn parse() -> Self {
+        let matches = App::new("game-of-life")
+        .version("0.3.0")
+        .author("Splinter Suidman")
+        .about("game-of-life emulates John Conway's game of life.\nPress Escape to exit, press Space or a mouse button to reinitialise grid.")
+        .arg(Arg::with_name("width")
+            .short("w")
+            .long("width")
+            .help("Change the width of the board (in cells).\nDefault: 50.")
+            .takes_value(true))
+        .arg(Arg::with_name("height")
+            .short("h")
+            .long("height")
+            .help("Change the height of the board (in cells).\nDefault: 50.")
+            .takes_value(true))
+        .arg(Arg::with_name("cell-width")
+            .short("c")
+            .long("cell-width")
+            .help("Change width of a cell (in pixels).\nDefault: 10.")
+            .takes_value(true))
+        .arg(Arg::with_name("chance")
+            .short("l")
+            .long("chance")
+            .help("Chance for randomly initialising board.\nExample: with '--chance 128' passed, cells will have a 50% chance of living.\nDefault: 220.")
+            .takes_value(true))
+        .arg(Arg::with_name("fps")
+            .long("fps")
+            .help("The amount of updates and frames that should be performed per second.\nThis is the maximum frames per second; that is, the actual fps could be less.\nDefault: 24.")
+            .takes_value(true))
+        .arg(Arg::with_name("file")
+            .short("f")
+            .long("file")
+            .help("The file that contains the board.\nIf this flag is passed, the board will be initialised with the board in the given file.\nDefault: None,")
+            .takes_value(true))
+        .arg(Arg::with_name("foreground")
+            .long("foreground")
+            .help("Change the foreground colour of the cells.\nThe colour should be passed as a hexidecimal RGB colour, example: FFFFFF for white, 000000 for black.\nDefault: 000000.")
+            .takes_value(true))
+        .arg(Arg::with_name("background")
+            .long("background")
+            .help("Change the background colour.\nThe colour should be passed as a hexidecimal RGB colour, example: FFFFFF for white, 000000 for black.\nDefault: FFFFFF.")
+            .takes_value(true))
+        .get_matches();
+
+        macro_rules! parse_or_default {
+            ($name: expr, $default: expr) => {
+                matches
+                    .value_of($name)
+                    .and_then(|s| match s.trim().parse() {
+                        Ok(v) => Some(v),
+                        Err(_) => None,
+                    })
+                    .unwrap_or($default)
+            };
+        }
+
+        let width: u32 = parse_or_default!("width", 50);
+        let height: u32 = parse_or_default!("height", 50);
+        let cell_width: u32 = parse_or_default!("cell-width", 10);
+        let chance: u8 = parse_or_default!("chance", 220);
+        let fps: u64 = parse_or_default!("fps", 24);
+        let file: Option<String> = matches.value_of("file").and_then(|s| Some(String::from(s)));
+
+        let foreground: u32 = matches
+            .value_of("foreground")
+            .and_then(|s| match u32::from_str_radix(&s, 16) {
+                Ok(v) => Some(v),
+                Err(_) => None,
+            })
+            .unwrap_or(0x000000);
+        let background: u32 = matches
+            .value_of("background")
+            .and_then(|s| match u32::from_str_radix(&s, 16) {
+                Ok(v) => Some(v),
+                Err(_) => None,
+            })
+            .unwrap_or(0x000000);
+
+        let background = [
+            ((background & 0xFF0000) >> 16) as f32 / 255.0,
+            ((background & 0x00FF00) >> 8) as f32 / 255.0,
+            (background & 0x0000FF) as f32 / 255.0,
+            1.,
+        ];
+        let foreground = [
+            ((foreground & 0xFF0000) >> 16) as f32 / 255.0,
+            ((foreground & 0x00FF00) >> 8) as f32 / 255.0,
+            (foreground & 0x0000FF) as f32 / 255.0,
+            1.,
+        ];
+
+        Config {
+            width,
+            height,
+            cell_width,
+            chance,
+            fps,
+            file,
+            foreground,
+            background,
+        }
     }
 }
