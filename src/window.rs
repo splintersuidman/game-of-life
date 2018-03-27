@@ -139,7 +139,7 @@ impl Config {
         .arg(Arg::with_name("file")
             .short("f")
             .long("file")
-            .help("The file that contains the board.\nIf this flag is passed, the board will be initialised with the board in the given file.\nDefault: None,")
+            .help("The file that contains the board.\nIf this flag is passed, the board will be initialised with the board in the given file.\nDefault: None.")
             .takes_value(true))
         .arg(Arg::with_name("foreground")
             .long("foreground")
