@@ -61,22 +61,20 @@ impl GameOfLife {
     pub fn init_randomly(&mut self, chance: u8) -> &mut Self {
         let mut rng = rand::weak_rng();
 
-        self.board.iter_mut()
-            .for_each(|row: &mut Vec<bool>| {
-                row.iter_mut()
-                    .for_each(|cell| {
-                        *cell = rng.gen::<u8>() > chance;
-                    });
+        self.board.iter_mut().for_each(|row: &mut Vec<bool>| {
+            row.iter_mut().for_each(|cell| {
+                *cell = rng.gen::<u8>() > chance;
             });
-        
+        });
+
         for y in 1..self.height - 1 {
             self.board[y][0] = false;
-            self.board[y][self.width-1] = false;
+            self.board[y][self.width - 1] = false;
         }
 
         for x in 1..self.width - 1 {
             self.board[0][x] = false;
-            self.board[self.height-1][x] = false;
+            self.board[self.height - 1][x] = false;
         }
 
         self
@@ -111,16 +109,22 @@ impl GameOfLife {
     /// Update the board using the game of life rules.
     pub fn update(&mut self) {
         // Count neighbours for all cells.
-        let mut neighbours: Vec<Vec<i32>> = Vec::new();
-        for y in 1..self.height - 1 {
-            let mut row: Vec<i32> = Vec::new();
+        let mut neighbours: Vec<Vec<i32>> = iter::repeat(())
+            .take(self.height)
+            .map(|_| iter::repeat(0).take(self.width).collect())
+            .collect();
 
-            for x in 1..self.width - 1 {
+        neighbours.par_iter_mut().enumerate().for_each(|(y, row)| {
+            row.iter_mut().enumerate().for_each(|(x, cell)| {
+                if x == 0 || y == 0 || x == self.width - 1 || y == self.height - 1 {
+                    return;
+                }
+
                 let mut number_of_neighbours = 0;
-                for i in 0..3 {
-                    for j in 0..3 {
-                        let i: usize = (y as isize + i as isize - 1) as usize;
-                        let j: usize = (x as isize + j as isize - 1) as usize;
+                for i in -1..1 + 1 {
+                    for j in -1..1 + 1 {
+                        let i: usize = (y as isize + i as isize) as usize;
+                        let j: usize = (x as isize + j as isize) as usize;
                         if self.board[i][j] {
                             number_of_neighbours += 1;
                         }
@@ -131,10 +135,9 @@ impl GameOfLife {
                     number_of_neighbours -= 1;
                 }
 
-                row.push(number_of_neighbours);
-            }
-            neighbours.push(row);
-        }
+                *cell = number_of_neighbours
+            })
+        });
 
         // Update cells based on their neighbour count.
         let width = self.width;
@@ -149,7 +152,7 @@ impl GameOfLife {
                     .skip(1)
                     .take(width - 2)
                     .for_each(|(x, cell)| {
-                        let number_of_neighbours = neighbours[y - 1][x - 1];
+                        let number_of_neighbours = neighbours[y][x];
                         if *cell {
                             if number_of_neighbours < 2 || number_of_neighbours > 3 {
                                 *cell = false;

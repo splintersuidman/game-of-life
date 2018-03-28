@@ -35,71 +35,71 @@ You may want to move these executables into a folder in your path.
 ### Window
 
 ```text
+game-of-life 0.3.0
+Splinter Suidman
+game-of-life emulates John Conway's game of life.
 Press Escape to exit, press Space or a mouse button to reinitialise grid.
 
-Flags:
-  --help
-    Show this screen.
-  --width [w] | -w [w]
-    : u32
-    Change the width of the board (in cells).
-    Default: 50.
-  --height [h] | -h [h]
-    : u32
-    Change the height of the board (in cells).
-    Default: 50.
-  --cell-width [cw] | -cw [cw]
-    : u32
-    Change width of a cell (in pixels).
-    Default: 10.
-  --chance [c] | -ch [ch]
-    : u8
-    Chance for randomly initialising board.
-    Example: with '--chance 128' passed, cells will have a 50% chance of living.
-    Default: 220.
-  --fps [f] | -fps [f]
-    : u64
-    The amount of updates and frames that should be performed per second.
-    This is the maximum frames per second; that is, the actual fps could be less.
-    Default: 24.
-  --file [f] | -f [f]
-    : path
-    The file that contains the board.
-    If this flag is passed, the board will be initialised with the board in the given file.
-    Default: None.
-  --colour [c] | --color [c] | -c [c]
-    : u32
-    Change the foreground colour of the cells.
-    The colour should be passed as a hexidecimal RGB colour, example: FFFFFF for white, 000000 for black.
-    Default: FFFFFF (white).
-  --background [c] | -bg [c]
-    : u32
-    Change the background colour.
-    The colour should be passed as a hexidecimal RGB colour, example: FFFFFF for white, 000000 for black.
-    Default: 000000 (black).
+USAGE:
+    game-of-life-window [OPTIONS]
+
+FLAGS:
+        --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+        --background <background>    Change the background colour.
+                                     The colour should be passed as a hexidecimal RGB colour, example: FFFFFF for white,
+                                     000000 for black.
+                                     Default: FFFFFF.
+    -c, --cell-width <cell-width>    Change width of a cell (in pixels).
+                                     Default: 10.
+    -l, --chance <chance>            Chance for randomly initialising board.
+                                     Example: with '--chance 128' passed, cells will have a 50% chance of living.
+                                     Default: 220.
+    -f, --file <file>                The file that contains the board.
+                                     If this flag is passed, the board will be initialised with the board in the given
+                                     file.
+                                     Default: None.
+        --foreground <foreground>    Change the foreground colour of the cells.
+                                     The colour should be passed as a hexidecimal RGB colour, example: FFFFFF for white,
+                                     000000 for black.
+                                     Default: 000000.
+        --fps <fps>                  The amount of updates and frames that should be performed per second.
+                                     This is the maximum frames per second; that is, the actual fps could be less.
+                                     Default: 24.
+    -h, --height <height>            Change the height of the board (in cells).
+                                     Default: 50.
+    -w, --width <width>              Change the width of the board (in cells).
+                                     Default: 50.
 ```
 
 ### CLI
 
 ```text
-Flags:
-  --help | -h
-    Show this screen.
-  --width [w] : u16
-    Change the width of the board.
-    Default: terminal width.
-  --height [h] : u16
-    Change the height of the board.
-    Default: terminal height.
-  --chance [c] : u8
-    Chance for randomly initialising board.
-    Example: with '--chance 128' passed, cells will have a 50% chance of living.
-    Default: 220.
-  --sleep [s] : u64
-    The amount of milliseconds the thread sleeps between every frame.
-    Default: None.
-  --file [f] : path
-    The file that contains the board.
-    If this flag is passed, the board will be initialised with the board in the given file.
-    Default: None.
+game-of-life 0.3.0
+Splinter Suidman
+game-of-life emulates John Conway's game of life.
+Press ^C to quit.
+
+USAGE:
+    game-of-life-cli [OPTIONS]
+
+FLAGS:
+        --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+    -l, --chance <chance>    Chance for randomly initialising board.
+                             Example: with '--chance 128' passed, cells will have a 50% chance of living.
+                             Default: 220.
+    -f, --file <file>        The file that contains the board.
+                             If this flag is passed, the board will be initialised with the board in the given file.
+                             Default: None.
+    -h, --height <height>    Change the height of the board (in cells).
+                             Default: terminal height.
+        --sleep <sleep>      The amount of milliseconds the thread sleeps between every frame.
+                             Default: 0.
+    -w, --width <width>      Change the width of the board (in cells).
+                             Default: terminal width.
 ```
