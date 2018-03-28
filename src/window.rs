@@ -183,7 +183,7 @@ impl Config {
                 Ok(v) => Some(v),
                 Err(_) => None,
             })
-            .unwrap_or(0x000000);
+            .unwrap_or(0xFFFFFF);
 
         let background = [
             ((background & 0xFF0000) >> 16) as f32 / 255.0,
