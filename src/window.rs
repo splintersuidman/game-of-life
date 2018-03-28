@@ -93,6 +93,18 @@ fn main() {
                             c.transform,
                             g,
                         );
+                    } else if config.view_border && (y + view.y == 0 || y + view.y + 1 == view.board_height || x + view.x == 0 || x + view.x + 1 == view.board_width) {
+                        rectangle(
+                            [0.5, 0.5, 0.5, 1.0],
+                            [
+                                (x as f64) * view.cell_width,
+                                (y as f64) * view.cell_width,
+                                view.cell_width,
+                                view.cell_width,
+                            ],
+                            c.transform,
+                            g,
+                        );
                     }
                 }
             }
@@ -108,6 +120,9 @@ struct View {
 
     pub y: usize,
     pub x: usize,
+
+    pub precise_y: f64,
+    pub precise_x: f64,
 
     pub capture_cursor: bool,
 
@@ -131,6 +146,9 @@ impl View {
         Self {
             y: 0,
             x: 0,
+
+            precise_y: 0.0,
+            precise_x: 0.0,
 
             cell_width: config.cell_width.into(),
             base_cell_width: config.cell_width.into(),
@@ -169,27 +187,33 @@ impl View {
             self.cell_width = self.window_height as f64 / self.board_height as f64;
             self.cells_on_height = (self.window_height as f64 / self.cell_width) as usize;
         }
+
+        // trigger function to check for moving outside of the board
+        self.on_mouse_move(0.0, 0.0);
     }
 
     fn on_mouse_move(&mut self, mouse_x: f64, mouse_y: f64) {
         if self.capture_cursor {
             // prevent y from moving outside of the board and update it
-            if self.y as f64 - mouse_y < 0.0 {
-                self.y = 0;
-            } else if self.y - mouse_y as usize + self.cells_on_height > self.board_height {
-                self.y = self.board_height - self.cells_on_height;
+            if self.precise_y - mouse_y < 0.0 {
+                self.precise_y = 0.0;
+            } else if self.precise_y - mouse_y + self.cells_on_height as f64 > self.board_height as f64 {
+                self.precise_y = (self.board_height - self.cells_on_height) as f64;
             } else {
-                self.y -= mouse_y as usize;
+                self.precise_y -= mouse_y;
             }
 
             // prevent x from moving outside of the board and update it
-            if self.x as f64 - mouse_x < 0.0 {
-                self.x = 0;
-            } else if self.x - mouse_x as usize + self.cells_on_width > self.board_width {
-                self.x = self.board_width - self.cells_on_width;
+            if self.precise_x - mouse_x < 0.0 {
+                self.precise_x = 0.0;
+            } else if self.precise_x - mouse_x + self.cells_on_width as f64 > self.board_width as f64 {
+                self.precise_x = (self.board_width - self.cells_on_width) as f64;
             } else {
-                self.x -= mouse_x as usize;
+                self.precise_x -= mouse_x;
             }
+
+            self.y = self.precise_y as usize;
+            self.x = self.precise_x as usize;
         }
     }
 }
@@ -203,6 +227,7 @@ struct Config {
     pub file: Option<String>,
     pub foreground: [f32; 4],
     pub background: [f32; 4],
+    pub view_border: bool,
 }
 
 impl Config {
@@ -247,6 +272,10 @@ impl Config {
         .arg(Arg::with_name("background")
             .long("background")
             .help("Change the background colour.\nThe colour should be passed as a hexidecimal RGB colour, example: FFFFFF for white, 000000 for black.\nDefault: FFFFFF.")
+            .takes_value(true))
+        .arg(Arg::with_name("view-border")
+            .long("view-border")
+            .help("Configures whether the border is visible on your screen.\nDefault: false.")
             .takes_value(true))
         .get_matches();
 
@@ -297,6 +326,8 @@ impl Config {
             1.,
         ];
 
+        let view_border: bool = parse_or_default!("view-border", false);
+
         Config {
             width,
             height,
@@ -306,6 +337,7 @@ impl Config {
             file,
             foreground,
             background,
+            view_border,
         }
     }
 }
