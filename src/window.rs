@@ -142,6 +142,17 @@ impl View {
     }
 
     fn from_config(config: &Config) -> Self {
+        let board_width = config.width as usize;
+        let board_height = config.height as usize;
+
+        let base_cell_width: f64 = config.cell_width.into();
+        let cell_width = base_cell_width.clone();
+
+        let window_width = if board_width as f64 * cell_width > 600.0 {600} else {(board_width as f64 * cell_width) as u32};
+        let window_height = if board_height as f64 * cell_width > 600.0 {600} else {(board_height as f64 * cell_width) as u32};
+
+        let cells_on_width = (window_width as f64 / cell_width) as usize;
+        let cells_on_height = (window_height as f64 / cell_width) as usize;
 
         Self {
             y: 0,
@@ -150,20 +161,19 @@ impl View {
             precise_y: 0.0,
             precise_x: 0.0,
 
-            cell_width: config.cell_width.into(),
-            base_cell_width: config.cell_width.into(),
+            cell_width,
+            base_cell_width,
 
             capture_cursor: true,
 
-            // limit initial window size to 600
-            window_width: if config.width * config.cell_width > 600 {600} else {config.width * config.cell_width},
-            window_height: if config.height * config.cell_width > 600 {600} else {config.height * config.cell_width},
+            window_width,
+            window_height,
 
-            cells_on_width: (config.width * config.cell_width / config.cell_width) as usize,
-            cells_on_height: (config.height * config.cell_width / config.cell_width) as usize,
+            cells_on_width,
+            cells_on_height,
 
-            board_width: config.width as usize,
-            board_height: config.height as usize,
+            board_width,
+            board_height,
         }
     }
 
