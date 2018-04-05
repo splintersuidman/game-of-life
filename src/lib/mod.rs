@@ -67,12 +67,12 @@ impl GameOfLife {
             });
         });
 
-        for y in 1..self.height - 1 {
+        for y in 0..self.height {
             self.board[y][0] = false;
             self.board[y][self.width - 1] = false;
         }
 
-        for x in 1..self.width - 1 {
+        for x in 0..self.width {
             self.board[0][x] = false;
             self.board[self.height - 1][x] = false;
         }
