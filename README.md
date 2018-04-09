@@ -26,7 +26,7 @@ To use a file, pass it to the `--file` flag (see [below](#usage) for more flags)
 cargo install --git https://github.com/splintah/game-of-life
 ```
 
-This will install `game-of-life-window` and `game-of-life-cli` into `$HOME/.cargo/bin/`, which should be in your `PATH` variable when you have installed Rust via [`rustup`](https://rustup.rs).
+This will install `gol-win` and `gol-cli` into `$HOME/.cargo/bin/`, which should be in your `PATH` variable when you have installed Rust via [`rustup`](https://rustup.rs).
 
 ## Installation from source
 

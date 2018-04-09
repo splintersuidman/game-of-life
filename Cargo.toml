@@ -4,11 +4,11 @@ name = "game-of-life"
 version = "0.3.0"
 
 [[bin]]
-name = "game-of-life-window"
+name = "gol-win"
 path = "./src/window.rs"
 
 [[bin]]
-name = "game-of-life-cli"
+name = "gol-cli"
 path = "./src/cli.rs"
 
 [lib]
