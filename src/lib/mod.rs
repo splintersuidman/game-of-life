@@ -3,9 +3,9 @@ extern crate rayon;
 
 pub mod parsers;
 
-use std::iter;
 use self::rand::Rng;
 use self::rayon::prelude::*;
+use std::iter;
 
 pub struct GameOfLife {
     pub board: Vec<Vec<bool>>,
