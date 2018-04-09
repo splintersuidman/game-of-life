@@ -29,6 +29,19 @@ cargo build --release
 
 The executables are now located in `target/release/`.
 You may want to move these executables into a folder in your path.
+To do this, run the following in your terminal:
+```bash
+echo $PATH
+```
+Which should return something like this:
+```bash
+/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin
+```
+Now choose a folder to which you want to move the executables, `/usr/local/bin` will be used as an example, and move the executables to that folder:
+```bash
+mv target/release/game-of-life-cli target/release/game-of-life-window /usr/local/bin
+```
+**Note**: replace `/usr/local/bin` with your folder of choice.
 
 ## Usage
 
