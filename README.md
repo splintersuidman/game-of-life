@@ -22,26 +22,15 @@ To use a file, pass it to the `--file` flag (see [below](#usage) for more flags)
 [Install Rust](https://www.rust-lang.org/en-US/). Then run the following in your terminal:
 
 ```bash
+# Clone the code.
 git clone https://github.com/splintah/game-of-life.git
+# Change your directory to `game-of-life`.
 cd game-of-life
-cargo build --release
+# Install the binaries.
+cargo install
 ```
 
-The executables are now located in `target/release/`.
-You may want to move these executables into a folder in your path.
-To do this, run the following in your terminal:
-```bash
-echo $PATH
-```
-Which should return something like this:
-```bash
-/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin
-```
-Now choose a folder to which you want to move the executables, `/usr/local/bin` will be used as an example, and move the executables to that folder:
-```bash
-mv target/release/game-of-life-cli target/release/game-of-life-window /usr/local/bin
-```
-**Note**: replace `/usr/local/bin` with your folder of choice.
+This will install `game-of-life-window` and `game-of-life-cli` into `$HOME/.cargo/bin/`, which should be in your `PATH` variable when you have installed Rust via [`rustup`](https://rustup.rs).
 
 ## Usage
 
