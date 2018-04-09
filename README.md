@@ -22,6 +22,17 @@ To use a file, pass it to the `--file` flag (see [below](#usage) for more flags)
 [Install Rust](https://www.rust-lang.org/en-US/). Then run the following in your terminal:
 
 ```bash
+# Install from GitHub with cargo.
+cargo install --git https://github.com/splintah/game-of-life
+```
+
+This will install `game-of-life-window` and `game-of-life-cli` into `$HOME/.cargo/bin/`, which should be in your `PATH` variable when you have installed Rust via [`rustup`](https://rustup.rs).
+
+## Installation from source
+
+[Install Rust](https://www.rust-lang.org/en-US/). Then run the following in your terminal:
+
+```bash
 # Clone the code.
 git clone https://github.com/splintah/game-of-life.git
 # Change your directory to `game-of-life`.
@@ -29,8 +40,6 @@ cd game-of-life
 # Install the binaries.
 cargo install
 ```
-
-This will install `game-of-life-window` and `game-of-life-cli` into `$HOME/.cargo/bin/`, which should be in your `PATH` variable when you have installed Rust via [`rustup`](https://rustup.rs).
 
 ## Usage
 
