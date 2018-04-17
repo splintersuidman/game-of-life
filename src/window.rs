@@ -3,7 +3,7 @@ extern crate game_of_life;
 extern crate piston_window;
 
 use clap::{App, Arg};
-use game_of_life::GameOfLife;
+use game_of_life::{CellState, GameOfLife};
 use piston_window::*;
 
 fn main() {
@@ -73,7 +73,7 @@ fn main() {
 
             for y in 0..game_of_life.board.len() {
                 for x in 0..game_of_life.board[y].len() {
-                    if game_of_life.board[y][x] {
+                    if game_of_life.board[y][x] == CellState::Alive {
                         rectangle(
                             foreground,
                             [
