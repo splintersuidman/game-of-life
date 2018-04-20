@@ -1,8 +1,10 @@
+extern crate ndarray;
 extern crate rand;
 extern crate rayon;
 
 pub mod parsers;
 
+use self::ndarray::prelude::*;
 use self::rand::Rng;
 use self::rayon::prelude::*;
 use std::iter;
@@ -41,7 +43,7 @@ impl ::std::ops::Not for CellState {
 }
 
 pub struct GameOfLife {
-    pub board: Vec<Vec<CellState>>,
+    pub board: Array2<CellState>,
     pub width: usize,
     pub height: usize,
     pub name: Option<String>,
@@ -50,13 +52,8 @@ pub struct GameOfLife {
 impl GameOfLife {
     /// Return a new GameOfLife instance.
     pub fn new(width: usize, height: usize) -> GameOfLife {
-        let board: Vec<Vec<CellState>> = iter::repeat(
-            iter::repeat(CellState::Dead).take(width).collect(),
-        ).take(height)
-            .collect();
-
         GameOfLife {
-            board,
+            board: Array2::from_elem((width, height), CellState::Dead),
             width: width as usize,
             height: height as usize,
             name: None,
@@ -69,9 +66,13 @@ impl GameOfLife {
     pub fn to_string_with_alive(&self, alive: char) -> String {
         let mut s = String::new();
 
-        for row in &self.board {
-            for x in row {
-                s.push(if *x == CellState::Alive { alive } else { ' ' });
+        for y in 0..self.height {
+            for x in 0..self.width {
+                s.push(if self.board[(x, y)] == CellState::Alive {
+                    alive
+                } else {
+                    ' '
+                });
             }
             s.push('\n');
         }
@@ -82,9 +83,7 @@ impl GameOfLife {
     /// Init board with only dead cells.
     /// All alive cells will be killed.
     pub fn init_empty(&mut self) -> &mut Self {
-        self.board = iter::repeat(iter::repeat(CellState::Dead).take(self.width).collect())
-            .take(self.height)
-            .collect();
+        self.board = Array2::from_elem((self.width, self.height), CellState::Dead);
 
         self
     }
@@ -95,20 +94,19 @@ impl GameOfLife {
     pub fn init_randomly(&mut self, chance: u8) -> &mut Self {
         let mut rng = rand::weak_rng();
 
-        self.board.iter_mut().for_each(|row: &mut Vec<CellState>| {
-            row.iter_mut().for_each(|cell| {
-                *cell = (rng.gen::<u8>() > chance).into();
-            });
-        });
+        self.board
+            .iter_mut()
+            .for_each(|cell| *cell = (rng.gen::<u8>() > chance).into());
 
+        // Clear borders.
         for y in 1..self.height - 1 {
-            self.board[y][0] = CellState::Dead;
-            self.board[y][self.width - 1] = CellState::Dead;
+            self.board[(0, y)] = CellState::Dead;
+            self.board[(self.width - 1, y)] = CellState::Dead;
         }
 
         for x in 1..self.width - 1 {
-            self.board[0][x] = CellState::Dead;
-            self.board[self.height - 1][x] = CellState::Dead;
+            self.board[(x, 0)] = CellState::Dead;
+            self.board[(x, self.height - 1)] = CellState::Dead;
         }
 
         self
@@ -133,7 +131,7 @@ impl GameOfLife {
             let y = (y + origin.1 as isize) as usize;
 
             if x > 0 && x < self.width && y > 0 && y < self.height {
-                self.board[y][x] = CellState::Alive;
+                self.board[(x, y)] = CellState::Alive;
             }
         }
 
@@ -157,15 +155,15 @@ impl GameOfLife {
                 let mut number_of_neighbours = 0;
                 for i in -1..1 + 1 {
                     for j in -1..1 + 1 {
-                        let i: usize = (y as isize + i as isize) as usize;
-                        let j: usize = (x as isize + j as isize) as usize;
-                        if self.board[i][j] == CellState::Alive {
+                        let x: usize = (x as isize + j as isize) as usize;
+                        let y: usize = (y as isize + i as isize) as usize;
+                        if self.board[(x, y)] == CellState::Alive {
                             number_of_neighbours += 1;
                         }
                     }
                 }
 
-                if self.board[y][x] == CellState::Alive {
+                if self.board[(x, y)] == CellState::Alive {
                     number_of_neighbours -= 1;
                 }
 
@@ -174,27 +172,18 @@ impl GameOfLife {
         });
 
         // Update cells based on their neighbour count.
-        let width = self.width;
-        self.board
-            .par_iter_mut()
-            .enumerate()
-            .skip(1)
-            .take(self.height - 2)
-            .for_each(|(y, row)| {
-                row.par_iter_mut()
-                    .enumerate()
-                    .skip(1)
-                    .take(width - 2)
-                    .for_each(|(x, cell)| {
-                        let number_of_neighbours = neighbours[y][x];
-                        if *cell == CellState::Alive {
-                            if number_of_neighbours < 2 || number_of_neighbours > 3 {
-                                *cell = CellState::Dead;
-                            }
-                        } else if number_of_neighbours == 3 {
-                            *cell = CellState::Alive;
-                        }
-                    });
-            });
+        for y in 1..self.height - 1 {
+            for x in 1..self.width - 1 {
+                let cell = &mut self.board[(x, y)];
+                let neighbours = neighbours[y][x];
+                if *cell == CellState::Alive {
+                    if neighbours < 2 || neighbours > 3 {
+                        *cell = CellState::Dead;
+                    }
+                } else if neighbours == 3 {
+                    *cell = CellState::Alive;
+                }
+            }
+        }
     }
 }
