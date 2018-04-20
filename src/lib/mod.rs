@@ -94,9 +94,9 @@ impl GameOfLife {
     pub fn init_randomly(&mut self, chance: u8) -> &mut Self {
         let mut rng = rand::weak_rng();
 
-        self.board
-            .iter_mut()
-            .for_each(|cell| *cell = (rng.gen::<u8>() > chance).into());
+        for cell in self.board.iter_mut() {
+            *cell = (rng.gen::<u8>() > chance).into();
+        }
 
         // Clear borders.
         for y in 1..self.height - 1 {
