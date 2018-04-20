@@ -175,25 +175,25 @@ impl Config {
                 Ok(v) => Some(v),
                 Err(_) => None,
             })
-            .unwrap_or(0x000000);
+            .unwrap_or(0x00_00_00);
         let background: u32 = matches
             .value_of("background")
             .and_then(|s| match u32::from_str_radix(&s, 16) {
                 Ok(v) => Some(v),
                 Err(_) => None,
             })
-            .unwrap_or(0xFFFFFF);
+            .unwrap_or(0xFF_FF_FF);
 
         let background = [
-            ((background & 0xFF0000) >> 16) as f32 / 255.0,
-            ((background & 0x00FF00) >> 8) as f32 / 255.0,
-            (background & 0x0000FF) as f32 / 255.0,
+            ((background & 0xFF_00_00) >> 16) as f32 / 255.0,
+            ((background & 0x00_FF_00) >> 8) as f32 / 255.0,
+            (background & 0x00_00_FF) as f32 / 255.0,
             1.,
         ];
         let foreground = [
-            ((foreground & 0xFF0000) >> 16) as f32 / 255.0,
-            ((foreground & 0x00FF00) >> 8) as f32 / 255.0,
-            (foreground & 0x0000FF) as f32 / 255.0,
+            ((foreground & 0xFF_00_00) >> 16) as f32 / 255.0,
+            ((foreground & 0x00_FF_00) >> 8) as f32 / 255.0,
+            (foreground & 0x00_00_FF) as f32 / 255.0,
             1.,
         ];
 

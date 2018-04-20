@@ -21,9 +21,10 @@ impl Into<bool> for CellState {
 
 impl From<bool> for CellState {
     fn from(value: bool) -> Self {
-        match value {
-            true => CellState::Alive,
-            false => CellState::Dead,
+        if value {
+            CellState::Alive
+        } else {
+            CellState::Dead
         }
     }
 }
