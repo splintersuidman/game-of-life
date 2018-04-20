@@ -1,11 +1,10 @@
 extern crate clap;
+extern crate game_of_life;
 extern crate terminal_size;
 
-mod lib;
-
-use lib::GameOfLife;
-use terminal_size::*;
 use clap::{App, Arg};
+use game_of_life::GameOfLife;
+use terminal_size::*;
 
 const ALIVE: char = '*';
 
@@ -88,7 +87,7 @@ impl Config {
         .get_matches();
 
         macro_rules! parse_or_default {
-            ($name: expr, $default: expr) => {
+            ($name:expr, $default:expr) => {
                 matches
                     .value_of($name)
                     .and_then(|s| match s.trim().parse() {

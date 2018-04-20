@@ -4,11 +4,11 @@ name = "game-of-life"
 version = "0.3.0"
 
 [[bin]]
-name = "game-of-life-window"
+name = "gol-win"
 path = "./src/window.rs"
 
 [[bin]]
-name = "game-of-life-cli"
+name = "gol-cli"
 path = "./src/cli.rs"
 
 [lib]
@@ -17,8 +17,7 @@ path = "./src/lib/mod.rs"
 
 [features]
 # This feature is only used for benchmarks since the test crate is unstable.
-bench-gol = []
-bench-parse = []
+bench = []
 
 [dependencies]
 piston_window = "0.77"

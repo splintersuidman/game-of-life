@@ -1,11 +1,10 @@
 extern crate clap;
+extern crate game_of_life;
 extern crate piston_window;
 
-mod lib;
-
-use lib::GameOfLife;
-use piston_window::*;
 use clap::{App, Arg};
+use game_of_life::{CellState, GameOfLife};
+use piston_window::*;
 
 fn main() {
     let config = Config::parse();
@@ -81,7 +80,7 @@ fn main() {
 
             for y in 0..view.cells_on_height {
                 for x in 0..view.cells_on_width {
-                    if game_of_life.board[y + view.y][x + view.x] {
+                    if game_of_life.board[y + view.y][x + view.x] == CellState::Alive {
                         rectangle(
                             config.foreground,
                             [
@@ -286,11 +285,12 @@ impl Config {
         .arg(Arg::with_name("view-border")
             .long("view-border")
             .help("Configures whether the border is visible on your screen.\nDefault: false.")
-            .takes_value(true))
+            .takes_value(true)
+            .possible_values(&["true", "false"]))
         .get_matches();
 
         macro_rules! parse_or_default {
-            ($name: expr, $default: expr) => {
+            ($name:expr, $default:expr) => {
                 matches
                     .value_of($name)
                     .and_then(|s| match s.trim().parse() {

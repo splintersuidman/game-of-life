@@ -1,6 +1,6 @@
-#![cfg_attr(feature = "bench-gol", feature(test))]
+#![cfg_attr(feature = "bench", feature(test))]
 
-#[cfg(all(feature = "bench-gol", test))]
+#[cfg(all(feature = "bench", test))]
 mod benches {
     extern crate game_of_life;
     extern crate test;
@@ -14,12 +14,12 @@ mod benches {
     const TEST_FILE: &str = "./examples/B-52_Bomber_105.life";
 
     #[bench]
-    fn bench_new(b: &mut Bencher) {
+    fn bench_lib_new(b: &mut Bencher) {
         b.iter(|| GameOfLife::new(WIDTH, HEIGHT));
     }
 
     #[bench]
-    fn bench_to_string(b: &mut Bencher) {
+    fn bench_lib_to_string(b: &mut Bencher) {
         let mut gol = GameOfLife::new(WIDTH, HEIGHT);
         gol.init_randomly(CHANCE);
         b.iter(|| {
@@ -28,7 +28,7 @@ mod benches {
     }
 
     #[bench]
-    fn bench_init_empty(b: &mut Bencher) {
+    fn bench_lib_init_empty(b: &mut Bencher) {
         let mut gol = GameOfLife::new(WIDTH, HEIGHT);
 
         b.iter(|| {
@@ -37,7 +37,7 @@ mod benches {
     }
 
     #[bench]
-    fn bench_init_randomly(b: &mut Bencher) {
+    fn bench_lib_init_randomly(b: &mut Bencher) {
         let mut gol = GameOfLife::new(WIDTH, HEIGHT);
 
         b.iter(|| {
@@ -46,7 +46,7 @@ mod benches {
     }
 
     #[bench]
-    fn bench_init_with_file(b: &mut Bencher) {
+    fn bench_lib_init_with_file(b: &mut Bencher) {
         let mut gol = GameOfLife::new(WIDTH, HEIGHT);
 
         b.iter(|| {
@@ -55,7 +55,7 @@ mod benches {
     }
 
     #[bench]
-    fn bench_update(b: &mut Bencher) {
+    fn bench_lib_update(b: &mut Bencher) {
         let mut gol = GameOfLife::new(WIDTH, HEIGHT);
         gol.init_randomly(CHANCE);
 
@@ -64,4 +64,3 @@ mod benches {
         });
     }
 }
-
