@@ -52,7 +52,7 @@ game-of-life emulates John Conway's game of life.
 Press Escape to exit, press Space or a mouse button to reinitialise grid.
 
 USAGE:
-    game-of-life-window [OPTIONS]
+    gol-win [OPTIONS]
 
 FLAGS:
         --help       Prints help information
@@ -66,8 +66,8 @@ OPTIONS:
     -c, --cell-width <cell-width>    Change width of a cell (in pixels).
                                      Default: 10.
     -l, --chance <chance>            Chance for randomly initialising board.
-                                     Example: with '--chance 128' passed, cells will have a 50% chance of living.
-                                     Default: 220.
+                                     Example: with '--chance 50' passed, cells will have a 50% chance of living.
+                                     Default: 15.
     -f, --file <file>                The file that contains the board.
                                      If this flag is passed, the board will be initialised with the board in the given
                                      file.
@@ -94,7 +94,7 @@ game-of-life emulates John Conway's game of life.
 Press ^C to quit.
 
 USAGE:
-    game-of-life-cli [OPTIONS]
+    gol-cli [OPTIONS]
 
 FLAGS:
         --help       Prints help information
@@ -102,8 +102,8 @@ FLAGS:
 
 OPTIONS:
     -l, --chance <chance>    Chance for randomly initialising board.
-                             Example: with '--chance 128' passed, cells will have a 50% chance of living.
-                             Default: 220.
+                             Example: with '--chance 50' passed, cells will have a 50% chance of living.
+                             Default: 15.
     -f, --file <file>        The file that contains the board.
                              If this flag is passed, the board will be initialised with the board in the given file.
                              Default: None.
