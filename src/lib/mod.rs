@@ -29,7 +29,7 @@ impl From<bool> for CellState {
     }
 }
 
-impl ::std::ops::Not for CellState {
+impl std::ops::Not for CellState {
     type Output = Self;
 
     fn not(self) -> Self::Output {
