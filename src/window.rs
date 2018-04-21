@@ -129,7 +129,7 @@ impl Config {
         .arg(Arg::with_name("chance")
             .short("l")
             .long("chance")
-            .help("Chance for randomly initialising board.\nExample: with '--chance 128' passed, cells will have a 50% chance of living.\nDefault: 220.")
+            .help("Chance for randomly initialising board.\nExample: with '--chance 50' passed, cells will have a 50% chance of living.\nDefault: 15.")
             .takes_value(true))
         .arg(Arg::with_name("fps")
             .long("fps")
@@ -165,7 +165,7 @@ impl Config {
         let width: u32 = parse_or_default!("width", 50);
         let height: u32 = parse_or_default!("height", 50);
         let cell_width: u32 = parse_or_default!("cell-width", 10);
-        let chance: u8 = parse_or_default!("chance", 220);
+        let chance: u8 = parse_or_default!("chance", 15);
         let fps: u64 = parse_or_default!("fps", 24);
         let file: Option<String> = matches.value_of("file").and_then(|s| Some(String::from(s)));
 

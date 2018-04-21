@@ -95,20 +95,10 @@ impl GameOfLife {
     pub fn init_randomly(&mut self, chance: u8) -> &mut Self {
         let mut rng = rand::weak_rng();
 
-        self.board.iter_mut().for_each(|row: &mut Vec<CellState>| {
-            row.iter_mut().for_each(|cell| {
-                *cell = (rng.gen::<u8>() > chance).into();
-            });
-        });
-
         for y in 1..self.height - 1 {
-            self.board[y][0] = CellState::Dead;
-            self.board[y][self.width - 1] = CellState::Dead;
-        }
-
-        for x in 1..self.width - 1 {
-            self.board[0][x] = CellState::Dead;
-            self.board[self.height - 1][x] = CellState::Dead;
+            for x in 1..self.width - 1 {
+                self.board[y][x] = (rng.gen::<u8>() % 100 <= chance).into();
+            }
         }
 
         self

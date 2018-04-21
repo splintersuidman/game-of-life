@@ -73,7 +73,7 @@ impl Config {
         .arg(Arg::with_name("chance")
             .short("l")
             .long("chance")
-            .help("Chance for randomly initialising board.\nExample: with '--chance 128' passed, cells will have a 50% chance of living.\nDefault: 220.")
+            .help("Chance for randomly initialising board.\nExample: with '--chance 50' passed, cells will have a 50% chance of living.\nDefault: 15.")
             .takes_value(true))
         .arg(Arg::with_name("sleep")
             .long("sleep")
@@ -100,7 +100,7 @@ impl Config {
 
         let width: u16 = parse_or_default!("width", 50);
         let height: u16 = parse_or_default!("height", 50);
-        let chance: u8 = parse_or_default!("chance", 220);
+        let chance: u8 = parse_or_default!("chance", 15);
         let sleep: u64 = parse_or_default!("sleep", 24);
         let file: Option<String> = matches.value_of("file").and_then(|s| Some(String::from(s)));
 
