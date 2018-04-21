@@ -71,8 +71,8 @@ fn main() {
         window.draw_2d(&e, |c, g| {
             clear(background, g);
 
-            for y in 0..game_of_life.board.len() {
-                for x in 0..game_of_life.board[y].len() {
+            for y in 0..game_of_life.height {
+                for x in 0..game_of_life.width {
                     if game_of_life.board[y][x] == CellState::Alive {
                         rectangle(
                             foreground,

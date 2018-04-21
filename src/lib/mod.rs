@@ -174,27 +174,17 @@ impl GameOfLife {
         });
 
         // Update cells based on their neighbour count.
-        let width = self.width;
-        self.board
-            .par_iter_mut()
-            .enumerate()
-            .skip(1)
-            .take(self.height - 2)
-            .for_each(|(y, row)| {
-                row.par_iter_mut()
-                    .enumerate()
-                    .skip(1)
-                    .take(width - 2)
-                    .for_each(|(x, cell)| {
-                        let number_of_neighbours = neighbours[y][x];
-                        if *cell == CellState::Alive {
-                            if number_of_neighbours < 2 || number_of_neighbours > 3 {
-                                *cell = CellState::Dead;
-                            }
-                        } else if number_of_neighbours == 3 {
-                            *cell = CellState::Alive;
-                        }
-                    });
+        self.board.par_iter_mut().enumerate().for_each(|(y, row)| {
+            row.par_iter_mut().enumerate().for_each(|(x, cell)| {
+                let number_of_neighbours = neighbours[y][x];
+                if *cell == CellState::Alive {
+                    if number_of_neighbours < 2 || number_of_neighbours > 3 {
+                        *cell = CellState::Dead;
+                    }
+                } else if number_of_neighbours == 3 {
+                    *cell = CellState::Alive;
+                }
             });
+        });
     }
 }
