@@ -1,12 +1,11 @@
 extern crate clap;
 extern crate game_of_life;
-extern crate piston_window;
+extern crate glium;
 
 mod view;
 
 use clap::{App, Arg};
 use game_of_life::{CellState, GameOfLife};
-use piston_window::*;
 use view::View;
 
 fn main() {
@@ -29,103 +28,147 @@ fn main() {
     // Create View for managing boards larger than a window
     let mut view = View::from_config(&config);
 
-    view.determine_window_size(600, 600);
+    // view.determine_window_size(600, 600);
 
     // Create window.
-    let mut window: PistonWindow =
-        WindowSettings::new(name, [view.window_width, view.window_height])
-            .exit_on_esc(true)
-            .build()
-            .unwrap();
+    let mut events_loop = glium::glutin::EventsLoop::new();
+    let window = glium::glutin::WindowBuilder::new();
+    let context = glium::glutin::ContextBuilder::new();
+    let display = glium::Display::new(window, context, &events_loop).unwrap();
 
-    // // Get the window
-    // let (screen_width, screen_height): (u32, u32) =
-    //     window.window.window.get_current_monitor().get_dimensions();
+    // Get the window
+    let (screen_width, screen_height): (u32, u32) =
+        display.gl_window().get_current_monitor().get_dimensions();
 
-    // view.determine_window_size(screen_width, screen_height);
-    // window.set_size((view.window_width, view.window_height));
+    view.determine_window_size(screen_width, screen_height);
+    display
+        .gl_window()
+        .set_inner_size(view.window_width, view.window_height);
 
-    window.set_capture_cursor(view.capture_cursor);
+    display
+        .gl_window()
+        .set_cursor_state(glium::glutin::CursorState::Grab);
 
     // Set event loop settings
-    let mut settings = window.get_event_settings();
-    settings.set_ups(0);
-    settings.set_max_fps(config.fps);
-    window.set_event_settings(settings);
+    // let mut settings = window.get_event_settings();
+    // settings.set_ups(0);
+    // settings.set_max_fps(config.fps);
+    // window.set_event_settings(settings);
 
-    // Event loop.
-    while let Some(e) = window.next() {
-        // Key press for resetting grid.
-        if let Some(button) = e.press_args() {
-            use piston_window::Button::{Keyboard, Mouse};
-            use piston_window::Key;
+    // // Event loop.
+    // while let Some(e) = window.next() {
+    //     // Drawing.
+    //     window.draw_2d(&e, |c, g| {
+    //         clear(config.background, g);
 
-            match button {
-                Keyboard(Key::Space) | Mouse(_) => {
-                    if let Some(f) = config.file.clone() {
-                        game_of_life.init_with_file(f).unwrap();
-                    } else {
-                        game_of_life.init_randomly(config.chance);
+    //         for y in 0..view.cells_on_height {
+    //             for x in 0..view.cells_on_width {
+    //                 if game_of_life.board[y + view.y][x + view.x] == CellState::Alive {
+    //                     rectangle(
+    //                         config.foreground,
+    //                         [
+    //                             (x as f64) * view.cell_width,
+    //                             (y as f64) * view.cell_width,
+    //                             view.cell_width,
+    //                             view.cell_width,
+    //                         ],
+    //                         c.transform,
+    //                         g,
+    //                     );
+    //                 } else if config.view_border
+    //                     && (y + view.y == 0
+    //                         || y + view.y + 1 == view.board_height
+    //                         || x + view.x == 0
+    //                         || x + view.x + 1 == view.board_width)
+    //                 {
+    //                     rectangle(
+    //                         [0.5, 0.5, 0.5, 1.0],
+    //                         [
+    //                             (x as f64) * view.cell_width,
+    //                             (y as f64) * view.cell_width,
+    //                             view.cell_width,
+    //                             view.cell_width,
+    //                         ],
+    //                         c.transform,
+    //                         g,
+    //                     );
+    //                 }
+    //             }
+    //         }
+
+    //         game_of_life.update();
+    //     });
+    // }
+
+    let mut closed = false;
+    while !closed {
+        use glium::{glutin, Surface};
+
+        let mut target = display.draw();
+        target.clear_color(0.0, 0.0, 1.0, 1.0);
+        target.finish().unwrap();
+
+        events_loop.poll_events(|ev| match ev {
+            glutin::Event::WindowEvent { event, .. } => match event {
+                glutin::WindowEvent::Closed => {
+                    // window was closed
+                    closed = true;
+                }
+                glutin::WindowEvent::Resized(width, height) => {
+                    // window was resized
+                    view.on_resize(width, height);
+                }
+                glutin::WindowEvent::CursorMoved { position, .. } => {
+                    // mouse moved
+                    view.on_mouse_move(position.0, position.1);
+                }
+                glutin::WindowEvent::MouseInput { state, button, .. } => {
+                    // Left-mouse-button pressed
+                    if state == glutin::ElementState::Pressed && glutin::MouseButton::Left == button
+                    {
+                        // reinitialise board
+                        if let Some(f) = config.file.clone() {
+                            game_of_life.init_with_file(f).unwrap();
+                        } else {
+                            game_of_life.init_randomly(config.chance);
+                        }
                     }
                 }
-                Keyboard(Key::C) => {
-                    view.toggle_capture_cursor();
-                    window.set_capture_cursor(view.capture_cursor);
+                glutin::WindowEvent::KeyboardInput { input, .. } => {
+                    if input.state == glutin::ElementState::Pressed
+                        && input.virtual_keycode.is_some()
+                    {
+                        use glium::glutin::VirtualKeyCode::*;
+
+                        match input.virtual_keycode.unwrap() {
+                            C => {
+                                // Toggle capture_cursor
+                                use glium::glutin::CursorState;
+
+                                view.toggle_capture_cursor();
+                                display
+                                    .gl_window()
+                                    .set_cursor_state(if view.capture_cursor {
+                                        CursorState::Grab
+                                    } else {
+                                        CursorState::Normal
+                                    });
+                            }
+                            Space => {
+                                // reinitialise board
+                                if let Some(f) = config.file.clone() {
+                                    game_of_life.init_with_file(f).unwrap();
+                                } else {
+                                    game_of_life.init_randomly(config.chance);
+                                }
+                            }
+                            _ => (),
+                        }
+                    }
                 }
                 _ => (),
-            }
-        }
-
-        // On window resize
-        e.resize(|width, height| {
-            view.on_resize(width, height);
-        });
-
-        // On mouse movement
-        e.mouse_relative(|x: f64, y: f64| {
-            view.on_mouse_move(x, y);
-        });
-
-        // Drawing.
-        window.draw_2d(&e, |c, g| {
-            clear(config.background, g);
-
-            for y in 0..view.cells_on_height {
-                for x in 0..view.cells_on_width {
-                    if game_of_life.board[y + view.y][x + view.x] == CellState::Alive {
-                        rectangle(
-                            config.foreground,
-                            [
-                                (x as f64) * view.cell_width,
-                                (y as f64) * view.cell_width,
-                                view.cell_width,
-                                view.cell_width,
-                            ],
-                            c.transform,
-                            g,
-                        );
-                    } else if config.view_border
-                        && (y + view.y == 0
-                            || y + view.y + 1 == view.board_height
-                            || x + view.x == 0
-                            || x + view.x + 1 == view.board_width)
-                    {
-                        rectangle(
-                            [0.5, 0.5, 0.5, 1.0],
-                            [
-                                (x as f64) * view.cell_width,
-                                (y as f64) * view.cell_width,
-                                view.cell_width,
-                                view.cell_width,
-                            ],
-                            c.transform,
-                            g,
-                        );
-                    }
-                }
-            }
-
-            game_of_life.update();
+            },
+            _ => (),
         });
     }
 }
