@@ -147,8 +147,8 @@ impl GameOfLife {
                 let mut number_of_neighbours = 0;
                 for i in -1..1 + 1 {
                     for j in -1..1 + 1 {
-                        let i: usize = (y as isize + i as isize) as usize;
-                        let j: usize = (x as isize + j as isize) as usize;
+                        let i: usize = (y as isize + i) as usize;
+                        let j: usize = (x as isize + j) as usize;
                         if self.board[i][j] == CellState::Alive {
                             number_of_neighbours += 1;
                         }
