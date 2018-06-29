@@ -67,7 +67,7 @@ impl GameOfLife {
     /// Allow dead code here, because this function is only used in cli.rs.
     #[allow(dead_code)]
     pub fn to_string_with_alive(&self, alive: char) -> String {
-        let mut s = String::new();
+        let mut s = String::with_capacity((self.width + 1) * self.height);
 
         for row in &self.board {
             for x in row {
