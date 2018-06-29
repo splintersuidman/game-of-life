@@ -6,8 +6,8 @@ mod view;
 
 use clap::{App, Arg};
 use game_of_life::{CellState, GameOfLife};
-use view::View;
 use piston_window::*;
+use view::View;
 
 fn main() {
     let config = Config::parse();
@@ -29,12 +29,21 @@ fn main() {
     // Create View for managing boards larger than a window
     let mut view = View::from_config(&config);
 
+    view.determine_window_size(600, 600);
+
     // Create window.
     let mut window: PistonWindow =
         WindowSettings::new(name, [view.window_width, view.window_height])
             .exit_on_esc(true)
             .build()
             .unwrap();
+
+    // // Get the window
+    // let (screen_width, screen_height): (u32, u32) =
+    //     window.window.window.get_current_monitor().get_dimensions();
+
+    // view.determine_window_size(screen_width, screen_height);
+    // window.set_size((view.window_width, view.window_height));
 
     window.set_capture_cursor(view.capture_cursor);
 
@@ -95,7 +104,12 @@ fn main() {
                             c.transform,
                             g,
                         );
-                    } else if config.view_border && (y + view.y == 0 || y + view.y + 1 == view.board_height || x + view.x == 0 || x + view.x + 1 == view.board_width) {
+                    } else if config.view_border
+                        && (y + view.y == 0
+                            || y + view.y + 1 == view.board_height
+                            || x + view.x == 0
+                            || x + view.x + 1 == view.board_width)
+                    {
                         rectangle(
                             [0.5, 0.5, 0.5, 1.0],
                             [

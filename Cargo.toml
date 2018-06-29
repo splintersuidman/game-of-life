@@ -20,7 +20,7 @@ path = "./src/lib/mod.rs"
 bench = []
 
 [dependencies]
-piston_window = "0.77"
+piston_window = "0.80"
 rand = "0.4"
 terminal_size = "0.1.7"
 rayon = "1.0"
