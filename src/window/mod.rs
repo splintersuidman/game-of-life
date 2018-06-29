@@ -166,7 +166,7 @@ impl Config {
         .arg(Arg::with_name("chance")
             .short("l")
             .long("chance")
-            .help("Chance for randomly initialising board.\nExample: with '--chance 128' passed, cells will have a 50% chance of living.\nDefault: 220.")
+            .help("Chance for randomly initialising board.\nExample: with '--chance 50' passed, cells will have a 50% chance of living.\nDefault: 15.")
             .takes_value(true))
         .arg(Arg::with_name("fps")
             .long("fps")
@@ -207,7 +207,7 @@ impl Config {
         let width: u32 = parse_or_default!("width", 50);
         let height: u32 = parse_or_default!("height", 50);
         let cell_width: u32 = parse_or_default!("cell-width", 10);
-        let chance: u8 = parse_or_default!("chance", 220);
+        let chance: u8 = parse_or_default!("chance", 15);
         let fps: u64 = parse_or_default!("fps", 24);
         let file: Option<String> = matches.value_of("file").and_then(|s| Some(String::from(s)));
 
@@ -217,25 +217,25 @@ impl Config {
                 Ok(v) => Some(v),
                 Err(_) => None,
             })
-            .unwrap_or(0x000000);
+            .unwrap_or(0x00_00_00);
         let background: u32 = matches
             .value_of("background")
             .and_then(|s| match u32::from_str_radix(&s, 16) {
                 Ok(v) => Some(v),
                 Err(_) => None,
             })
-            .unwrap_or(0xFFFFFF);
+            .unwrap_or(0xFF_FF_FF);
 
         let background = [
-            ((background & 0xFF0000) >> 16) as f32 / 255.0,
-            ((background & 0x00FF00) >> 8) as f32 / 255.0,
-            (background & 0x0000FF) as f32 / 255.0,
+            ((background & 0xFF_00_00) >> 16) as f32 / 255.0,
+            ((background & 0x00_FF_00) >> 8) as f32 / 255.0,
+            (background & 0x00_00_FF) as f32 / 255.0,
             1.,
         ];
         let foreground = [
-            ((foreground & 0xFF0000) >> 16) as f32 / 255.0,
-            ((foreground & 0x00FF00) >> 8) as f32 / 255.0,
-            (foreground & 0x0000FF) as f32 / 255.0,
+            ((foreground & 0xFF_00_00) >> 16) as f32 / 255.0,
+            ((foreground & 0x00_FF_00) >> 8) as f32 / 255.0,
+            (foreground & 0x00_00_FF) as f32 / 255.0,
             1.,
         ];
 

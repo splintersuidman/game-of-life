@@ -21,14 +21,15 @@ impl Into<bool> for CellState {
 
 impl From<bool> for CellState {
     fn from(value: bool) -> Self {
-        match value {
-            true => CellState::Alive,
-            false => CellState::Dead,
+        if value {
+            CellState::Alive
+        } else {
+            CellState::Dead
         }
     }
 }
 
-impl ::std::ops::Not for CellState {
+impl std::ops::Not for CellState {
     type Output = Self;
 
     fn not(self) -> Self::Output {
@@ -94,20 +95,10 @@ impl GameOfLife {
     pub fn init_randomly(&mut self, chance: u8) -> &mut Self {
         let mut rng = rand::weak_rng();
 
-        self.board.iter_mut().for_each(|row: &mut Vec<CellState>| {
-            row.iter_mut().for_each(|cell| {
-                *cell = (rng.gen::<u8>() > chance).into();
-            });
-        });
-
-        for y in 0..self.height {
-            self.board[y][0] = CellState::Dead;
-            self.board[y][self.width - 1] = CellState::Dead;
-        }
-
-        for x in 0..self.width {
-            self.board[0][x] = CellState::Dead;
-            self.board[self.height - 1][x] = CellState::Dead;
+        for y in 1..self.height - 1 {
+            for x in 1..self.width - 1 {
+                self.board[y][x] = (rng.gen::<u8>() % 100 <= chance).into();
+            }
         }
 
         self
@@ -156,8 +147,8 @@ impl GameOfLife {
                 let mut number_of_neighbours = 0;
                 for i in -1..1 + 1 {
                     for j in -1..1 + 1 {
-                        let i: usize = (y as isize + i as isize) as usize;
-                        let j: usize = (x as isize + j as isize) as usize;
+                        let i: usize = (y as isize + i) as usize;
+                        let j: usize = (x as isize + j) as usize;
                         if self.board[i][j] == CellState::Alive {
                             number_of_neighbours += 1;
                         }
@@ -173,27 +164,17 @@ impl GameOfLife {
         });
 
         // Update cells based on their neighbour count.
-        let width = self.width;
-        self.board
-            .par_iter_mut()
-            .enumerate()
-            .skip(1)
-            .take(self.height - 2)
-            .for_each(|(y, row)| {
-                row.par_iter_mut()
-                    .enumerate()
-                    .skip(1)
-                    .take(width - 2)
-                    .for_each(|(x, cell)| {
-                        let number_of_neighbours = neighbours[y][x];
-                        if *cell == CellState::Alive {
-                            if number_of_neighbours < 2 || number_of_neighbours > 3 {
-                                *cell = CellState::Dead;
-                            }
-                        } else if number_of_neighbours == 3 {
-                            *cell = CellState::Alive;
-                        }
-                    });
+        self.board.par_iter_mut().enumerate().for_each(|(y, row)| {
+            row.par_iter_mut().enumerate().for_each(|(x, cell)| {
+                let number_of_neighbours = neighbours[y][x];
+                if *cell == CellState::Alive {
+                    if number_of_neighbours < 2 || number_of_neighbours > 3 {
+                        *cell = CellState::Dead;
+                    }
+                } else if number_of_neighbours == 3 {
+                    *cell = CellState::Alive;
+                }
             });
+        });
     }
 }
