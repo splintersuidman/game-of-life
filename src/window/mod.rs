@@ -2,28 +2,22 @@ extern crate clap;
 extern crate game_of_life;
 extern crate piston_window;
 
+mod view;
+
 use clap::{App, Arg};
 use game_of_life::{CellState, GameOfLife};
 use piston_window::*;
+use view::View;
 
 fn main() {
-    let Config {
-        width,
-        height,
-        cell_width,
-        chance,
-        fps,
-        file,
-        foreground,
-        background,
-    } = Config::parse();
+    let config = Config::parse();
 
-    let mut game_of_life = GameOfLife::new(width as usize, height as usize);
+    let mut game_of_life = GameOfLife::new(config.width as usize, config.height as usize);
 
-    if let Some(f) = file.clone() {
+    if let Some(f) = config.file.clone() {
         game_of_life.init_with_file(f).unwrap();
     } else {
-        game_of_life.init_randomly(chance);
+        game_of_life.init_randomly(config.chance);
     }
 
     let name = if let Some(ref n) = game_of_life.name {
@@ -32,21 +26,32 @@ fn main() {
         String::from("Game of Life")
     };
 
+    // Create View for managing boards larger than a window
+    let mut view = View::from_config(&config);
+
+    view.determine_window_size(600, 600);
+
     // Create window.
     let mut window: PistonWindow =
-        WindowSettings::new(name, [width * cell_width, height * cell_width])
+        WindowSettings::new(name, [view.window_width, view.window_height])
             .exit_on_esc(true)
             .build()
             .unwrap();
 
+    // // Get the window
+    // let (screen_width, screen_height): (u32, u32) =
+    //     window.window.window.get_current_monitor().get_dimensions();
+
+    // view.determine_window_size(screen_width, screen_height);
+    // window.set_size((view.window_width, view.window_height));
+
+    window.set_capture_cursor(view.capture_cursor);
+
     // Set event loop settings
     let mut settings = window.get_event_settings();
     settings.set_ups(0);
-    settings.set_max_fps(fps);
+    settings.set_max_fps(config.fps);
     window.set_event_settings(settings);
-
-    // Convert cell_width to f64.
-    let cell_width = f64::from(cell_width);
 
     // Event loop.
     while let Some(e) = window.next() {
@@ -57,30 +62,61 @@ fn main() {
 
             match button {
                 Keyboard(Key::Space) | Mouse(_) => {
-                    if let Some(f) = file.clone() {
+                    if let Some(f) = config.file.clone() {
                         game_of_life.init_with_file(f).unwrap();
                     } else {
-                        game_of_life.init_randomly(chance);
+                        game_of_life.init_randomly(config.chance);
                     }
+                }
+                Keyboard(Key::C) => {
+                    view.toggle_capture_cursor();
+                    window.set_capture_cursor(view.capture_cursor);
                 }
                 _ => (),
             }
         }
 
+        // On window resize
+        e.resize(|width, height| {
+            view.on_resize(width, height);
+        });
+
+        // On mouse movement
+        e.mouse_relative(|x: f64, y: f64| {
+            view.on_mouse_move(x, y);
+        });
+
         // Drawing.
         window.draw_2d(&e, |c, g| {
-            clear(background, g);
+            clear(config.background, g);
 
-            for y in 0..game_of_life.height {
-                for x in 0..game_of_life.width {
-                    if game_of_life.board[y][x] == CellState::Alive {
+            for y in 0..view.cells_on_height {
+                for x in 0..view.cells_on_width {
+                    if game_of_life.board[y + view.y][x + view.x] == CellState::Alive {
                         rectangle(
-                            foreground,
+                            config.foreground,
                             [
-                                (x as f64) * cell_width,
-                                (y as f64) * cell_width,
-                                cell_width,
-                                cell_width,
+                                (x as f64) * view.cell_width,
+                                (y as f64) * view.cell_width,
+                                view.cell_width,
+                                view.cell_width,
+                            ],
+                            c.transform,
+                            g,
+                        );
+                    } else if config.view_border
+                        && (y + view.y == 0
+                            || y + view.y + 1 == view.board_height
+                            || x + view.x == 0
+                            || x + view.x + 1 == view.board_width)
+                    {
+                        rectangle(
+                            [0.5, 0.5, 0.5, 1.0],
+                            [
+                                (x as f64) * view.cell_width,
+                                (y as f64) * view.cell_width,
+                                view.cell_width,
+                                view.cell_width,
                             ],
                             c.transform,
                             g,
@@ -94,7 +130,7 @@ fn main() {
     }
 }
 
-struct Config {
+pub struct Config {
     pub width: u32,
     pub height: u32,
     pub cell_width: u32,
@@ -103,6 +139,7 @@ struct Config {
     pub file: Option<String>,
     pub foreground: [f32; 4],
     pub background: [f32; 4],
+    pub view_border: bool,
 }
 
 impl Config {
@@ -110,7 +147,7 @@ impl Config {
         let matches = App::new("game-of-life")
         .version("0.3.0")
         .author("Splinter Suidman")
-        .about("game-of-life emulates John Conway's game of life.\nPress Escape to exit, press Space or a mouse button to reinitialise grid.")
+        .about("game-of-life emulates John Conway's game of life.\nPress Escape to exit, press C to toggle cursor capture and press Space or a mouse button to reinitialise grid.")
         .arg(Arg::with_name("width")
             .short("w")
             .long("width")
@@ -148,6 +185,11 @@ impl Config {
             .long("background")
             .help("Change the background colour.\nThe colour should be passed as a hexidecimal RGB colour, example: FFFFFF for white, 000000 for black.\nDefault: FFFFFF.")
             .takes_value(true))
+        .arg(Arg::with_name("view-border")
+            .long("view-border")
+            .help("Configures whether the border is visible on your screen.\nDefault: false.")
+            .takes_value(true)
+            .possible_values(&["true", "false"]))
         .get_matches();
 
         macro_rules! parse_or_default {
@@ -197,6 +239,8 @@ impl Config {
             1.,
         ];
 
+        let view_border: bool = parse_or_default!("view-border", false);
+
         Config {
             width,
             height,
@@ -206,6 +250,7 @@ impl Config {
             file,
             foreground,
             background,
+            view_border,
         }
     }
 }
