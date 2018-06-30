@@ -55,9 +55,9 @@ impl Config {
             .long("background")
             .help("Change the background colour.\nThe colour should be passed as a hexidecimal RGB colour, example: FFFFFF for white, 000000 for black.\nDefault: FFFFFF.")
             .takes_value(true))
-        .arg(Arg::with_name("view-border")
-            .long("view-border")
-            .help("Configures whether the border is visible on your screen.\nDefault: false.")
+        .arg(Arg::with_name("border")
+            .long("border")
+            .help("Display the border.")
             .takes_value(false))
         .get_matches();
 
