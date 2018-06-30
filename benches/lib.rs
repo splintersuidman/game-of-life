@@ -19,15 +19,6 @@ mod benches {
     }
 
     #[bench]
-    fn bench_lib_to_string(b: &mut Bencher) {
-        let mut gol = GameOfLife::new(WIDTH, HEIGHT);
-        gol.init_randomly(CHANCE);
-        b.iter(|| {
-            gol.to_string_with_alive('*');
-        });
-    }
-
-    #[bench]
     fn bench_lib_init_empty(b: &mut Bencher) {
         let mut gol = GameOfLife::new(WIDTH, HEIGHT);
 

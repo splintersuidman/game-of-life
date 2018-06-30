@@ -176,20 +176,16 @@ impl GraphicsContext {
         unsafe {
             gl::UseProgram(self.shader_program);
 
-            let scale_square = gl::GetUniformLocation(
-                self.shader_program,
-                CString::new("scale").unwrap().as_ptr(),
-            );
+            let scale_str = CString::new("scale").unwrap();
+            let translate_str = CString::new("translate").unwrap();
+            let color_str = CString::new("color").unwrap();
+
+            let scale_square = gl::GetUniformLocation(self.shader_program, scale_str.as_ptr());
             gl::UniformMatrix4fv(scale_square, 1, gl::FALSE, scale.as_ptr());
-            let translate_square = gl::GetUniformLocation(
-                self.shader_program,
-                CString::new("translate").unwrap().as_ptr(),
-            );
+            let translate_square =
+                gl::GetUniformLocation(self.shader_program, translate_str.as_ptr());
             gl::UniformMatrix4fv(translate_square, 1, gl::FALSE, translate.as_ptr());
-            let color_square = gl::GetUniformLocation(
-                self.shader_program,
-                CString::new("color").unwrap().as_ptr(),
-            );
+            let color_square = gl::GetUniformLocation(self.shader_program, color_str.as_ptr());
             gl::Uniform4f(color_square, color[0], color[1], color[2], color[3]);
 
             gl::BindVertexArray(self.vao);

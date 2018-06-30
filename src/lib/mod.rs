@@ -3,8 +3,9 @@ extern crate rayon;
 
 pub mod parsers;
 
-use self::rand::Rng;
 use self::rayon::prelude::*;
+use rand::rngs::SmallRng;
+use rand::{FromEntropy, Rng};
 use std::iter;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -63,22 +64,6 @@ impl GameOfLife {
         }
     }
 
-    /// Convert board to a String.
-    /// Allow dead code here, because this function is only used in cli.rs.
-    #[allow(dead_code)]
-    pub fn to_string_with_alive(&self, alive: char) -> String {
-        let mut s = String::with_capacity((self.width + 1) * self.height);
-
-        for row in &self.board {
-            for x in row {
-                s.push(if *x == CellState::Alive { alive } else { ' ' });
-            }
-            s.push('\n');
-        }
-
-        s
-    }
-
     /// Init board with only dead cells.
     /// All alive cells will be killed.
     pub fn init_empty(&mut self) -> &mut Self {
@@ -93,7 +78,7 @@ impl GameOfLife {
     /// A random u8 will be picked, and if it is greater than `chance`, the current cell will be
     /// alive.
     pub fn init_randomly(&mut self, chance: u8) -> &mut Self {
-        let mut rng = rand::weak_rng();
+        let mut rng = SmallRng::from_entropy();
 
         for y in 1..self.height - 1 {
             for x in 1..self.width - 1 {

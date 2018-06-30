@@ -28,11 +28,11 @@ impl View {
     }
 
     pub fn gl_cell_width(&self) -> f32 {
-        return self.cell_width / self.window_width as f32 * 2.0;
+        self.cell_width / self.window_width as f32 * 2.0
     }
 
     pub fn gl_cell_height(&self) -> f32 {
-        return self.cell_width / self.window_height as f32 * 2.0;
+        self.cell_width / self.window_height as f32 * 2.0
     }
 
     pub fn determine_window_size(&mut self, screen_width: f32, screen_height: f32) {
@@ -63,7 +63,7 @@ impl View {
         let board_height = config.height as usize;
 
         let base_cell_width: f32 = config.cell_width as f32;
-        let cell_width = base_cell_width.clone();
+        let cell_width = base_cell_width;
 
         let window_width = 0.0;
         let window_height = 0.0;
