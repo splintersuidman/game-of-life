@@ -18,8 +18,8 @@ pub struct View {
     pub board_width: usize,
     pub board_height: usize,
 
-    pub window_width: f64,
-    pub window_height: f64,
+    pub window_width: f32,
+    pub window_height: f32,
 }
 
 impl View {
@@ -35,16 +35,16 @@ impl View {
         return self.cell_width / self.window_height as f32 * 2.0;
     }
 
-    pub fn determine_window_size(&mut self, screen_width: f64, screen_height: f64) {
-        self.window_width = if self.board_width as f64 * self.cell_width > screen_width as f64 {
+    pub fn determine_window_size(&mut self, screen_width: f32, screen_height: f32) {
+        self.window_width = if self.board_width as f32 * self.cell_width > screen_width {
             screen_width
         } else {
-            (self.board_width as f64 * self.cell_width)
+            (self.board_width as f32 * self.cell_width)
         };
-        self.window_height = if self.board_height as f32 * self.cell_width > screen_height as f32 {
+        self.window_height = if self.board_height as f32 * self.cell_width > screen_height {
             screen_height
         } else {
-            (self.board_height as f64 * self.cell_width)
+            (self.board_height as f32 * self.cell_width)
         };
 
         let (width, height) = (self.window_width, self.window_height);
@@ -88,7 +88,7 @@ impl View {
         }
     }
 
-    pub fn on_resize(&mut self, width: f64, height: f64) {
+    pub fn on_resize(&mut self, width: f32, height: f32) {
         self.window_width = width;
         self.window_height = height;
 
@@ -99,13 +99,13 @@ impl View {
         self.cells_on_height = (self.window_height / self.cell_width) as usize;
 
         if self.cells_on_width > self.board_width {
-            self.cell_width = self.window_width / self.board_width as f64;
+            self.cell_width = self.window_width / self.board_width as f32;
             self.cells_on_width = (self.window_width / self.cell_width) as usize;
             self.cells_on_height = (self.window_height / self.cell_width) as usize;
         }
 
         if self.cells_on_height > self.board_height {
-            self.cell_width = self.window_height / self.board_height as f64;
+            self.cell_width = self.window_height / self.board_height as f32;
             self.cells_on_height = (self.window_height / self.cell_width) as usize;
         }
 

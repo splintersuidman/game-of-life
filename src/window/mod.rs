@@ -57,8 +57,11 @@ fn main() {
     let size = gl_window.get_current_monitor().get_dimensions();
     let (screen_width, screen_height) = (size.width, size.height);
 
-    view.determine_window_size(screen_width, screen_height);
-    gl_window.set_inner_size(LogicalSize::new(view.window_width, view.window_height));
+    view.determine_window_size(screen_width as f32, screen_height as f32);
+    gl_window.set_inner_size(LogicalSize::new(
+        view.window_width as f64,
+        view.window_height as f64,
+    ));
 
     // TODO: set_cursor_state alternative.
     // gl_window.set_cursor_state(glutin::CursorState::Grab);
@@ -79,7 +82,7 @@ fn main() {
                 }
                 glutin::WindowEvent::Resized(size) => {
                     // window was resized
-                    view.on_resize(size.width, size.height);
+                    view.on_resize(size.width as f32, size.height as f32);
                 }
                 glutin::WindowEvent::CursorMoved { position, .. } => {
                     // mouse moved
