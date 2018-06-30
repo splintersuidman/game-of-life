@@ -145,10 +145,12 @@ fn main() {
             config.background[3],
         );
 
-        graphics_context.draw_square_with_scale_translation(
-            Matrix4::from_scale(0.5),
-            Matrix4::from_translation(Vector3::<f32>::new(-0.5, 0.5, 0.0)),
-        );
+        // graphics_context.draw_square_with_scale_translation(
+        //     Matrix4::from_scale(0.5),
+        //     Matrix4::from_translation(Vector3::<f32>::new(-0.5, 0.5, 0.0)),
+        // );
+
+        render::render(&config, &view, &game_of_life.board, &graphics_context);
 
         gl_window.swap_buffers().unwrap();
 

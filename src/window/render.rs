@@ -1,3 +1,6 @@
+use super::cgmath::{Matrix4, Vector3};
+use super::graphics_context::GraphicsContext;
+
 /// coordinates on the opengl field, ranging from -1 to 1
 pub struct Coordinate {
     x: f32,
@@ -10,8 +13,19 @@ pub struct Square {
 }
 
 impl Square {
-    pub fn draw(&self) {
-        unimplemented!();
+    pub fn draw(&self, graphics_context: &GraphicsContext) {
+        let width = self.coordinates[1].x - self.coordinates[0].x;
+        let height = self.coordinates[0].y - self.coordinates[2].y;
+        let scale = Matrix4::from_nonuniform_scale(width / 2.0, height / 2.0, 1.0);
+        let translate = Matrix4::from_translation(Vector3::<f32>::new(
+            self.coordinates[0].x + width / 2.0,
+            self.coordinates[2].y + height / 2.0,
+            0.0,
+        ));
+        // let translate = Matrix4::from_nonuniform_scale(
+        // );
+        graphics_context.draw_square_with_scale_translation(scale, translate);
+        // unimplemented!();
     }
 
     /// Calculates the coordinates from the top-left corner, the width and the height
@@ -55,17 +69,16 @@ pub fn clear_screen(color: [f32; 4]) {
 pub fn render(
     config: &super::Config,
     view: &super::View,
-    board: Vec<Vec<super::game_of_life::CellState>>,
-    alive_color: [f32; 4],
-    dead_color: [f32; 4],
+    board: &Vec<Vec<super::game_of_life::CellState>>,
+    graphics_context: &GraphicsContext,
 ) {
-    clear_screen(dead_color);
+    clear_screen(config.background);
 
     for board_y in 0..view.cells_on_height {
         for board_x in 0..view.cells_on_width {
             if board[board_y + view.y][board_x + view.x] == super::game_of_life::CellState::Alive {
-                let square = Square::simple(view, board_x, board_y, alive_color);
-                square.draw();
+                let square = Square::simple(view, board_x, board_y, config.foreground);
+                square.draw(graphics_context);
             } else if config.view_border
                 && (board_y + view.y == 0
                     || board_y + view.y + 1 == view.board_height
@@ -73,7 +86,7 @@ pub fn render(
                     || board_x + view.x + 1 == view.board_width)
             {
                 let square = Square::simple(view, board_x, board_y, [0.5, 0.5, 0.5, 1.0]);
-                square.draw();
+                square.draw(graphics_context);
             }
         }
     }
