@@ -92,15 +92,12 @@ fn main() {
                     view.on_resize(size.width as f32, size.height as f32);
                     let dpi_factor = gl_window.get_hidpi_factor();
                     gl_window.resize(size.to_physical(dpi_factor));
-
-                    // TODO: set viewport.
-                    // unsafe { gl::Viewport(0, 0, size.width as i32, size.height as i32) };
                 }
                 glutin::WindowEvent::MouseInput { state, button, .. } => {
                     // Left-mouse-button pressed.
                     if state == glutin::ElementState::Pressed && glutin::MouseButton::Left == button
                     {
-                        // reinitialise board
+                        // Reinitialise board.
                         if let Some(f) = config.file.clone() {
                             game_of_life.init_with_file(f).unwrap();
                         } else {
@@ -128,7 +125,7 @@ fn main() {
                                 }
                             }
                             F => {
-                                // ctrl-cmd F
+                                // Use ctrl-cmd F for fullscreen.
                                 if input.modifiers.ctrl && input.modifiers.logo {
                                     let monitor_id = gl_window.get_current_monitor();
                                     let size = monitor_id.get_dimensions();

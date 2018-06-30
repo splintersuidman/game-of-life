@@ -8,26 +8,9 @@ use std::ffi::{CStr, CString};
 use std::mem;
 use std::os::raw::c_void;
 use std::ptr;
-use std::str;
 
-const VERTEX_SHADER_SOURCE: &str = r#"
-    #version 330 core
-    layout (location = 0) in vec3 position;
-    uniform mat4 scale;
-    uniform mat4 translate;
-    void main() {
-       gl_Position = translate * scale * vec4(position, 1.0);
-    }
-"#;
-
-const FRAGMENT_SHADER_SOURCE: &str = r#"
-    #version 330 core
-    uniform vec4 color;
-    out vec4 fragment_color;
-    void main() {
-       fragment_color = color;
-    }
-"#;
+const VERTEX_SHADER_SOURCE: &[u8] = include_bytes!("./shaders/cell.vs");
+const FRAGMENT_SHADER_SOURCE: &[u8] = include_bytes!("./shaders/cell.fs");
 
 pub struct GraphicsContext {
     shader_program: GLuint,
@@ -51,7 +34,7 @@ impl GraphicsContext {
             let mut info_log = Vec::with_capacity(512);
 
             let vertex_shader = gl::CreateShader(gl::VERTEX_SHADER);
-            let c_str_vert = CString::new(VERTEX_SHADER_SOURCE.as_bytes()).unwrap();
+            let c_str_vert = CString::new(VERTEX_SHADER_SOURCE).unwrap();
             gl::ShaderSource(vertex_shader, 1, &c_str_vert.as_ptr(), ptr::null());
             gl::CompileShader(vertex_shader);
 
@@ -71,7 +54,7 @@ impl GraphicsContext {
             }
 
             let fragment_shader = gl::CreateShader(gl::FRAGMENT_SHADER);
-            let c_str_frag = CString::new(FRAGMENT_SHADER_SOURCE.as_bytes()).unwrap();
+            let c_str_frag = CString::new(FRAGMENT_SHADER_SOURCE).unwrap();
             gl::ShaderSource(fragment_shader, 1, &c_str_frag.as_ptr(), ptr::null());
             gl::CompileShader(fragment_shader);
             gl::GetShaderiv(fragment_shader, gl::COMPILE_STATUS, &mut success);
