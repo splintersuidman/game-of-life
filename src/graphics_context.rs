@@ -167,7 +167,7 @@ impl GraphicsContext {
         }
     }
 
-    pub fn draw_square_with_scale_translation(
+    pub fn draw_square_with_scale_translation_color(
         &self,
         scale: Matrix4<f32>,
         translate: Matrix4<f32>,
