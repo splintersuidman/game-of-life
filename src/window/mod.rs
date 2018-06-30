@@ -87,6 +87,8 @@ fn main() {
                 glutin::WindowEvent::Resized(size) => {
                     // Window was resized.
                     view.on_resize(size.width as f32, size.height as f32);
+                    // TODO: set viewport.
+                    // unsafe { gl::Viewport(0, 0, size.width as i32, size.height as i32) };
                 }
                 glutin::WindowEvent::MouseInput { state, button, .. } => {
                     // Left-mouse-button pressed.
