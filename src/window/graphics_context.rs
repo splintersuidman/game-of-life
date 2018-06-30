@@ -2,8 +2,7 @@ use super::gl;
 use super::gl::types::*;
 
 use super::cgmath::prelude::*;
-use super::cgmath::{vec3, Matrix4, Rad, Vector3};
-use super::glutin::dpi::*;
+use super::cgmath::Matrix4;
 use super::glutin::{GlContext, GlWindow};
 use std::ffi::CString;
 use std::mem;
