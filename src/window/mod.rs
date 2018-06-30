@@ -2,6 +2,7 @@ extern crate clap;
 extern crate game_of_life;
 extern crate glium;
 
+mod render;
 mod view;
 
 use clap::{App, Arg};

@@ -1,8 +1,8 @@
 use super::Config;
 
 pub struct View {
-    pub cell_width: f64,
-    base_cell_width: f64,
+    pub cell_width: f32,
+    base_cell_width: f32,
 
     pub y: usize,
     pub x: usize,
@@ -27,24 +27,24 @@ impl View {
         self.capture_cursor = !self.capture_cursor;
     }
 
-    pub fn gl_cell_width(&self) -> f64 {
-        return self.cell_width / self.window_width as f64 * 2.0;
+    pub fn gl_cell_width(&self) -> f32 {
+        return self.cell_width / self.window_width as f32 * 2.0;
     }
 
-    pub fn gl_cell_height(&self) -> f64 {
-        return self.cell_width / self.window_height as f64 * 2.0;
+    pub fn gl_cell_height(&self) -> f32 {
+        return self.cell_width / self.window_height as f32 * 2.0;
     }
 
     pub fn determine_window_size(&mut self, screen_width: u32, screen_height: u32) {
-        self.window_width = if self.board_width as f64 * self.cell_width > screen_width as f64 {
+        self.window_width = if self.board_width as f32 * self.cell_width > screen_width as f32 {
             screen_width
         } else {
-            (self.board_width as f64 * self.cell_width) as u32
+            (self.board_width as f32 * self.cell_width) as u32
         };
-        self.window_height = if self.board_height as f64 * self.cell_width > screen_height as f64 {
+        self.window_height = if self.board_height as f32 * self.cell_width > screen_height as f32 {
             screen_height
         } else {
-            (self.board_height as f64 * self.cell_width) as u32
+            (self.board_height as f32 * self.cell_width) as u32
         };
 
         let (width, height) = (self.window_width, self.window_height);
@@ -56,14 +56,14 @@ impl View {
         let board_width = config.width as usize;
         let board_height = config.height as usize;
 
-        let base_cell_width: f64 = config.cell_width.into();
+        let base_cell_width: f32 = config.cell_width as f32;
         let cell_width = base_cell_width.clone();
 
         let window_width = 0;
         let window_height = 0;
 
-        let cells_on_width = (window_width as f64 / cell_width) as usize;
-        let cells_on_height = (window_height as f64 / cell_width) as usize;
+        let cells_on_width = (window_width as f32 / cell_width) as usize;
+        let cells_on_height = (window_height as f32 / cell_width) as usize;
 
         Self {
             y: 0,
@@ -95,18 +95,18 @@ impl View {
         // reset to the base cell width
         self.cell_width = self.base_cell_width;
 
-        self.cells_on_width = (self.window_width as f64 / self.cell_width) as usize;
-        self.cells_on_height = (self.window_height as f64 / self.cell_width) as usize;
+        self.cells_on_width = (self.window_width as f32 / self.cell_width) as usize;
+        self.cells_on_height = (self.window_height as f32 / self.cell_width) as usize;
 
         if self.cells_on_width > self.board_width {
-            self.cell_width = self.window_width as f64 / self.board_width as f64;
-            self.cells_on_width = (self.window_width as f64 / self.cell_width) as usize;
-            self.cells_on_height = (self.window_height as f64 / self.cell_width) as usize;
+            self.cell_width = self.window_width as f32 / self.board_width as f32;
+            self.cells_on_width = (self.window_width as f32 / self.cell_width) as usize;
+            self.cells_on_height = (self.window_height as f32 / self.cell_width) as usize;
         }
 
         if self.cells_on_height > self.board_height {
-            self.cell_width = self.window_height as f64 / self.board_height as f64;
-            self.cells_on_height = (self.window_height as f64 / self.cell_width) as usize;
+            self.cell_width = self.window_height as f32 / self.board_height as f32;
+            self.cells_on_height = (self.window_height as f32 / self.cell_width) as usize;
         }
 
         // trigger function to check for moving outside of the board
