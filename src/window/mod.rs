@@ -57,27 +57,13 @@ fn main() {
     let size = gl_window.get_current_monitor().get_dimensions();
     let (screen_width, screen_height) = (size.width, size.height);
 
-    println!(
-        "Screen: width = {}px, height = {}px",
-        screen_width, screen_height
-    );
-
     view.determine_window_size(screen_width as f32, screen_height as f32);
     gl_window.set_inner_size(LogicalSize::new(
         view.window_width as f64,
         view.window_height as f64,
     ));
 
-    // view.info();
-
     // TODO: grab cursor if board_width * cell_width > window_width.
-    // gl_window.set_cursor_state(glutin::CursorState::Grab);
-
-    // Set event loop settings
-    // let mut settings = window.get_event_settings();
-    // settings.set_ups(0);
-    // settings.set_max_fps(config.fps);
-    // window.set_event_settings(settings);
 
     let mut closed = false;
     while !closed {
