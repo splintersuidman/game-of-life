@@ -49,17 +49,14 @@ fn main() {
     }
 
     // Get the window
-    // let (screen_width, screen_height): (u32, u32) =
-    //     display.gl_window().get_current_monitor().get_dimensions();
+    let size = gl_window.get_current_monitor().get_dimensions();
+    let (screen_width, screen_height) = (size.width, size.height);
 
-    // view.determine_window_size(screen_width, screen_height);
-    // display
-    //     .gl_window()
-    //     .set_inner_size(view.window_width, view.window_height);
+    view.determine_window_size(screen_width, screen_height);
+    gl_window.set_inner_size(LogicalSize::new(view.window_width, view.window_height));
 
-    // display
-    //     .gl_window()
-    //     .set_cursor_state(glium::glutin::CursorState::Grab);
+    // TODO: set_cursor_state alternative.
+    // gl_window.set_cursor_state(glutin::CursorState::Grab);
 
     // Set event loop settings
     // let mut settings = window.get_event_settings();
@@ -69,68 +66,68 @@ fn main() {
 
     let mut closed = false;
     while !closed {
-        // events_loop.poll_events(|ev| match ev {
-        //     glutin::Event::WindowEvent { event, .. } => match event {
-        //         glutin::WindowEvent::Closed => {
-        //             // window was closed
-        //             closed = true;
-        //         }
-        //         glutin::WindowEvent::Resized(width, height) => {
-        //             // window was resized
-        //             view.on_resize(width, height);
-        //         }
-        //         glutin::WindowEvent::CursorMoved { position, .. } => {
-        //             // mouse moved
-        //             view.on_mouse_move(position.0, position.1);
-        //         }
-        //         glutin::WindowEvent::MouseInput { state, button, .. } => {
-        //             // Left-mouse-button pressed
-        //             if state == glutin::ElementState::Pressed && glutin::MouseButton::Left == button
-        //             {
-        //                 // reinitialise board
-        //                 if let Some(f) = config.file.clone() {
-        //                     game_of_life.init_with_file(f).unwrap();
-        //                 } else {
-        //                     game_of_life.init_randomly(config.chance);
-        //                 }
-        //             }
-        //         }
-        //         glutin::WindowEvent::KeyboardInput { input, .. } => {
-        //             if input.state == glutin::ElementState::Pressed
-        //                 && input.virtual_keycode.is_some()
-        //             {
-        //                 use glium::glutin::VirtualKeyCode::*;
+        events_loop.poll_events(|ev| match ev {
+            glutin::Event::WindowEvent { event, .. } => match event {
+                glutin::WindowEvent::CloseRequested => {
+                    // window was closed
+                    closed = true;
+                }
+                glutin::WindowEvent::Resized(size) => {
+                    // window was resized
+                    view.on_resize(size.width, size.height);
+                }
+                glutin::WindowEvent::CursorMoved { position, .. } => {
+                    // mouse moved
+                    view.on_mouse_move(position.x, position.y);
+                }
+                glutin::WindowEvent::MouseInput { state, button, .. } => {
+                    // Left-mouse-button pressed
+                    if state == glutin::ElementState::Pressed && glutin::MouseButton::Left == button
+                    {
+                        // reinitialise board
+                        if let Some(f) = config.file.clone() {
+                            game_of_life.init_with_file(f).unwrap();
+                        } else {
+                            game_of_life.init_randomly(config.chance);
+                        }
+                    }
+                }
+                glutin::WindowEvent::KeyboardInput { input, .. } => {
+                    if input.state == glutin::ElementState::Pressed
+                        && input.virtual_keycode.is_some()
+                    {
+                        use glutin::VirtualKeyCode::*;
 
-        //                 match input.virtual_keycode.unwrap() {
-        //                     C => {
-        //                         // Toggle capture_cursor
-        //                         use glium::glutin::CursorState;
+                        match input.virtual_keycode.unwrap() {
+                            C => {
+                                // Toggle capture_cursor
+                                // use glutin::CursorState;
 
-        //                         view.toggle_capture_cursor();
-        //                         display
-        //                             .gl_window()
-        //                             .set_cursor_state(if view.capture_cursor {
-        //                                 CursorState::Grab
-        //                             } else {
-        //                                 CursorState::Normal
-        //                             });
-        //                     }
-        //                     Space => {
-        //                         // reinitialise board
-        //                         if let Some(f) = config.file.clone() {
-        //                             game_of_life.init_with_file(f).unwrap();
-        //                         } else {
-        //                             game_of_life.init_randomly(config.chance);
-        //                         }
-        //                     }
-        //                     _ => (),
-        //                 }
-        //             }
-        //         }
-        //         _ => (),
-        //     },
-        //     _ => (),
-        // });
+                                view.toggle_capture_cursor();
+
+                                // TODO: set_cursor_state alternative.
+                                // gl_window.set_cursor_state(if view.capture_cursor {
+                                //     CursorState::Grab
+                                // } else {
+                                //     CursorState::Normal
+                                // });
+                            }
+                            Space => {
+                                // reinitialise board
+                                if let Some(f) = config.file.clone() {
+                                    game_of_life.init_with_file(f).unwrap();
+                                } else {
+                                    game_of_life.init_randomly(config.chance);
+                                }
+                            }
+                            _ => (),
+                        }
+                    }
+                }
+                _ => (),
+            },
+            _ => (),
+        });
 
         // TODO: drawing.
 

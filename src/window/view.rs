@@ -18,8 +18,8 @@ pub struct View {
     pub board_width: usize,
     pub board_height: usize,
 
-    pub window_width: u32,
-    pub window_height: u32,
+    pub window_width: f64,
+    pub window_height: f64,
 }
 
 impl View {
@@ -35,16 +35,16 @@ impl View {
         return self.cell_width / self.window_height as f64 * 2.0;
     }
 
-    pub fn determine_window_size(&mut self, screen_width: u32, screen_height: u32) {
+    pub fn determine_window_size(&mut self, screen_width: f64, screen_height: f64) {
         self.window_width = if self.board_width as f64 * self.cell_width > screen_width as f64 {
             screen_width
         } else {
-            (self.board_width as f64 * self.cell_width) as u32
+            (self.board_width as f64 * self.cell_width)
         };
         self.window_height = if self.board_height as f64 * self.cell_width > screen_height as f64 {
             screen_height
         } else {
-            (self.board_height as f64 * self.cell_width) as u32
+            (self.board_height as f64 * self.cell_width)
         };
 
         let (width, height) = (self.window_width, self.window_height);
@@ -59,8 +59,8 @@ impl View {
         let base_cell_width: f64 = config.cell_width.into();
         let cell_width = base_cell_width.clone();
 
-        let window_width = 0;
-        let window_height = 0;
+        let window_width = 0.0;
+        let window_height = 0.0;
 
         let cells_on_width = (window_width as f64 / cell_width) as usize;
         let cells_on_height = (window_height as f64 / cell_width) as usize;
@@ -88,25 +88,25 @@ impl View {
         }
     }
 
-    pub fn on_resize(&mut self, width: u32, height: u32) {
+    pub fn on_resize(&mut self, width: f64, height: f64) {
         self.window_width = width;
         self.window_height = height;
 
         // reset to the base cell width
         self.cell_width = self.base_cell_width;
 
-        self.cells_on_width = (self.window_width as f64 / self.cell_width) as usize;
-        self.cells_on_height = (self.window_height as f64 / self.cell_width) as usize;
+        self.cells_on_width = (self.window_width / self.cell_width) as usize;
+        self.cells_on_height = (self.window_height / self.cell_width) as usize;
 
         if self.cells_on_width > self.board_width {
-            self.cell_width = self.window_width as f64 / self.board_width as f64;
-            self.cells_on_width = (self.window_width as f64 / self.cell_width) as usize;
-            self.cells_on_height = (self.window_height as f64 / self.cell_width) as usize;
+            self.cell_width = self.window_width / self.board_width as f64;
+            self.cells_on_width = (self.window_width / self.cell_width) as usize;
+            self.cells_on_height = (self.window_height / self.cell_width) as usize;
         }
 
         if self.cells_on_height > self.board_height {
-            self.cell_width = self.window_height as f64 / self.board_height as f64;
-            self.cells_on_height = (self.window_height as f64 / self.cell_width) as usize;
+            self.cell_width = self.window_height / self.board_height as f64;
+            self.cells_on_height = (self.window_height / self.cell_width) as usize;
         }
 
         // trigger function to check for moving outside of the board
