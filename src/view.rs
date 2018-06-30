@@ -170,11 +170,20 @@ impl View {
         let center = self.get_center();
         self.base_cell_width += self.base_cell_width * y * 0.01;
 
-        if self.base_cell_width * self.board_width as f32 <= self.window_width {
+        // Check if zooming further out is possible
+        if (self.base_cell_width * self.board_width as f32) < self.window_width {
             self.base_cell_width = self.window_width / self.board_width as f32;
         }
-        if self.base_cell_width * self.board_height as f32 <= self.window_height {
+        if (self.base_cell_width * self.board_height as f32) < self.window_height {
             self.base_cell_width = self.window_height / self.board_height as f32;
+        }
+
+        // Check if zooming further in is possible
+        if self.base_cell_width > self.window_width {
+            self.base_cell_width = self.window_width;
+        }
+        if self.base_cell_width > self.window_height {
+            self.base_cell_width = self.window_height;
         }
 
         let width = self.window_width;
