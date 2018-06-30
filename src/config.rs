@@ -17,7 +17,7 @@ impl Config {
         let matches = App::new("game-of-life")
         .version("0.3.0")
         .author("Splinter Suidman")
-        .about("game-of-life emulates John Conway's game of life.\nPress Escape to exit, press C to toggle cursor capture and press Space or a mouse button to reinitialise grid.")
+        .about("game-of-life emulates John Conway's game of life.\nPress Escape to exit, press C to toggle cursor capture and press Space or a mouse button to reinitialise grid.\nA file can be dropped on the screen to load that file. When the grid is reinitialised, it will be reinitialised with that file.")
         .arg(Arg::with_name("width")
             .short("w")
             .long("width")
