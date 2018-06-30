@@ -27,6 +27,14 @@ impl View {
         self.capture_cursor = !self.capture_cursor;
     }
 
+    pub fn gl_cell_width(&self) -> f64 {
+        return self.cell_width / self.window_width as f64 * 2.0;
+    }
+
+    pub fn gl_cell_height(&self) -> f64 {
+        return self.cell_width / self.window_height as f64 * 2.0;
+    }
+
     pub fn determine_window_size(&mut self, screen_width: u32, screen_height: u32) {
         self.window_width = if self.board_width as f64 * self.cell_width > screen_width as f64 {
             screen_width
