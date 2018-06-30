@@ -150,6 +150,14 @@ impl View {
 
     pub fn on_scroll(&mut self, y: f32) {
         self.base_cell_width += self.base_cell_width * y * 0.01;
+
+        if self.base_cell_width * self.board_width as f32 <= self.window_width {
+            self.base_cell_width = self.window_width / self.board_width as f32;
+        }
+        if self.base_cell_width * self.board_height as f32 <= self.window_height {
+            self.base_cell_width = self.window_height / self.board_height as f32;
+        }
+
         let width = self.window_width;
         let height = self.window_height;
 
