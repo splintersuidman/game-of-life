@@ -46,7 +46,7 @@ impl Square {
 }
 
 pub fn clear_screen(color: [f32; 4]) {
-    unimplemented!();
+    super::graphics_context::GraphicsContext::clear_color(color[0], color[1], color[2], color[3]);
 }
 
 /// Renders the board
