@@ -83,8 +83,15 @@ fn main() {
                     view.on_resize(size.width as f32, size.height as f32);
                 }
                 glutin::WindowEvent::CursorMoved { position, .. } => {
+                    let delta_x = view.previous_mouse_x - position.x;
+                    let delta_y = view.previous_mouse_y - position.y;
+
                     // mouse moved
-                    view.on_mouse_move(position.x, position.y);
+                    view.on_mouse_move(delta_x, delta_y);
+
+                    // update previous_mouse
+                    view.previous_mouse_x = position.x;
+                    view.previous_mouse_y = position.y;
                 }
                 glutin::WindowEvent::MouseInput { state, button, .. } => {
                     // Left-mouse-button pressed

@@ -11,6 +11,8 @@ pub struct View {
     precise_x: f64,
 
     pub capture_cursor: bool,
+    pub previous_mouse_x: f64,
+    pub previous_mouse_y: f64,
 
     pub cells_on_width: usize,
     pub cells_on_height: usize,
@@ -75,7 +77,9 @@ impl View {
             cell_width,
             base_cell_width,
 
-            capture_cursor: true,
+            capture_cursor: false,
+            previous_mouse_x: 0.0,
+            previous_mouse_y: 0.0,
 
             window_width,
             window_height,
