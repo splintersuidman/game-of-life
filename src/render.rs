@@ -82,7 +82,8 @@ impl Renderer {
             Matrix4::from_nonuniform_scale(square.size.width / 2.0, square.size.height / 2.0, 1.0);
         let translate = Matrix4::from_translation(Vector3::<f32>::new(
             square.origin.x + square.size.width / 2.0,
-            square.origin.y + square.size.height / 2.0,
+            // Negative, because OpenGL's y-axis is opposite to the one used by game of life.
+            -(square.origin.y + square.size.height / 2.0),
             0.0,
         ));
         self.graphics_context
