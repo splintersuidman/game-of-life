@@ -147,16 +147,4 @@ impl View {
             self.x = self.precise_x as usize;
         }
     }
-
-    pub fn info(&self) {
-        println!(
-            "Window: width = {}px, height = {}px",
-            self.window_width, self.window_height
-        );
-        println!("cell_width = {}px", self.cell_width);
-        println!(
-            "cells_on_width = {}, cells_on_height = {}",
-            self.cells_on_width, self.cells_on_height
-        );
-    }
 }
