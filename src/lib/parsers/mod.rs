@@ -1,9 +1,9 @@
 use std::fs::File;
 use std::io::Read;
 
-pub mod plaintext;
-pub mod life_106;
 pub mod life_105;
+pub mod life_106;
+pub mod plaintext;
 pub mod rle;
 
 /// Describes what type of file it is based on the file extension.

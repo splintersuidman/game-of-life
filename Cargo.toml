@@ -3,14 +3,6 @@ authors = ["Splinter Suidman (splintah)", "Sybrand Aarnoutse (syberant)"]
 name = "game-of-life"
 version = "0.3.0"
 
-[[bin]]
-name = "gol-win"
-path = "./src/window/mod.rs"
-
-[[bin]]
-name = "gol-cli"
-path = "./src/cli.rs"
-
 [lib]
 name = "game_of_life"
 path = "./src/lib/mod.rs"
@@ -20,8 +12,10 @@ path = "./src/lib/mod.rs"
 bench = []
 
 [dependencies]
-piston_window = "0.80"
-rand = "0.4"
-terminal_size = "0.1.7"
+rand = "0.5"
 rayon = "1.0"
 clap = "~2.31.0"
+glutin = "0.17.0"
+gl = "0.10.0"
+cgmath = "0.16.1"
+gleam = "0.5.1"
