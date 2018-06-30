@@ -147,4 +147,12 @@ impl View {
             self.x = self.precise_x as usize;
         }
     }
+
+    pub fn on_scroll(&mut self, y: f32) {
+        self.base_cell_width += self.base_cell_width * y * 0.01;
+        let width = self.window_width;
+        let height = self.window_height;
+
+        self.on_resize(width, height);
+    }
 }
