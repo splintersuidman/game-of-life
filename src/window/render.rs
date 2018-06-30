@@ -1,7 +1,7 @@
 /// coordinates on the opengl field, ranging from -1 to 1
 pub struct Coordinate {
-    x: f64,
-    y: f64,
+    x: f32,
+    y: f32,
 }
 
 pub struct Square {
@@ -43,7 +43,7 @@ pub fn clear_screen(color: [f64; 4]) {
 /// Renders the board
 /// 
 /// **NOTE**: Does not update the board as well.
-pub fn render(config: &super::Config, view: &super::View, board: Vec<Vec<super::CellState>>, alive_color: [f64; 4], dead_color: [f64; 4]) {
+pub fn render(config: &super::Config, view: &super::View, board: Vec<Vec<super::game_of_life::CellState>>, alive_color: [f64; 4], dead_color: [f64; 4]) {
     clear_screen(dead_color);
 
     for board_y in 0..view.cells_on_height {
