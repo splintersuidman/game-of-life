@@ -131,7 +131,10 @@ fn main() {
                                 // ctrl-cmd F
                                 if input.modifiers.ctrl && input.modifiers.logo {
                                     let monitor_id = gl_window.get_current_monitor();
+                                    let size = monitor_id.get_dimensions();
+
                                     gl_window.window().set_fullscreen(Some(monitor_id));
+                                    view.on_resize(size.width as f32, size.height as f32);
                                 }
                             }
                             Escape => {
