@@ -109,7 +109,7 @@ fn main() {
                             MouseScrollDelta::LineDelta(_x, y) => {
                                 view.on_scroll(y);
                             }
-                            MouseScrollDelta::PixelDelta(LogicalPosition { x: _, y }) => {
+                            MouseScrollDelta::PixelDelta(LogicalPosition { y, .. }) => {
                                 view.on_scroll(y as f32);
                             }
                         }
@@ -168,13 +168,12 @@ fn main() {
                 }
                 _ => (),
             },
-            glutin::Event::DeviceEvent { event, .. } => match event {
-                glutin::DeviceEvent::MouseMotion { delta } => {
+            glutin::Event::DeviceEvent { event, .. } => {
+                if let glutin::DeviceEvent::MouseMotion { delta } = event {
                     // Mouse moved.
                     view.on_mouse_move(delta.0, -delta.1);
                 }
-                _ => (),
-            },
+            }
             _ => (),
         });
 

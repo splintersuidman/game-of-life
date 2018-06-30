@@ -36,7 +36,7 @@ impl Square {
         let gl_y = board_y as f32 / view.cells_on_height as f32 * 2.0 - 1.0;
         let gl_x = board_x as f32 / view.cells_on_width as f32 * 2.0 - 1.0;
 
-        return Square::new(view.gl_cell_width(), view.gl_cell_height(), gl_x, gl_y);
+        Square::new(view.gl_cell_width(), view.gl_cell_height(), gl_x, gl_y)
     }
 }
 
@@ -56,14 +56,12 @@ impl Renderer {
 
         for board_y in 0..view.cells_on_height {
             for board_x in 0..view.cells_on_width {
-                if game_of_life.board[board_y + view.y][board_x + view.x] == CellState::Alive {
-                    let square = Square::simple(view, board_x, board_y);
-                    self.draw_square(&square, config.foreground);
-                } else if config.view_border
-                    && (board_y + view.y == 0
-                        || board_y + view.y + 1 == view.board_height
-                        || board_x + view.x == 0
-                        || board_x + view.x + 1 == view.board_width)
+                if game_of_life.board[board_y + view.y][board_x + view.x] == CellState::Alive
+                    || (config.view_border
+                        && (board_y + view.y == 0
+                            || board_y + view.y + 1 == view.board_height
+                            || board_x + view.x == 0
+                            || board_x + view.x + 1 == view.board_width))
                 {
                     let square = Square::simple(view, board_x, board_y);
                     self.draw_square(&square, config.foreground);
