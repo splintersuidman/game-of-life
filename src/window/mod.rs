@@ -139,6 +139,13 @@ fn main() {
 
         // TODO: drawing.
 
+        GraphicsContext::clear_color(
+            config.background[0],
+            config.background[1],
+            config.background[2],
+            config.background[3],
+        );
+
         graphics_context.draw_square_with_scale_translation(
             Matrix4::from_scale(0.5),
             Matrix4::from_translation(Vector3::<f32>::new(-0.5, 0.5, 0.0)),

@@ -185,6 +185,7 @@ impl GraphicsContext {
         }
     }
 
+    // TODO: color.
     pub fn draw_square_with_scale_translation(&self, scale: Matrix4<f32>, translate: Matrix4<f32>) {
         unsafe {
             gl::UseProgram(self.shader_program);
