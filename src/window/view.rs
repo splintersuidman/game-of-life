@@ -62,8 +62,8 @@ impl View {
         let window_width = 0.0;
         let window_height = 0.0;
 
-        let cells_on_width = (window_width as f32 / cell_width) as usize;
-        let cells_on_height = (window_height as f32 / cell_width) as usize;
+        let cells_on_width = (window_width as f32 / cell_width).ceil() as usize;
+        let cells_on_height = (window_height as f32 / cell_width).ceil() as usize;
 
         Self {
             y: 0,
@@ -95,8 +95,8 @@ impl View {
         // reset to the base cell width
         self.cell_width = self.base_cell_width;
 
-        self.cells_on_width = (self.window_width / self.cell_width) as usize;
-        self.cells_on_height = (self.window_height / self.cell_width) as usize;
+        self.cells_on_width = (self.window_width / self.cell_width).ceil() as usize;
+        self.cells_on_height = (self.window_height / self.cell_width).ceil() as usize;
 
         if self.cells_on_width > self.board_width {
             self.cell_width = self.window_width / self.board_width as f32;

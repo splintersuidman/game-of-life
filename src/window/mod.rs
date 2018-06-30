@@ -119,6 +119,10 @@ fn main() {
                                     gl_window.window().hide_cursor(false);
                                 }
                             }
+                            Escape => {
+                                // window has to close
+                                closed = true;
+                            }
                             Space => {
                                 // reinitialise board
                                 if let Some(f) = config.file.clone() {
