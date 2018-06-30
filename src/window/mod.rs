@@ -40,7 +40,10 @@ fn main() {
     let mut events_loop = glutin::EventsLoop::new();
     let window = glutin::WindowBuilder::new()
         .with_title(name)
-        .with_dimensions(LogicalSize::new(500.0, 500.0));
+        .with_dimensions(LogicalSize::new(
+            (config.width * config.cell_width) as f64,
+            (config.height * config.cell_width) as f64,
+        ));
     let context = glutin::ContextBuilder::new().with_vsync(true);
     let gl_window = glutin::GlWindow::new(window, context, &events_loop).unwrap();
 

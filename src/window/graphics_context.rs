@@ -4,7 +4,7 @@ use super::gl::types::*;
 use super::cgmath::prelude::*;
 use super::cgmath::Matrix4;
 use super::glutin::{GlContext, GlWindow};
-use std::ffi::CString;
+use std::ffi::{CStr, CString};
 use std::mem;
 use std::os::raw::c_void;
 use std::ptr;
@@ -65,8 +65,8 @@ impl GraphicsContext {
                     info_log.as_mut_ptr() as *mut GLchar,
                 );
                 return Err(format!(
-                    "vertex shader compilation failed: {}",
-                    str::from_utf8(&info_log).unwrap()
+                    "vertex shader compilation failed:\n{}",
+                    CStr::from_ptr(info_log.as_ptr()).to_string_lossy(),
                 ));
             }
 
@@ -83,8 +83,8 @@ impl GraphicsContext {
                     info_log.as_mut_ptr() as *mut GLchar,
                 );
                 return Err(format!(
-                    "fragment shader compilation failed: {}",
-                    str::from_utf8(&info_log).unwrap()
+                    "fragment shader compilation failed:\n{}",
+                    CStr::from_ptr(info_log.as_ptr()).to_string_lossy(),
                 ));
             }
 
@@ -101,8 +101,8 @@ impl GraphicsContext {
                     info_log.as_mut_ptr() as *mut GLchar,
                 );
                 return Err(format!(
-                    "shader program compilation failed: {}",
-                    str::from_utf8(&info_log).unwrap()
+                    "shader program compilation failed:\n{}",
+                    CStr::from_ptr(info_log.as_ptr()).to_string_lossy(),
                 ));
             }
             gl::DeleteShader(vertex_shader);
