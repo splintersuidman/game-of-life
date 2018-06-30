@@ -41,7 +41,7 @@ fn main() {
     // Create window.
     let mut events_loop = glutin::EventsLoop::new();
     let window = glutin::WindowBuilder::new()
-        .with_title("Hello, world!")
+        .with_title(name)
         .with_dimensions(LogicalSize::new(600.0, 600.0));
     let context = glutin::ContextBuilder::new().with_vsync(true);
     let gl_window = glutin::GlWindow::new(window, context, &events_loop).unwrap();
@@ -85,8 +85,15 @@ fn main() {
                     view.on_resize(size.width as f32, size.height as f32);
                 }
                 glutin::WindowEvent::CursorMoved { position, .. } => {
+                    let delta_x = view.previous_mouse_x - position.x;
+                    let delta_y = view.previous_mouse_y - position.y;
+
                     // mouse moved
-                    view.on_mouse_move(position.x, position.y);
+                    view.on_mouse_move(delta_x, delta_y);
+
+                    // update previous_mouse
+                    view.previous_mouse_x = position.x;
+                    view.previous_mouse_y = position.y;
                 }
                 glutin::WindowEvent::MouseInput { state, button, .. } => {
                     // Left-mouse-button pressed
