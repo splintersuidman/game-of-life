@@ -63,7 +63,7 @@ fn main() {
         view.window_height as f64,
     ));
 
-    // TODO: set_cursor_state alternative.
+    // TODO: grab cursor if board_width * cell_width > window_width.
     // gl_window.set_cursor_state(glutin::CursorState::Grab);
 
     // Set event loop settings
@@ -108,17 +108,16 @@ fn main() {
 
                         match input.virtual_keycode.unwrap() {
                             C => {
-                                // Toggle capture_cursor
-                                // use glutin::CursorState;
-
+                                // Toggle capture_cursor.
                                 view.toggle_capture_cursor();
 
-                                // TODO: set_cursor_state alternative.
-                                // gl_window.set_cursor_state(if view.capture_cursor {
-                                //     CursorState::Grab
-                                // } else {
-                                //     CursorState::Normal
-                                // });
+                                if view.capture_cursor {
+                                    gl_window.window().grab_cursor(true).unwrap();
+                                    gl_window.window().hide_cursor(true);
+                                } else {
+                                    gl_window.window().grab_cursor(false).unwrap();
+                                    gl_window.window().hide_cursor(false);
+                                }
                             }
                             Space => {
                                 // reinitialise board
