@@ -108,7 +108,7 @@ impl Config {
             1.,
         ];
 
-        let view_border: bool = matches.is_present("view-border");
+        let view_border: bool = matches.is_present("border");
 
         Config {
             width,
