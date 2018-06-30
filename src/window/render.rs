@@ -6,28 +6,27 @@ use super::view::View;
 use super::Config;
 
 /// coordinates on the opengl field, ranging from -1 to 1
-pub struct Coordinate {
-    x: f32,
-    y: f32,
+pub struct Coordinate<T = f32> {
+    pub x: T,
+    pub y: T,
+}
+
+pub struct Size<T = f32> {
+    pub width: T,
+    pub height: T,
 }
 
 pub struct Square {
-    coordinates: [Coordinate; 4],
+    pub origin: Coordinate,
+    pub size: Size,
 }
 
 impl Square {
     /// Calculates the coordinates from the top-left corner, the width and the height
     pub fn new(width: f32, height: f32, x: f32, y: f32) -> Self {
-        let top_left = Coordinate { x, y };
-        let top_right = Coordinate { x: x + width, y };
-        let bottom_left = Coordinate { x, y: y - height };
-        let bottom_right = Coordinate {
-            x: x + width,
-            y: y - height,
-        };
-
         Square {
-            coordinates: [top_left, top_right, bottom_left, bottom_right],
+            origin: Coordinate { x, y },
+            size: Size { width, height },
         }
     }
 
@@ -77,12 +76,11 @@ impl Renderer {
     }
 
     fn draw_square(&self, square: &Square, color: [f32; 4]) {
-        let width = square.coordinates[1].x - square.coordinates[0].x;
-        let height = square.coordinates[0].y - square.coordinates[2].y;
-        let scale = Matrix4::from_nonuniform_scale(width / 2.0, height / 2.0, 1.0);
+        let scale =
+            Matrix4::from_nonuniform_scale(square.size.width / 2.0, square.size.height / 2.0, 1.0);
         let translate = Matrix4::from_translation(Vector3::<f32>::new(
-            square.coordinates[0].x + width / 2.0,
-            square.coordinates[0].y + height / 2.0,
+            square.origin.x + square.size.width / 2.0,
+            square.origin.y + square.size.height / 2.0,
             0.0,
         ));
         self.graphics_context
