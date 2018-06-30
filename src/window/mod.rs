@@ -8,12 +8,11 @@ mod graphics_context;
 mod render;
 mod view;
 
-use cgmath::{Matrix4, Vector3};
 use clap::{App, Arg};
-use game_of_life::{CellState, GameOfLife};
+use game_of_life::GameOfLife;
 use glutin::dpi::*;
 use glutin::GlContext;
-use graphics_context::GraphicsContext;
+use render::Renderer;
 use view::View;
 
 fn main() {
@@ -48,8 +47,7 @@ fn main() {
         gl_window.make_current().unwrap();
     }
 
-    let mut graphics_context = GraphicsContext::new();
-    graphics_context.init(&gl_window).unwrap();
+    let renderer = Renderer::new(&gl_window).unwrap();
 
     // Get the window
     let size = gl_window.get_current_monitor().get_dimensions();
@@ -153,20 +151,12 @@ fn main() {
         });
 
         // TODO: drawing.
-
-        GraphicsContext::clear_color(
-            config.background[0],
-            config.background[1],
-            config.background[2],
-            config.background[3],
-        );
+        renderer.render(&config, &view, &game_of_life);
 
         // graphics_context.draw_square_with_scale_translation(
         //     Matrix4::from_scale(0.5),
         //     Matrix4::from_translation(Vector3::<f32>::new(-0.5, 0.5, 0.0)),
         // );
-
-        render::render(&config, &view, &game_of_life.board, &graphics_context);
 
         gl_window.swap_buffers().unwrap();
 
