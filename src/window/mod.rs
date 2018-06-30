@@ -47,7 +47,8 @@ fn main() {
 
     display
         .gl_window()
-        .set_cursor_state(glium::glutin::CursorState::Grab);
+        .set_cursor_state(glium::glutin::CursorState::Grab)
+        .unwrap();
 
     // Set event loop settings
     // let mut settings = window.get_event_settings();
@@ -152,7 +153,8 @@ fn main() {
                                         CursorState::Grab
                                     } else {
                                         CursorState::Normal
-                                    });
+                                    })
+                                    .unwrap();
                             }
                             Space => {
                                 // reinitialise board
