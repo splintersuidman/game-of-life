@@ -63,7 +63,10 @@ fn main() {
         view.window_height as f64,
     ));
 
-    // TODO: grab cursor if board_width * cell_width > window_width.
+    if view.capture_cursor {
+        gl_window.window().grab_cursor(true).unwrap();
+        gl_window.window().hide_cursor(true);
+    }
 
     let mut closed = false;
     while !closed {

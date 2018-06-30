@@ -50,6 +50,12 @@ impl View {
         let (width, height) = (self.window_width, self.window_height);
 
         self.on_resize(width, height);
+
+        if self.board_width as f32 * self.cell_width > self.window_width
+            || self.board_height as f32 * self.cell_width > self.window_height
+        {
+            self.capture_cursor = true;
+        }
     }
 
     pub fn from_config(config: &Config) -> Self {
