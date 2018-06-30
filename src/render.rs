@@ -33,8 +33,8 @@ impl Square {
 
     /// Takes a position on the board and calculates the coordinates.
     pub fn simple(view: &super::View, board_x: usize, board_y: usize) -> Self {
-        let gl_y = board_y as f32 / view.cells_on_height as f32 * 2.0 - 1.0;
-        let gl_x = board_x as f32 / view.cells_on_width as f32 * 2.0 - 1.0;
+        let gl_y = board_y as f32 / (view.window_height / view.cell_width) * 2.0 - 1.0;
+        let gl_x = board_x as f32 / (view.window_width / view.cell_width) * 2.0 - 1.0;
 
         Square::new(view.gl_cell_width(), view.gl_cell_height(), gl_x, gl_y)
     }
@@ -53,6 +53,9 @@ impl Renderer {
 
     pub fn render(&self, config: &Config, view: &View, game_of_life: &GameOfLife) {
         self.clear_screen(config.background);
+
+        assert!(view.cells_on_width - 1 + view.x < view.board_width);
+        assert!(view.cells_on_height - 1 + view.y < view.board_height);
 
         for board_y in 0..view.cells_on_height {
             for board_x in 0..view.cells_on_width {
