@@ -156,13 +156,13 @@ fn main() {
             _ => (),
         });
 
+        renderer.render(&config, &view, &game_of_life);
+        gl_window.swap_buffers().unwrap();
+
         let now = Instant::now();
         if now.duration_since(previous_update) >= delay {
             game_of_life.update();
             previous_update = now;
-
-            renderer.render(&config, &view, &game_of_life);
-            gl_window.swap_buffers().unwrap();
         }
     }
 }
