@@ -5,12 +5,13 @@ use super::graphics_context::GraphicsContext;
 use super::view::View;
 use super::Config;
 
-/// coordinates on the opengl field, ranging from -1 to 1
+/// Coordinates on the OpenGL field, ranging from -1 to 1.
 pub struct Coordinate<T = f32> {
     pub x: T,
     pub y: T,
 }
 
+/// Sizes on the OpenGL field, ranging from -1 to 1.
 pub struct Size<T = f32> {
     pub width: T,
     pub height: T,
@@ -22,7 +23,7 @@ pub struct Square {
 }
 
 impl Square {
-    /// Calculates the coordinates from the top-left corner, the width and the height
+    /// Calculates the coordinates from the top-left corner, the width and the height.
     pub fn new(width: f32, height: f32, x: f32, y: f32) -> Self {
         Square {
             origin: Coordinate { x, y },
@@ -30,7 +31,7 @@ impl Square {
         }
     }
 
-    /// Takes a position on the board and calculates the coordinates
+    /// Takes a position on the board and calculates the coordinates.
     pub fn simple(view: &super::View, board_x: usize, board_y: usize) -> Self {
         let gl_y = board_y as f32 / view.cells_on_height as f32 * 2.0 - 1.0;
         let gl_x = board_x as f32 / view.cells_on_width as f32 * 2.0 - 1.0;

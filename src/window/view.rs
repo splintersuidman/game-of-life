@@ -92,7 +92,7 @@ impl View {
         self.window_width = width;
         self.window_height = height;
 
-        // reset to the base cell width
+        // Reset to the base cell width.
         self.cell_width = self.base_cell_width;
 
         self.cells_on_width = (self.window_width / self.cell_width).ceil() as usize;
@@ -109,13 +109,13 @@ impl View {
             self.cells_on_height = (self.window_height / self.cell_width) as usize;
         }
 
-        // trigger function to check for moving outside of the board
+        // Trigger function to check for moving outside of the board.
         self.on_mouse_move(0.0, 0.0);
     }
 
     pub fn on_mouse_move(&mut self, mouse_x: f64, mouse_y: f64) {
         if self.capture_cursor {
-            // prevent y from moving outside of the board and update it
+            // Prevent y from moving outside of the board and update it.
             if self.precise_y - mouse_y < 0.0 {
                 self.precise_y = 0.0;
             } else if self.precise_y - mouse_y + self.cells_on_height as f64
@@ -126,7 +126,7 @@ impl View {
                 self.precise_y -= mouse_y;
             }
 
-            // prevent x from moving outside of the board and update it
+            // Prevent x from moving outside of the board and update it.
             if self.precise_x - mouse_x < 0.0 {
                 self.precise_x = 0.0;
             } else if self.precise_x - mouse_x + self.cells_on_width as f64

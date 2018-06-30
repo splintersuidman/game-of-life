@@ -50,7 +50,7 @@ fn main() {
 
     let renderer = Renderer::new(&gl_window).unwrap();
 
-    // Get the window
+    // Get the window.
     let size = gl_window.get_current_monitor().get_dimensions();
     let (screen_width, screen_height) = (size.width, size.height);
 
@@ -81,15 +81,15 @@ fn main() {
         events_loop.poll_events(|ev| match ev {
             glutin::Event::WindowEvent { event, .. } => match event {
                 glutin::WindowEvent::CloseRequested => {
-                    // window was closed
+                    // Window was closed.
                     closed = true;
                 }
                 glutin::WindowEvent::Resized(size) => {
-                    // window was resized
+                    // Window was resized.
                     view.on_resize(size.width as f32, size.height as f32);
                 }
                 glutin::WindowEvent::MouseInput { state, button, .. } => {
-                    // Left-mouse-button pressed
+                    // Left-mouse-button pressed.
                     if state == glutin::ElementState::Pressed && glutin::MouseButton::Left == button
                     {
                         // reinitialise board
@@ -120,11 +120,11 @@ fn main() {
                                 }
                             }
                             Escape => {
-                                // window has to close
+                                // Window has to close.
                                 closed = true;
                             }
                             Space => {
-                                // reinitialise board
+                                // Reinitialise board.
                                 if let Some(f) = config.file.clone() {
                                     game_of_life.init_with_file(f).unwrap();
                                 } else {
@@ -139,7 +139,7 @@ fn main() {
             },
             glutin::Event::DeviceEvent { event, .. } => match event {
                 glutin::DeviceEvent::MouseMotion { delta } => {
-                    // mouse moved
+                    // Mouse moved.
                     view.on_mouse_move(delta.0, -delta.1);
                 }
                 _ => (),
@@ -147,13 +147,7 @@ fn main() {
             _ => (),
         });
 
-        // TODO: drawing.
         renderer.render(&config, &view, &game_of_life);
-
-        // graphics_context.draw_square_with_scale_translation(
-        //     Matrix4::from_scale(0.5),
-        //     Matrix4::from_translation(Vector3::<f32>::new(-0.5, 0.5, 0.0)),
-        // );
 
         gl_window.swap_buffers().unwrap();
 
