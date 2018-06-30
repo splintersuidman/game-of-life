@@ -69,7 +69,11 @@ fn main() {
         gl_window.window().hide_cursor(true);
     }
 
-    let delay = Duration::from_millis(((1.0 / config.fps as f32) * 1e3) as u64);
+    let delay = if config.fps == 0 {
+        Duration::from_millis(0)
+    } else {
+        Duration::from_millis(((1.0 / config.fps as f32) * 1e3) as u64)
+    };
     // Keep track of the previous time the board had been updated, to use the fps config variable.
     let mut previous_update = Instant::now() - delay;
 

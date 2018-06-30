@@ -45,7 +45,7 @@ impl Config {
             .takes_value(true))
         .arg(Arg::with_name("fps")
             .long("fps")
-            .help("The amount of updates and frames that should be performed per second.\nThis is the maximum frames per second; that is, the actual fps could be less.\nDefault: 24.")
+            .help("The amount of updates and frames that should be performed per second.\nThis is the maximum frames per second; that is, the actual fps could be less.\nA frame rate of 0 fps will result in no fps limit.\nDefault: 24.")
             .takes_value(true))
         .arg(Arg::with_name("file")
             .short("f")
