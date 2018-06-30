@@ -148,7 +148,26 @@ impl View {
         }
     }
 
+    pub fn get_center(&self) -> (f32, f32) {
+        let x = self.cells_on_width as f32 / 2.0 + self.precise_x as f32;
+        let y = self.cells_on_height as f32 / 2.0 + self.precise_y as f32;
+
+        return (x, y);
+    }
+
+    pub fn set_center(&mut self, coordinates: (f32, f32)) {
+        let (x, y) = coordinates;
+        let (x, y) = (x as f64, y as f64);
+
+        self.precise_x = x - self.cells_on_width as f64 / 2.0;
+        self.precise_y = y - self.cells_on_height as f64 / 2.0;
+
+        self.y = self.precise_y as usize;
+        self.x = self.precise_x as usize;
+    }
+
     pub fn on_scroll(&mut self, y: f32) {
+        let center = self.get_center();
         self.base_cell_width += self.base_cell_width * y * 0.01;
 
         if self.base_cell_width * self.board_width as f32 <= self.window_width {
@@ -162,5 +181,7 @@ impl View {
         let height = self.window_height;
 
         self.on_resize(width, height);
+
+        self.set_center(center);
     }
 }
