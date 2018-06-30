@@ -8,6 +8,7 @@ mod graphics_context;
 mod render;
 mod view;
 
+use cgmath::{Matrix4, Vector3};
 use clap::{App, Arg};
 use game_of_life::{CellState, GameOfLife};
 use glutin::dpi::*;
@@ -48,6 +49,9 @@ fn main() {
     unsafe {
         gl_window.make_current().unwrap();
     }
+
+    let mut graphics_context = GraphicsContext::new();
+    graphics_context.init(&gl_window).unwrap();
 
     // Get the window
     let size = gl_window.get_current_monitor().get_dimensions();
@@ -132,7 +136,14 @@ fn main() {
 
         // TODO: drawing.
 
+        graphics_context.draw_square_with_scale_translation(
+            Matrix4::from_scale(0.5),
+            Matrix4::from_translation(Vector3::<f32>::new(-0.5, 0.5, 0.0)),
+        );
+
         gl_window.swap_buffers().unwrap();
+
+        game_of_life.update();
     }
 
     // // Event loop.
