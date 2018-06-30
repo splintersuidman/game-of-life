@@ -13,7 +13,6 @@ bench = []
 
 [dependencies]
 rand = "0.4"
-terminal_size = "0.1.7"
 rayon = "1.0"
 clap = "~2.31.0"
 glutin = "0.17.0"
