@@ -40,7 +40,7 @@ fn main() {
     let mut events_loop = glutin::EventsLoop::new();
     let window = glutin::WindowBuilder::new()
         .with_title(name)
-        .with_dimensions(LogicalSize::new(600.0, 600.0));
+        .with_dimensions(LogicalSize::new(500.0, 500.0));
     let context = glutin::ContextBuilder::new().with_vsync(true);
     let gl_window = glutin::GlWindow::new(window, context, &events_loop).unwrap();
 
@@ -87,6 +87,9 @@ fn main() {
                 glutin::WindowEvent::Resized(size) => {
                     // Window was resized.
                     view.on_resize(size.width as f32, size.height as f32);
+                    let dpi_factor = gl_window.get_hidpi_factor();
+                    gl_window.resize(size.to_physical(dpi_factor));
+
                     // TODO: set viewport.
                     // unsafe { gl::Viewport(0, 0, size.width as i32, size.height as i32) };
                 }
