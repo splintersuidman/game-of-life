@@ -3,14 +3,6 @@ authors = ["Splinter Suidman (splintah)", "Sybrand Aarnoutse (syberant)"]
 name = "game-of-life"
 version = "0.3.0"
 
-[[bin]]
-name = "gol-win"
-path = "./src/window/mod.rs"
-
-[[bin]]
-name = "gol-cli"
-path = "./src/cli.rs"
-
 [lib]
 name = "game_of_life"
 path = "./src/lib/mod.rs"

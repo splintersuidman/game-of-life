@@ -1,6 +1,6 @@
 # Game of Life [![Build Status](https://travis-ci.org/splintah/game-of-life.svg?branch=master)](https://travis-ci.org/splintah/game-of-life)
 
-A Game of Life emulation, both in a graphical window and in your terminal, with support for several file formats.
+A Game of Life emulation with support for several file formats.
 
 ![Window Demo](./window-demo.png)
 
@@ -26,7 +26,7 @@ To use a file, pass it to the `--file` flag (see [below](#usage) for more flags)
 cargo install --git https://github.com/splintah/game-of-life
 ```
 
-This will install `gol-win` and `gol-cli` into `$HOME/.cargo/bin/`, which should be in your `PATH` variable when you have installed Rust via [`rustup`](https://rustup.rs).
+This will install `game-of-life` into `$HOME/.cargo/bin/`, which should be in your `PATH` variable when you have installed Rust via [`rustup`](https://rustup.rs).
 
 ## Installation from source
 
@@ -42,8 +42,6 @@ cargo install
 ```
 
 ## Usage
-
-### Window
 
 ```text
 game-of-life 0.3.0
@@ -83,34 +81,4 @@ OPTIONS:
                                      Default: 50.
     -w, --width <width>              Change the width of the board (in cells).
                                      Default: 50.
-```
-
-### CLI
-
-```text
-game-of-life 0.3.0
-Splinter Suidman
-game-of-life emulates John Conway's game of life.
-Press ^C to quit.
-
-USAGE:
-    gol-cli [OPTIONS]
-
-FLAGS:
-        --help       Prints help information
-    -V, --version    Prints version information
-
-OPTIONS:
-    -l, --chance <chance>    Chance for randomly initialising board.
-                             Example: with '--chance 50' passed, cells will have a 50% chance of living.
-                             Default: 15.
-    -f, --file <file>        The file that contains the board.
-                             If this flag is passed, the board will be initialised with the board in the given file.
-                             Default: None.
-    -h, --height <height>    Change the height of the board (in cells).
-                             Default: terminal height.
-        --sleep <sleep>      The amount of milliseconds the thread sleeps between every frame.
-                             Default: 0.
-    -w, --width <width>      Change the width of the board (in cells).
-                             Default: terminal width.
 ```
