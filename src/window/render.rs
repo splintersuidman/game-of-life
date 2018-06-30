@@ -82,7 +82,7 @@ impl Renderer {
         let scale = Matrix4::from_nonuniform_scale(width / 2.0, height / 2.0, 1.0);
         let translate = Matrix4::from_translation(Vector3::<f32>::new(
             square.coordinates[0].x + width / 2.0,
-            square.coordinates[2].y + height / 2.0,
+            square.coordinates[0].y + height / 2.0,
             0.0,
         ));
         self.graphics_context
