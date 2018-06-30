@@ -99,6 +99,22 @@ fn main() {
                         }
                     }
                 }
+                glutin::WindowEvent::MouseWheel {
+                    delta, modifiers, ..
+                } => {
+                    use glutin::MouseScrollDelta;
+                    // Change scale when scrolling with ctrl.
+                    if modifiers.ctrl {
+                        match delta {
+                            MouseScrollDelta::LineDelta(_x, y) => {
+                                view.on_scroll(y);
+                            }
+                            MouseScrollDelta::PixelDelta(LogicalPosition { x: _, y }) => {
+                                view.on_scroll(y as f32);
+                            }
+                        }
+                    }
+                }
                 glutin::WindowEvent::KeyboardInput { input, .. } => {
                     if input.state == glutin::ElementState::Pressed
                         && input.virtual_keycode.is_some()
