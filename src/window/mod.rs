@@ -160,51 +160,6 @@ fn main() {
 
         game_of_life.update();
     }
-
-    // // Event loop.
-    // while let Some(e) = window.next() {
-    //     // Drawing.
-    //     window.draw_2d(&e, |c, g| {
-    //         clear(config.background, g);
-
-    //         for y in 0..view.cells_on_height {
-    //             for x in 0..view.cells_on_width {
-    //                 if game_of_life.board[y + view.y][x + view.x] == CellState::Alive {
-    //                     rectangle(
-    //                         config.foreground,
-    //                         [
-    //                             (x as f64) * view.cell_width,
-    //                             (y as f64) * view.cell_width,
-    //                             view.cell_width,
-    //                             view.cell_width,
-    //                         ],
-    //                         c.transform,
-    //                         g,
-    //                     );
-    //                 } else if config.view_border
-    //                     && (y + view.y == 0
-    //                         || y + view.y + 1 == view.board_height
-    //                         || x + view.x == 0
-    //                         || x + view.x + 1 == view.board_width)
-    //                 {
-    //                     rectangle(
-    //                         [0.5, 0.5, 0.5, 1.0],
-    //                         [
-    //                             (x as f64) * view.cell_width,
-    //                             (y as f64) * view.cell_width,
-    //                             view.cell_width,
-    //                             view.cell_width,
-    //                         ],
-    //                         c.transform,
-    //                         g,
-    //                     );
-    //                 }
-    //             }
-    //         }
-
-    //         game_of_life.update();
-    //     });
-    // }
 }
 
 pub struct Config {
