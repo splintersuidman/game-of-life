@@ -6,7 +6,7 @@ pub struct Coordinate {
 
 pub struct Square {
     coordinates: [Coordinate; 4],
-    color: [f64; 4],
+    color: [f32; 4],
 }
 
 impl Square {
@@ -15,7 +15,7 @@ impl Square {
     }
 
     /// Calculates the coordinates from the top-left corner, the width and the height
-    pub fn new(width: f64, height: f64, x: f64, y: f64, color: [f64; 4]) -> Square {
+    pub fn new(width: f32, height: f32, x: f32, y: f32, color: [f32; 4]) -> Square {
         let top_left = Coordinate { x, y };
         let top_right = Coordinate { x + width, y };
         let bottom_left = Coordinate { x, y - height };
@@ -28,22 +28,22 @@ impl Square {
     }
 
     /// Takes a position on the board and calculates the coordinates
-    pub fn simple(view: &super::View, board_x: usize, board_y: usize, color: [f64; 4]) -> Square {
-        let gl_y = board_y as f64 / (view.cells_on_height + 1) as f64 * 2.0 - 1.0;
-        let gl_x = board_x as f64 / (view.cells_on_width + 1) as f64 * 2.0 - 1.0;
+    pub fn simple(view: &super::View, board_x: usize, board_y: usize, color: [f32; 4]) -> Square {
+        let gl_y = board_y as f32 / (view.cells_on_height + 2) as f32 * 2.0 - 1.0;
+        let gl_x = board_x as f32 / (view.cells_on_width + 2) as f32 * 2.0 - 1.0;
 
         return Square::new(view.gl_cell_width(), view.gl_cell_height(), gl_x, gl_y, color);
     }
 }
 
-pub fn clear_screen(color: [f64; 4]) {
+pub fn clear_screen(color: [f32; 4]) {
     unimplemented!();
 }
 
 /// Renders the board
 /// 
 /// **NOTE**: Does not update the board as well.
-pub fn render(config: &super::Config, view: &super::View, board: Vec<Vec<super::game_of_life::CellState>>, alive_color: [f64; 4], dead_color: [f64; 4]) {
+pub fn render(config: &super::Config, view: &super::View, board: Vec<Vec<super::game_of_life::CellState>>, alive_color: [f32; 4], dead_color: [f32; 4]) {
     clear_screen(dead_color);
 
     for board_y in 0..view.cells_on_height {
