@@ -5,6 +5,7 @@ extern crate gl;
 extern crate glutin;
 
 mod graphics_context;
+mod render;
 mod view;
 
 use clap::{App, Arg};
