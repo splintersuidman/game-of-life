@@ -83,6 +83,6 @@ impl Renderer {
             0.0,
         ));
         self.graphics_context
-            .draw_square_with_scale_translation(scale, translate, color);
+            .draw_square_with_scale_translation_color(scale, translate, color);
     }
 }

@@ -152,7 +152,7 @@ impl View {
         let x = self.cells_on_width as f32 / 2.0 + self.precise_x as f32;
         let y = self.cells_on_height as f32 / 2.0 + self.precise_y as f32;
 
-        return (x, y);
+        (x, y)
     }
 
     pub fn set_center(&mut self, coordinates: (f32, f32)) {
