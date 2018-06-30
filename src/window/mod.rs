@@ -35,8 +35,6 @@ fn main() {
     // Create View for managing boards larger than a window
     let mut view = View::from_config(&config);
 
-    // view.determine_window_size(600, 600);
-
     // Create window.
     let mut events_loop = glutin::EventsLoop::new();
     let window = glutin::WindowBuilder::new()
@@ -55,11 +53,18 @@ fn main() {
     let size = gl_window.get_current_monitor().get_dimensions();
     let (screen_width, screen_height) = (size.width, size.height);
 
+    println!(
+        "Screen: width = {}px, height = {}px",
+        screen_width, screen_height
+    );
+
     view.determine_window_size(screen_width as f32, screen_height as f32);
     gl_window.set_inner_size(LogicalSize::new(
         view.window_width as f64,
         view.window_height as f64,
     ));
+
+    // view.info();
 
     // TODO: grab cursor if board_width * cell_width > window_width.
     // gl_window.set_cursor_state(glutin::CursorState::Grab);
