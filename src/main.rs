@@ -18,7 +18,7 @@ use std::time::{Duration, Instant};
 use view::View;
 
 fn main() {
-    let config = Config::parse();
+    let mut config = Config::parse();
 
     let mut game_of_life = GameOfLife::new(config.width as usize, config.height as usize);
 
@@ -158,6 +158,12 @@ fn main() {
                             }
                             _ => (),
                         }
+                    }
+                }
+                glutin::WindowEvent::DroppedFile(f) => {
+                    if let Some(f) = f.to_str() {
+                        game_of_life.init_with_file(f).unwrap();
+                        config.file = Some(f.to_string());
                     }
                 }
                 _ => (),
