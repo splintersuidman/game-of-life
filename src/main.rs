@@ -87,7 +87,10 @@ fn main() {
                 }
                 glutin::WindowEvent::Resized(size) => {
                     // Window was resized.
+                    let center = view.get_center();
                     view.on_resize(size.width as f32, size.height as f32);
+                    view.set_center(center);
+
                     let dpi_factor = gl_window.get_hidpi_factor();
                     gl_window.resize(size.to_physical(dpi_factor));
                 }
