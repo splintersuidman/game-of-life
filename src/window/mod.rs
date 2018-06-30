@@ -14,6 +14,7 @@ use game_of_life::GameOfLife;
 use glutin::dpi::*;
 use glutin::GlContext;
 use render::Renderer;
+use std::time::{Duration, Instant};
 use view::View;
 
 fn main() {
@@ -67,6 +68,10 @@ fn main() {
         gl_window.window().grab_cursor(true).unwrap();
         gl_window.window().hide_cursor(true);
     }
+
+    let delay = Duration::from_millis(((1.0 / config.fps as f32) * 1e3) as u64);
+    // Keep track of the previous time the board had been updated, to use the fps config variable.
+    let mut previous_update = Instant::now() - delay;
 
     let mut closed = false;
     while !closed {
@@ -151,10 +156,13 @@ fn main() {
             _ => (),
         });
 
-        renderer.render(&config, &view, &game_of_life);
+        let now = Instant::now();
+        if now.duration_since(previous_update) >= delay {
+            game_of_life.update();
+            previous_update = now;
 
-        gl_window.swap_buffers().unwrap();
-
-        game_of_life.update();
+            renderer.render(&config, &view, &game_of_life);
+            gl_window.swap_buffers().unwrap();
+        }
     }
 }
