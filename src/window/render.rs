@@ -32,8 +32,8 @@ impl Square {
 
     /// Takes a position on the board and calculates the coordinates
     pub fn simple(view: &super::View, board_x: usize, board_y: usize, color: [f32; 4]) -> Square {
-        let gl_y = board_y as f32 / (view.cells_on_height + 2) as f32 * 2.0 - 1.0;
-        let gl_x = board_x as f32 / (view.cells_on_width + 2) as f32 * 2.0 - 1.0;
+        let gl_y = board_y as f32 / view.cells_on_height as f32 * 2.0 - 1.0;
+        let gl_x = board_x as f32 / view.cells_on_width as f32 * 2.0 - 1.0;
 
         return Square::new(
             view.gl_cell_width(),
