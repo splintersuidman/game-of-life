@@ -45,14 +45,18 @@ cargo install
 
 ```text
 game-of-life 0.3.0
-Splinter Suidman
+Splinter Suidman (splintah) & Sybrand Aarnoutse (syberant)
 game-of-life emulates John Conway's game of life.
-Press Escape to exit, press Space or a mouse button to reinitialise grid.
+Press Escape to exit, press C to toggle cursor capture and press Space or a mouse button to reinitialise grid.
+Pressing ctrl and scrolling will zoom in on the cells.
+A file can be dropped on the screen to load that file. When the grid is reinitialised, it will be reinitialised with
+that file.
 
 USAGE:
-    gol-win [OPTIONS]
+    game-of-life [FLAGS] [OPTIONS]
 
 FLAGS:
+        --border     Display the border.
         --help       Prints help information
     -V, --version    Prints version information
 
@@ -76,9 +80,11 @@ OPTIONS:
                                      Default: 000000.
         --fps <fps>                  The amount of updates and frames that should be performed per second.
                                      This is the maximum frames per second; that is, the actual fps could be less.
+                                     A frame rate of 0 fps will result in no fps limit.
                                      Default: 24.
     -h, --height <height>            Change the height of the board (in cells).
                                      Default: 50.
     -w, --width <width>              Change the width of the board (in cells).
                                      Default: 50.
+
 ```

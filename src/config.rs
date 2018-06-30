@@ -20,7 +20,7 @@ pub struct Config {
 impl Config {
     pub fn parse() -> Self {
         let matches = App::new("game-of-life")
-        .version("0.3.0")
+        .version("1.0.0")
         .author("Splinter Suidman (splintah) & Sybrand Aarnoutse (syberant)")
         .about(ABOUT_MESSAGE)
         .arg(Arg::with_name("width")
