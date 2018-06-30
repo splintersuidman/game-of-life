@@ -1,5 +1,10 @@
 use super::clap::{App, Arg};
 
+const ABOUT_MESSAGE: &str = "game-of-life emulates John Conway's game of life.
+Press Escape to exit, press C to toggle cursor capture and press Space or a mouse button to reinitialise grid.
+Pressing ctrl and scrolling will zoom in on the cells.
+A file can be dropped on the screen to load that file. When the grid is reinitialised, it will be reinitialised with that file.";
+
 pub struct Config {
     pub width: u32,
     pub height: u32,
@@ -17,7 +22,7 @@ impl Config {
         let matches = App::new("game-of-life")
         .version("0.3.0")
         .author("Splinter Suidman (splintah) & Sybrand Aarnoutse (syberant)")
-        .about("game-of-life emulates John Conway's game of life.\nPress Escape to exit, press C to toggle cursor capture and press Space or a mouse button to reinitialise grid.\nA file can be dropped on the screen to load that file. When the grid is reinitialised, it will be reinitialised with that file.")
+        .about(ABOUT_MESSAGE)
         .arg(Arg::with_name("width")
             .short("w")
             .long("width")
