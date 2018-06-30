@@ -127,6 +127,13 @@ fn main() {
                                     gl_window.window().hide_cursor(false);
                                 }
                             }
+                            F => {
+                                // ctrl-cmd F
+                                if input.modifiers.ctrl && input.modifiers.logo {
+                                    let monitor_id = gl_window.get_current_monitor();
+                                    gl_window.window().set_fullscreen(Some(monitor_id));
+                                }
+                            }
                             Escape => {
                                 // Window has to close.
                                 closed = true;
