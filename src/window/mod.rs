@@ -87,17 +87,6 @@ fn main() {
                     // window was resized
                     view.on_resize(size.width as f32, size.height as f32);
                 }
-                glutin::WindowEvent::CursorMoved { position, .. } => {
-                    let delta_x = view.previous_mouse_x - position.x;
-                    let delta_y = view.previous_mouse_y - position.y;
-
-                    // mouse moved
-                    view.on_mouse_move(delta_x, delta_y);
-
-                    // update previous_mouse
-                    view.previous_mouse_x = position.x;
-                    view.previous_mouse_y = position.y;
-                }
                 glutin::WindowEvent::MouseInput { state, button, .. } => {
                     // Left-mouse-button pressed
                     if state == glutin::ElementState::Pressed && glutin::MouseButton::Left == button
@@ -144,6 +133,13 @@ fn main() {
                             _ => (),
                         }
                     }
+                }
+                _ => (),
+            },
+            glutin::Event::DeviceEvent { event, .. } => match event {
+                glutin::DeviceEvent::MouseMotion { delta } => {
+                    // mouse moved
+                    view.on_mouse_move(delta.0, -delta.1);
                 }
                 _ => (),
             },
