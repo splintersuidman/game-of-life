@@ -12,20 +12,20 @@ use std::str;
 
 const VERTEX_SHADER_SOURCE: &str = r#"
     #version 330 core
-    layout (location = 0) in vec3 aPos;
+    layout (location = 0) in vec3 position;
     uniform mat4 scale;
     uniform mat4 translate;
     void main() {
-       gl_Position = translate * scale * vec4(aPos.x, aPos.y, aPos.z, 1.0);
+       gl_Position = translate * scale * vec4(position, 1.0);
     }
 "#;
 
-// TODO: uniform colour.
 const FRAGMENT_SHADER_SOURCE: &str = r#"
     #version 330 core
-    out vec4 FragColor;
+    uniform vec4 color;
+    out vec4 fragment_color;
     void main() {
-       FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+       fragment_color = color;
     }
 "#;
 
@@ -184,8 +184,12 @@ impl GraphicsContext {
         }
     }
 
-    // TODO: color.
-    pub fn draw_square_with_scale_translation(&self, scale: Matrix4<f32>, translate: Matrix4<f32>) {
+    pub fn draw_square_with_scale_translation(
+        &self,
+        scale: Matrix4<f32>,
+        translate: Matrix4<f32>,
+        color: [f32; 4],
+    ) {
         unsafe {
             gl::UseProgram(self.shader_program);
 
@@ -199,6 +203,11 @@ impl GraphicsContext {
                 CString::new("translate").unwrap().as_ptr(),
             );
             gl::UniformMatrix4fv(translate_square, 1, gl::FALSE, translate.as_ptr());
+            let color_square = gl::GetUniformLocation(
+                self.shader_program,
+                CString::new("color").unwrap().as_ptr(),
+            );
+            gl::Uniform4f(color_square, color[0], color[1], color[2], color[3]);
 
             gl::BindVertexArray(self.vao);
             gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, ptr::null());

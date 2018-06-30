@@ -52,13 +52,13 @@ impl Renderer {
     }
 
     pub fn render(&self, config: &Config, view: &View, game_of_life: &GameOfLife) {
-        self.clear_screen(config.foreground);
+        self.clear_screen(config.background);
 
         for board_y in 0..view.cells_on_height {
             for board_x in 0..view.cells_on_width {
                 if game_of_life.board[board_y + view.y][board_x + view.x] == CellState::Alive {
                     let square = Square::simple(view, board_x, board_y);
-                    self.draw_square(&square);
+                    self.draw_square(&square, config.foreground);
                 } else if config.view_border
                     && (board_y + view.y == 0
                         || board_y + view.y + 1 == view.board_height
@@ -66,7 +66,7 @@ impl Renderer {
                         || board_x + view.x + 1 == view.board_width)
                 {
                     let square = Square::simple(view, board_x, board_y);
-                    self.draw_square(&square);
+                    self.draw_square(&square, config.foreground);
                 }
             }
         }
@@ -76,7 +76,7 @@ impl Renderer {
         GraphicsContext::clear_color(color[0], color[1], color[2], color[3]);
     }
 
-    fn draw_square(&self, square: &Square) {
+    fn draw_square(&self, square: &Square, color: [f32; 4]) {
         let width = square.coordinates[1].x - square.coordinates[0].x;
         let height = square.coordinates[0].y - square.coordinates[2].y;
         let scale = Matrix4::from_nonuniform_scale(width / 2.0, height / 2.0, 1.0);
@@ -86,6 +86,6 @@ impl Renderer {
             0.0,
         ));
         self.graphics_context
-            .draw_square_with_scale_translation(scale, translate);
+            .draw_square_with_scale_translation(scale, translate, color);
     }
 }
