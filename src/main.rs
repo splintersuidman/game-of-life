@@ -178,7 +178,7 @@ fn main() {
             glutin::Event::DeviceEvent { event, .. } => {
                 if let glutin::DeviceEvent::MouseMotion { delta } = event {
                     // Mouse moved.
-                    view.on_mouse_move(delta.0, -delta.1);
+                    view.on_mouse_move(-delta.0, -delta.1);
                 }
             }
             _ => (),
