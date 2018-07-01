@@ -9,8 +9,8 @@ use std::mem;
 use std::os::raw::c_void;
 use std::ptr;
 
-const VERTEX_SHADER_SOURCE: &[u8] = include_bytes!("./shaders/cell.vs");
-const FRAGMENT_SHADER_SOURCE: &[u8] = include_bytes!("./shaders/cell.fs");
+const VERTEX_SHADER_SOURCE: &[u8] = include_bytes!("./shaders/cell_vertex.glsl");
+const FRAGMENT_SHADER_SOURCE: &[u8] = include_bytes!("./shaders/cell_fragment.glsl");
 
 pub struct GraphicsContext {
     shader_program: GLuint,
@@ -92,23 +92,16 @@ impl GraphicsContext {
             gl::DeleteShader(fragment_shader);
 
             // Using vertices and indices a square is drawn that covers the entire screen.
-            let vertices: [f32; 12] = [
+            let vertices_count = 3 * 4;
+            let vertices: [[f32; 3]; 4] = [
                 // top left
-                -1.0,
-                -1.0,
-                0.0,
+                [-1.0, -1.0, 0.0],
                 // top right
-                1.0,
-                -1.0,
-                0.0,
+                [1.0, -1.0, 0.0],
                 // bottom right
-                1.0,
-                1.0,
-                0.0,
+                [1.0, 1.0, 0.0],
                 // bottom left
-                -1.0,
-                1.0,
-                0.0,
+                [-1.0, 1.0, 0.0],
             ];
             let indices = [
                 // first triangle
@@ -129,7 +122,7 @@ impl GraphicsContext {
             gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
             gl::BufferData(
                 gl::ARRAY_BUFFER,
-                (vertices.len() * mem::size_of::<GLfloat>()) as GLsizeiptr,
+                (vertices_count * mem::size_of::<GLfloat>()) as GLsizeiptr,
                 &vertices[0] as *const f32 as *const c_void,
                 gl::STATIC_DRAW,
             );
@@ -137,7 +130,7 @@ impl GraphicsContext {
             gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, ebo);
             gl::BufferData(
                 gl::ELEMENT_ARRAY_BUFFER,
-                (indices.len() * mem::size_of::<GLfloat>()) as GLsizeiptr,
+                (indices.len() * mem::size_of::<GLint>()) as GLsizeiptr,
                 &indices[0] as *const i32 as *const c_void,
                 gl::STATIC_DRAW,
             );
