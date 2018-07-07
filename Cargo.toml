@@ -12,9 +12,9 @@ path = "./src/lib/mod.rs"
 bench = []
 
 [dependencies]
-rand = "0.5"
-rayon = "1.0"
-clap = "~2.31.0"
-glutin = "0.17.0"
-gl = "0.10.0"
-cgmath = "0.16.1"
+rand = "~0.5"
+rayon = "~1.0"
+clap = "~2.31"
+glutin = "~0.17"
+gl = "~0.10"
+cgmath = "~0.16"
