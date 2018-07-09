@@ -15,6 +15,7 @@ pub struct Config {
     pub foreground: [f32; 4],
     pub background: [f32; 4],
     pub view_border: bool,
+    pub full_screen: bool,
 }
 
 impl Config {
@@ -63,6 +64,10 @@ impl Config {
         .arg(Arg::with_name("border")
             .long("border")
             .help("Display the border.")
+            .takes_value(false))
+        .arg(Arg::with_name("full-screen")
+            .long("full-screen")
+            .help("Launch in full-screen mode.")
             .takes_value(false))
         .get_matches();
 
@@ -114,6 +119,7 @@ impl Config {
         ];
 
         let view_border: bool = matches.is_present("border");
+        let full_screen: bool = matches.is_present("full-screen");
 
         Config {
             width,
@@ -125,6 +131,7 @@ impl Config {
             foreground,
             background,
             view_border,
+            full_screen,
         }
     }
 }

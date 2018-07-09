@@ -39,12 +39,24 @@ fn main() {
 
     // Create window.
     let mut events_loop = glutin::EventsLoop::new();
-    let window = glutin::WindowBuilder::new()
-        .with_title(name)
-        .with_dimensions(LogicalSize::new(
-            (config.width * config.cell_width) as f64,
-            (config.height * config.cell_width) as f64,
-        ));
+    let window = glutin::WindowBuilder::new().with_title(name);
+
+    let monitor: glutin::MonitorId = events_loop.get_primary_monitor(); // Get the MonitorId of the primary monitor.
+    let dimensions = monitor.get_dimensions(); // Get the screen dimensions.
+    view.determine_window_size(dimensions.width as f32, dimensions.height as f32); // Prepare for creating a window.
+
+    if config.full_screen {
+        view.on_resize(dimensions.width as f32, dimensions.height as f32); // Resize the window if neccessary to full_screen.
+    }
+
+    let window = if config.full_screen {
+        window.with_fullscreen(Some(monitor))
+    } else {
+        window.with_dimensions(LogicalSize::new(
+            view.window_width as f64,
+            view.window_height as f64,
+        ))
+    };
     let context = glutin::ContextBuilder::new().with_vsync(true);
     let gl_window = glutin::GlWindow::new(window, context, &events_loop).unwrap();
 
@@ -54,16 +66,7 @@ fn main() {
 
     let renderer = Renderer::new(&gl_window).unwrap();
 
-    // Get the window.
-    let size = gl_window.get_current_monitor().get_dimensions();
-    let (screen_width, screen_height) = (size.width, size.height);
-
-    view.determine_window_size(screen_width as f32, screen_height as f32);
-    gl_window.set_inner_size(LogicalSize::new(
-        view.window_width as f64,
-        view.window_height as f64,
-    ));
-
+    // Capture the cursor if appropriate.
     if view.capture_cursor {
         gl_window.window().grab_cursor(true).unwrap();
         gl_window.window().hide_cursor(true);
