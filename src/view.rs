@@ -23,6 +23,15 @@ pub struct View {
 }
 
 impl View {
+    /// Checks whether it's neccessary to be able to move around the board
+    pub fn check_capture_cursor(&mut self) {
+        if self.board_width as f32 * self.cell_width > self.window_width
+            || self.board_height as f32 * self.cell_width > self.window_height
+        {
+            self.capture_cursor = true;
+        }
+    }
+
     pub fn toggle_capture_cursor(&mut self) {
         self.capture_cursor = !self.capture_cursor;
     }
@@ -51,11 +60,7 @@ impl View {
 
         self.on_resize(width, height);
 
-        if self.board_width as f32 * self.cell_width > self.window_width
-            || self.board_height as f32 * self.cell_width > self.window_height
-        {
-            self.capture_cursor = true;
-        }
+        self.check_capture_cursor();
     }
 
     pub fn from_config(config: &Config) -> Self {

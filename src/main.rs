@@ -47,6 +47,7 @@ fn main() {
 
     if config.full_screen {
         view.on_resize(dimensions.width as f32, dimensions.height as f32); // Resize the window if neccessary to full_screen.
+        view.check_capture_cursor(); // Check if the cursor should be captured and set `view.capture_cursor`.
     }
 
     let window = if config.full_screen {
