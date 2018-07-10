@@ -37,12 +37,12 @@ impl View {
         self.capture_cursor = !self.capture_cursor;
     }
 
-    /// Returns the cell_width in the correct proportions for openGL.
+    /// Returns the cell_width in the correct proportions for OpenGL.
     pub fn gl_cell_width(&self) -> f32 {
         self.cell_width / self.window_width as f32 * 2.0
     }
 
-    /// Returns the cell_height in the correct proportions for openGL.
+    /// Returns the cell_height in the correct proportions for OpenGL.
     pub fn gl_cell_height(&self) -> f32 {
         self.cell_width / self.window_height as f32 * 2.0
     }
