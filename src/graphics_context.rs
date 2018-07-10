@@ -104,14 +104,8 @@ impl GraphicsContext {
                 [-1.0, 1.0, 0.0],
             ];
             let indices = [
-                // first triangle
-                0,
-                1,
-                2,
-                // second triangle
-                2,
-                3,
-                0,
+                0, 1, 2, // first triangle
+                2, 3, 0, // second triangle
             ];
             let (mut vbo, mut ebo) = (0, 0);
             gl::GenVertexArrays(1, &mut self.vao);

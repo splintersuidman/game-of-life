@@ -9,7 +9,8 @@ pub fn parse_life_105_file<S: AsRef<str>>(s: &S) -> Result<Pattern, String> {
 
     let mut pattern = Pattern::default();
 
-    let metadata: String = s.lines()
+    let metadata: String = s
+        .lines()
         .filter(|x| x.starts_with("#D"))
         .map(|x| format!("{}\n", x[2..].trim()))
         .collect();
@@ -22,7 +23,8 @@ pub fn parse_life_105_file<S: AsRef<str>>(s: &S) -> Result<Pattern, String> {
 
     // Remove all lines beginning with "#", except the ones with "#P" because they give information
     // about the blocks.
-    let lines = s.lines()
+    let lines = s
+        .lines()
         .filter(|x| !x.starts_with('#') || x.starts_with("#P"));
 
     let mut y: isize = -1;
