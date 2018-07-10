@@ -41,13 +41,18 @@ fn main() {
     let mut events_loop = glutin::EventsLoop::new();
     let window = glutin::WindowBuilder::new().with_title(name);
 
-    let monitor: glutin::MonitorId = events_loop.get_primary_monitor(); // Get the MonitorId of the primary monitor.
-    let dimensions = monitor.get_dimensions(); // Get the screen dimensions.
-    view.determine_window_size(dimensions.width as f32, dimensions.height as f32); // Prepare for creating a window.
+    // Get the MonitorId of the primary monitor.
+    let monitor: glutin::MonitorId = events_loop.get_primary_monitor();
+    // Get the screen dimensions.
+    let dimensions = monitor.get_dimensions();
+    // Prepare for creating a window.
+    view.determine_window_size(dimensions.width as f32, dimensions.height as f32);
 
     if config.full_screen {
-        view.on_resize(dimensions.width as f32, dimensions.height as f32); // Resize the window if neccessary to full_screen.
-        view.check_capture_cursor(); // Check if the cursor should be captured and set `view.capture_cursor`.
+        // Resize the window if neccessary to full_screen.
+        view.on_resize(dimensions.width as f32, dimensions.height as f32);
+        // Check if the cursor should be captured and set `view.capture_cursor`.
+        view.check_capture_cursor();
     }
 
     let window = if config.full_screen {
