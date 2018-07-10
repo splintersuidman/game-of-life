@@ -23,7 +23,7 @@ pub struct View {
 }
 
 impl View {
-    /// Checks whether it's neccessary to be able to move around the board
+    /// Checks whether it's neccessary to be able to move around the board.
     pub fn check_capture_cursor(&mut self) {
         if self.board_width as f32 * self.cell_width > self.window_width
             || self.board_height as f32 * self.cell_width > self.window_height
@@ -32,18 +32,26 @@ impl View {
         }
     }
 
+    /// Toggles whether the cursor should be captured or not.
     pub fn toggle_capture_cursor(&mut self) {
         self.capture_cursor = !self.capture_cursor;
     }
 
+    /// Returns the cell_width in the correct proportions for openGL.
     pub fn gl_cell_width(&self) -> f32 {
         self.cell_width / self.window_width as f32 * 2.0
     }
 
+    /// Returns the cell_height in the correct proportions for openGL.
     pub fn gl_cell_height(&self) -> f32 {
         self.cell_width / self.window_height as f32 * 2.0
     }
 
+    /// Guesses the ideal window size for a board
+    ///
+    /// Uses the screen size, the board size, and cell_width to make its guess.
+    /// Also captures the cursor if neccessary with `check_capture_cursor()` and makes sure everything is alright via `on_resize()`.
+    /// Intended only for use on startup.
     pub fn determine_window_size(&mut self, screen_width: f32, screen_height: f32) {
         self.window_width = if self.board_width as f32 * self.cell_width > screen_width {
             screen_width
@@ -63,6 +71,10 @@ impl View {
         self.check_capture_cursor();
     }
 
+    /// Initialises a `View` struct based on the given settings.
+    ///
+    /// **NOTE:** Because the screen size is still unknown the struct is not ready to be used yet;
+    /// call the `determine_window_size()` function first.
     pub fn from_config(config: &Config) -> Self {
         let board_width = config.width as usize;
         let board_height = config.height as usize;
@@ -99,6 +111,12 @@ impl View {
         }
     }
 
+    /// Chooses the correct `cell_width` for the new window size.
+    ///
+    /// Makes sure `cell_width`, `window_width`, `window_height`, `cells_on_width`, and `cells_on_height` are proportionate to one another.
+    /// Strives for using `base_cell_width` but adapts if that's not possible.
+    ///
+    /// **NOTE:** Does not change `base_cell_width`.
     pub fn on_resize(&mut self, width: f32, height: f32) {
         self.window_width = width;
         self.window_height = height;
@@ -124,6 +142,7 @@ impl View {
         self.on_mouse_move(0.0, 0.0);
     }
 
+    /// Moves the view around if appropriate.
     pub fn on_mouse_move(&mut self, mouse_x: f64, mouse_y: f64) {
         if self.capture_cursor {
             // Prevent y from moving outside of the board and update it.
@@ -171,6 +190,7 @@ impl View {
     //     self.x = self.precise_x as usize;
     // }
 
+    /// Zooms in and out if appropriate.
     pub fn on_scroll(&mut self, y: f32) {
         // let center = self.get_center();
         self.base_cell_width += self.base_cell_width * y * 0.01;
