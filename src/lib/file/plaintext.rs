@@ -19,29 +19,29 @@ impl Parse for Plaintext {
 
         let mut pattern = Pattern::default();
 
-        let mut metadata = file.lines().take_while(|x| x.starts_with('!'));
+        let mut metadata_lines = file.lines().take_while(|x| x.starts_with('!'));
 
         // Process name (!Name: name)
-        if let Some(name) = metadata.next() {
+        if let Some(name) = metadata_lines.next() {
             // exlude the "!Name:" and remove surrounding whitespace
             let name: &str = name[6..].trim();
-            pattern.name = Some(String::from(name));
+            pattern.metadata.name = Some(String::from(name));
         }
 
         // Process comments (lines starting with '!')
-        for description in metadata {
+        for description in metadata_lines {
             // Check for other information
             if description.starts_with("!Author:") {
                 let description = description[8..].trim();
-                pattern.author = Some(String::from(description));
+                pattern.metadata.author = Some(String::from(description));
             } else {
                 // Default, this line is a description
                 let description = description[1..].trim();
                 // and add to earlier description lines
-                if let Some(d) = pattern.description {
-                    pattern.description = Some(format!("{}\n{}", d, description));
+                if let Some(d) = pattern.metadata.description {
+                    pattern.metadata.description = Some(format!("{}\n{}", d, description));
                 } else {
-                    pattern.description = Some(String::from(description));
+                    pattern.metadata.description = Some(String::from(description));
                 }
             }
         }

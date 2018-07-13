@@ -3,7 +3,7 @@ extern crate rayon;
 
 pub mod file;
 
-use self::file::Pattern;
+use self::file::{Pattern, Metadata};
 use self::rayon::prelude::*;
 use rand::rngs::SmallRng;
 use rand::{FromEntropy, Rng};
@@ -46,7 +46,7 @@ pub struct GameOfLife {
     pub board: Vec<Vec<CellState>>,
     pub width: usize,
     pub height: usize,
-    pub name: Option<String>,
+    pub metadata: Metadata,
 }
 
 impl GameOfLife {
@@ -61,7 +61,7 @@ impl GameOfLife {
             board,
             width: width as usize,
             height: height as usize,
-            name: None,
+            metadata: Metadata::default(),
         }
     }
 
@@ -96,11 +96,9 @@ impl GameOfLife {
         S: AsRef<str>,
     {
         let pattern = Pattern::parse_file(filename)?;
-        if let Some(name) = pattern.name {
-            self.name = Some(name);
-        }
 
         self.init_empty();
+        self.metadata = pattern.metadata.clone();
 
         let origin = (self.width / 2, self.height / 2);
 
@@ -165,10 +163,10 @@ impl GameOfLife {
     }
 
     /// Export the current board
-    ///
-    /// Currently without any metadata.
     pub fn export(&self) -> Pattern {
         let mut cells: Vec<(isize, isize)> = Vec::new();
+        let metadata = self.metadata.clone();
+
         let origin = (self.width as isize / 2, self.height as isize / 2);
 
         for y in 0..self.width {
@@ -181,9 +179,7 @@ impl GameOfLife {
 
         Pattern {
             cells,
-            name: None,
-            description: None,
-            author: None,
+            metadata,
         }
     }
 }

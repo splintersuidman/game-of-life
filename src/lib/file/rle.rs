@@ -21,9 +21,9 @@ impl Parse for RLE {
         let mut pattern = Pattern::default();
 
         // Metadata
-        let metadata = file.lines().take_while(|x| x.starts_with('#'));
+        let metadata_lines = file.lines().take_while(|x| x.starts_with('#'));
 
-        for line in metadata {
+        for line in metadata_lines {
             let mut linedata = line.chars().skip(1);
             match linedata.next() {
                 Some('N') => {
@@ -31,24 +31,24 @@ impl Parse for RLE {
                     let name: String = linedata.collect();
                     let name = name.trim();
                     if !name.is_empty() {
-                        pattern.name = Some(String::from(name));
+                        pattern.metadata.name = Some(String::from(name));
                     }
                 }
                 Some('C') | Some('c') => {
                     // Comment or description
                     let description: String = linedata.collect();
                     let description = description.trim();
-                    if let Some(d) = pattern.description {
-                        pattern.description = Some(format!("{}\n{}", d, description));
+                    if let Some(d) = pattern.metadata.description {
+                        pattern.metadata.description = Some(format!("{}\n{}", d, description));
                     } else {
-                        pattern.description = Some(String::from(description));
+                        pattern.metadata.description = Some(String::from(description));
                     }
                 }
                 Some('O') => {
                     // Author
                     let author: String = linedata.collect();
                     let author = author.trim();
-                    pattern.author = Some(String::from(author));
+                    pattern.metadata.author = Some(String::from(author));
                 }
                 Some(unknown_char) => {
                     return Err(format!(
