@@ -31,6 +31,8 @@ impl Parse for Life105 {
             pattern.metadata.description = Some(metadata_lines);
         }
 
+        // TODO: support #R (rule).
+
         // Remove all lines beginning with "#", except the ones with "#P" because they give information
         // about the blocks.
         let lines = file
