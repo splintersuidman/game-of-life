@@ -3,13 +3,15 @@ mod life106;
 mod plaintext;
 mod rle;
 
-use std::fs::File;
-use std::io::Read;
-
 pub use self::life105::Life105;
 pub use self::life106::Life106;
 pub use self::plaintext::Plaintext;
 pub use self::rle::RLE;
+
+use std::fs::File;
+use std::io::Read;
+use super::CellState;
+
 
 pub trait Parse {
     fn parse<S: AsRef<str>>(file: S) -> Result<Pattern, String>;
@@ -20,6 +22,9 @@ pub trait Serialise {
     // TODO: change output to generic write object.
     fn serialise(output: &mut String, pattern: Pattern) -> Result<(), String>;
 }
+
+pub struct CellList(Vec<(isize, isize)>);
+pub struct CellTable(Vec<Vec<CellState>>);
 
 #[derive(Default)]
 pub struct Pattern {
@@ -63,5 +68,19 @@ impl Pattern {
 
     pub fn serialise<F: Serialise>(self, output: &mut String) -> Result<(), String> {
         F::serialise(output, self)
+    }
+}
+
+impl From<CellList> for CellTable {
+    // TODO: implement.
+    fn from(_list: CellList) -> CellTable {
+        unimplemented!()
+    }
+}
+
+impl From<CellTable> for CellList {
+    // TODO: implement.
+    fn from(_list: CellTable) -> CellList {
+        unimplemented!()
     }
 }
