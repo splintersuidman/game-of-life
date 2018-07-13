@@ -138,6 +138,10 @@ fn main() {
                         use glutin::VirtualKeyCode::*;
 
                         match input.virtual_keycode.unwrap() {
+                            E => {
+                                let pattern = game_of_life.export();
+                                println!("{}", game_of_life::parsers::life_106::export_life_106_file(pattern));
+                            }
                             C => {
                                 // Toggle capture_cursor.
                                 view.toggle_capture_cursor();

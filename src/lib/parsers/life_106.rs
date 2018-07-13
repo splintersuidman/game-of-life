@@ -38,3 +38,13 @@ pub fn parse_life_106_file<S: AsRef<str>>(s: &S) -> Result<Pattern, String> {
 
     Ok(pattern)
 }
+
+pub fn export_life_106_file(pattern: Pattern) -> String {
+    let mut text = String::from("#Life 1.06");
+
+    for c in pattern.cells {
+        text.push_str(&format!("\n{} {}", c.0, c.1));
+    }
+
+    return text;
+}

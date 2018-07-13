@@ -162,4 +162,27 @@ impl GameOfLife {
             });
         });
     }
+
+    /// Export the current board
+    /// 
+    /// Currently without any metadata.
+    pub fn export(&self) -> parsers::Pattern {
+        let mut cells: Vec<(isize, isize)> = Vec::new();
+        let origin = (self.width as isize / 2, self.height as isize / 2);
+
+        for y in 0..self.width {
+            for x in 0..self.height {
+                if self.board[y][x] == CellState::Alive {
+                    cells.push((x as isize - origin.0, y as isize - origin.1));
+                }
+            }
+        }
+
+        parsers::Pattern {
+            cells,
+            name: None,
+            description: None,
+            author: None,
+        }
+    }
 }
