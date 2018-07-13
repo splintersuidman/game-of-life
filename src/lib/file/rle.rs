@@ -104,17 +104,7 @@ impl Parse for RLE {
                             amount = 0;
                         }
                     }
-                    // TODO(splintah): rewrite because this is stupid (no offence).
-                    '0' => amount *= 10,
-                    '1' => amount = amount * 10 + 1,
-                    '2' => amount = amount * 10 + 2,
-                    '3' => amount = amount * 10 + 3,
-                    '4' => amount = amount * 10 + 4,
-                    '5' => amount = amount * 10 + 5,
-                    '6' => amount = amount * 10 + 6,
-                    '7' => amount = amount * 10 + 7,
-                    '8' => amount = amount * 10 + 8,
-                    '9' => amount = amount * 10 + 9,
+                    ch @ '0'...'9' => amount = amount * 10 + (ch as u8 - b'0') as isize,
                     '!' => {
                         // The end of this pattern was reached
                         return Ok(pattern);
