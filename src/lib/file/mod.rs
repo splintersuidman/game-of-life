@@ -24,15 +24,15 @@ pub trait Serialise {
 
 #[derive(Default)]
 pub struct CellList {
-    cells: Vec<(isize, isize)>,
-    center: (isize, isize),
+    pub cells: Vec<(isize, isize)>,
+    pub center: (isize, isize),
 }
 
 #[derive(Default)]
 pub struct CellTable {
-    cells: Vec<Vec<CellState>>,
-    width: usize,
-    height: usize,
+    pub cells: Vec<Vec<CellState>>,
+    pub width: usize,
+    pub height: usize,
 }
 
 #[derive(Default)]
@@ -85,38 +85,39 @@ impl From<CellList> for CellTable {
     fn from(list: CellList) -> CellTable {
         use std::iter;
 
-        let mut outer_x = (isize::max_value(), isize::min_value());
-        let mut outer_y = outer_x.clone();
+        let mut min_x = isize::max_value();
+        let mut max_x = isize::min_value();
+        let mut min_y = isize::max_value();
+        let mut max_y = isize::min_value();
 
         for (x, y) in list.cells.iter() {
             let (x, y) = (*x, *y);
 
-            if x < outer_x.0 {
-                outer_x.0 = x;
+            if x < min_x {
+                min_x = x;
             }
-            if x > outer_x.1 {
-                outer_x.1 = x;
+            if x > max_x {
+                max_x = x;
             }
-            if y < outer_y.0 {
-                outer_y.0 = y;
+            if y < min_x {
+                min_y = y;
             }
-            if y > outer_y.1 {
-                outer_y.1 = y;
+            if y > max_y {
+                max_y = y;
             }
         }
 
         let mut table = CellTable::default();
 
-        table.width = (outer_x.1 - outer_x.0) as usize;
-        table.height = (outer_y.1 - outer_y.0) as usize;
+        table.width = (max_x - min_x) as usize + 1;
+        table.height = (max_y - min_y) as usize + 1;
 
         table.cells = iter::repeat(iter::repeat(CellState::Dead).take(table.width).collect())
             .take(table.height)
             .collect();
 
         for (x, y) in list.cells {
-            table.cells[(list.center.0 - x) as usize][(list.center.1 - y) as usize] =
-                CellState::Alive;
+            table.cells[(y - min_y) as usize][(x - min_x) as usize] = CellState::Alive;
         }
 
         table
