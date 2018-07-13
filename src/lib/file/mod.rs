@@ -23,8 +23,15 @@ pub trait Serialise {
     fn serialise(output: &mut String, pattern: Pattern) -> Result<(), String>;
 }
 
-pub struct CellList(Vec<(isize, isize)>);
-pub struct CellTable(Vec<Vec<CellState>>);
+pub struct CellList {
+    cells: Vec<(isize, isize)>,
+    center: (isize, isize),
+}
+pub struct CellTable {
+    cells: Vec<Vec<CellState>>,
+    width: usize,
+    height: usize,
+}
 
 #[derive(Default)]
 pub struct Pattern {
