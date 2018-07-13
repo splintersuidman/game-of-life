@@ -80,14 +80,50 @@ impl Pattern {
     }
 }
 
-// TODO: benchmark.
+// TODO: benchmark + test.
 impl From<CellList> for CellTable {
     fn from(list: CellList) -> CellTable {
-        unimplemented!()
+        use std::iter;
+
+        let mut outer_x = (isize::max_value(), isize::min_value());
+        let mut outer_y = outer_x.clone();
+
+        for (x, y) in list.cells.iter() {
+            let (x, y) = (*x, *y);
+
+            if x < outer_x.0 {
+                outer_x.0 = x;
+            }
+            if x > outer_x.1 {
+                outer_x.1 = x;
+            }
+            if y < outer_y.0 {
+                outer_y.0 = y;
+            }
+            if y > outer_y.1 {
+                outer_y.1 = y;
+            }
+        }
+
+        let mut table = CellTable::default();
+
+        table.width = (outer_x.1 - outer_x.0) as usize;
+        table.height = (outer_y.1 - outer_y.0) as usize;
+
+        table.cells = iter::repeat(iter::repeat(CellState::Dead).take(table.width).collect())
+            .take(table.height)
+            .collect();
+
+        for (x, y) in list.cells {
+            table.cells[(list.center.0 - x) as usize][(list.center.1 - y) as usize] =
+                CellState::Alive;
+        }
+
+        table
     }
 }
 
-// TODO: benchmark.
+// TODO: benchmark + test.
 impl From<CellTable> for CellList {
     fn from(table: CellTable) -> CellList {
         let mut list = CellList::default();
