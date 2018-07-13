@@ -28,7 +28,7 @@ fn main() {
         game_of_life.init_randomly(config.chance);
     }
 
-    let name = if let Some(ref n) = game_of_life.name {
+    let name = if let Some(ref n) = game_of_life.metadata.name {
         format!("Game of Life - {}", n)
     } else {
         String::from("Game of Life")
@@ -139,7 +139,7 @@ fn main() {
 
                         match input.virtual_keycode.unwrap() {
                             E => {
-                                let pattern = game_of_life.export();
+                                // let pattern = game_of_life.export();
                                 // TODO: this.
                                 // println!(
                                 //     "{}",

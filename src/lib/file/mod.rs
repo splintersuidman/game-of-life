@@ -38,9 +38,7 @@ pub struct CellTable {
 #[derive(Default)]
 pub struct Pattern {
     pub cells: Vec<(isize, isize)>,
-    pub name: Option<String>,
-    pub description: Option<String>,
-    pub author: Option<String>,
+    pub metadata: Metadata,
 }
 
 impl Pattern {
@@ -78,6 +76,14 @@ impl Pattern {
     pub fn serialise<F: Serialise>(self, output: &mut String) -> Result<(), String> {
         F::serialise(output, self)
     }
+}
+
+#[derive(Default, Clone)]
+pub struct Metadata {
+    pub name: Option<String>,
+    pub description: Option<String>,
+    pub author: Option<String>,
+    pub generation: Option<usize>,
 }
 
 // TODO: benchmark + test.

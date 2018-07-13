@@ -19,16 +19,16 @@ impl Parse for Life105 {
 
         let mut pattern = Pattern::default();
 
-        let metadata: String = file
+        let metadata_lines: String = file
             .lines()
             .filter(|x| x.starts_with("#D"))
             .map(|x| format!("{}\n", x[2..].trim()))
             .collect();
 
-        if metadata.is_empty() {
-            pattern.description = None;
+        if metadata_lines.is_empty() {
+            pattern.metadata.description = None;
         } else {
-            pattern.description = Some(metadata);
+            pattern.metadata.description = Some(metadata_lines);
         }
 
         // TODO: support #R (rule).
