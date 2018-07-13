@@ -1,8 +1,9 @@
 extern crate rand;
 extern crate rayon;
 
-pub mod parsers;
+pub mod file;
 
+use self::file::Pattern;
 use self::rayon::prelude::*;
 use rand::rngs::SmallRng;
 use rand::{FromEntropy, Rng};
@@ -94,7 +95,7 @@ impl GameOfLife {
     where
         S: AsRef<str>,
     {
-        let pattern = parsers::Pattern::from_file(filename)?;
+        let pattern = Pattern::parse_file(filename)?;
         if let Some(name) = pattern.name {
             self.name = Some(name);
         }
@@ -164,9 +165,9 @@ impl GameOfLife {
     }
 
     /// Export the current board
-    /// 
+    ///
     /// Currently without any metadata.
-    pub fn export(&self) -> parsers::Pattern {
+    pub fn export(&self) -> Pattern {
         let mut cells: Vec<(isize, isize)> = Vec::new();
         let origin = (self.width as isize / 2, self.height as isize / 2);
 
@@ -178,7 +179,7 @@ impl GameOfLife {
             }
         }
 
-        parsers::Pattern {
+        Pattern {
             cells,
             name: None,
             description: None,
