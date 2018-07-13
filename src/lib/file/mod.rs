@@ -8,10 +8,9 @@ pub use self::life106::Life106;
 pub use self::plaintext::Plaintext;
 pub use self::rle::RLE;
 
+use super::CellState;
 use std::fs::File;
 use std::io::Read;
-use super::CellState;
-
 
 pub trait Parse {
     fn parse<S: AsRef<str>>(file: S) -> Result<Pattern, String>;
@@ -23,10 +22,13 @@ pub trait Serialise {
     fn serialise(output: &mut String, pattern: Pattern) -> Result<(), String>;
 }
 
+#[derive(Default)]
 pub struct CellList {
     cells: Vec<(isize, isize)>,
     center: (isize, isize),
 }
+
+#[derive(Default)]
 pub struct CellTable {
     cells: Vec<Vec<CellState>>,
     width: usize,
@@ -78,16 +80,29 @@ impl Pattern {
     }
 }
 
+// TODO: benchmark.
 impl From<CellList> for CellTable {
-    // TODO: implement.
-    fn from(_list: CellList) -> CellTable {
+    fn from(list: CellList) -> CellTable {
         unimplemented!()
     }
 }
 
+// TODO: benchmark.
 impl From<CellTable> for CellList {
-    // TODO: implement.
-    fn from(_list: CellTable) -> CellList {
-        unimplemented!()
+    fn from(table: CellTable) -> CellList {
+        let mut list = CellList::default();
+        // TODO: appropriate to say center = (width / 2, height / 2)?
+        list.center = (table.width as isize / 2, table.height as isize / 2);
+
+        for y in 0..table.width {
+            for x in 0..table.height {
+                if table.cells[y][x] == CellState::Alive {
+                    list.cells
+                        .push((x as isize - list.center.0, y as isize - list.center.1));
+                }
+            }
+        }
+
+        list
     }
 }
