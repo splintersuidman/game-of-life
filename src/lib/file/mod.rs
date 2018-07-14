@@ -83,7 +83,6 @@ pub struct Metadata {
     pub description: Option<String>,
     pub author: Option<String>,
     pub generation: Option<usize>,
-    // TODO: implement rule in GameOfLife.
     pub rule: Rule,
 }
 
