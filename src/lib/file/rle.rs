@@ -1,4 +1,4 @@
-use super::{Parse, Pattern, Serialise};
+use super::{Parse, Pattern, Serialise, Rule};
 use std::fmt;
 
 pub struct RLE;
@@ -50,6 +50,30 @@ impl Parse for RLE {
                     let author: String = linedata.collect();
                     let author = author.trim();
                     pattern.metadata.author = Some(String::from(author));
+                }
+                Some('r') => {
+                    let rule: String = linedata.collect();
+                    let rule = rule.trim();
+                    let mut line = rule.chars().peekable();
+                    pattern.metadata.rule = Rule::empty();
+
+                    while line.peek().map(|ch| ch != &'/') == Some(true) {
+                        let ch = line.next().unwrap();
+                        pattern
+                            .metadata
+                            .rule
+                            .set_survival((ch as u8 - b'0') as usize, true);
+                    }
+
+                    // Read '/'.
+                    line.next();
+
+                    for ch in line {
+                        pattern
+                            .metadata
+                            .rule
+                            .set_birth((ch as u8 - b'0') as usize, true);
+                    }
                 }
                 Some(unknown_char) => {
                     return Err(format!(
