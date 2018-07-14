@@ -19,7 +19,6 @@ pub trait Parse {
 }
 
 pub trait Serialise {
-    // TODO: change output to generic write object.
     fn serialise<W: fmt::Write>(output: &mut W, pattern: Pattern) -> Result<(), fmt::Error>;
 }
 
