@@ -97,7 +97,7 @@ impl From<CellList> for CellTable {
         let mut min_y = isize::max_value();
         let mut max_y = isize::min_value();
 
-        for &(x, y) in list.cells.iter() {
+        for &(x, y) in &list.cells {
             if x < min_x {
                 min_x = x;
             }
