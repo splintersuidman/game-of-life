@@ -8,6 +8,7 @@ use self::rayon::prelude::*;
 use rand::rngs::SmallRng;
 use rand::{FromEntropy, Rng};
 use std::iter;
+use std::path::Path;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CellState {
@@ -91,9 +92,9 @@ impl GameOfLife {
     }
 
     /// Init the game of life board from a file.
-    pub fn init_with_file<S>(&mut self, filename: S) -> Result<&mut Self, String>
+    pub fn init_with_file<P>(&mut self, filename: P) -> Result<&mut Self, String>
     where
-        S: AsRef<str>,
+        P: AsRef<Path>,
     {
         let pattern = Pattern::parse_file(filename)?;
 

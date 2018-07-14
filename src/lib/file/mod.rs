@@ -9,9 +9,10 @@ pub use self::plaintext::Plaintext;
 pub use self::rle::RLE;
 
 use super::CellState;
+use std::fmt;
 use std::fs::File;
 use std::io::Read;
-use std::fmt;
+use std::path::Path;
 
 pub trait Parse {
     fn parse<S: AsRef<str>>(file: S) -> Result<Pattern, String>;
@@ -42,8 +43,7 @@ pub struct Pattern {
 }
 
 impl Pattern {
-    // TODO: change AsRef<str> to AsRef<Path> or something like that.
-    pub fn parse_file<S: AsRef<str>>(filename: S) -> Result<Pattern, String> {
+    pub fn parse_file<P: AsRef<Path>>(filename: P) -> Result<Pattern, String> {
         let filename = filename.as_ref();
 
         // Read file and get rules from them.
@@ -68,7 +68,6 @@ impl Pattern {
         }
     }
 
-    // TODO: change AsRef<str> to AsRef<Path> or something like that.
     pub fn parse_file_with_type<F: Parse>(file: &str) -> Result<Pattern, String> {
         F::parse(file)
     }
