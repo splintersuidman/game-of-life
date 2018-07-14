@@ -1,4 +1,4 @@
-use super::{Parse, Pattern, Serialise};
+use super::{Parse, Pattern, Rule, Serialise};
 use std::fmt;
 
 pub struct Life105;
@@ -20,25 +20,48 @@ impl Parse for Life105 {
 
         let mut pattern = Pattern::default();
 
-        let metadata_lines: String = file
-            .lines()
-            .filter(|x| x.starts_with("#D"))
-            .map(|x| format!("{}\n", x[2..].trim()))
-            .collect();
+        // Skip header.
+        let mut lines = file.lines().skip(1).peekable();
 
-        if metadata_lines.is_empty() {
-            pattern.metadata.description = None;
-        } else {
-            pattern.metadata.description = Some(metadata_lines);
+        let mut description = String::new();
+        while lines.peek().map(|l| l.starts_with("#D")) == Some(true) {
+            // We can safely unwrap.
+            for ch in lines.next().unwrap().chars().skip(3) {
+                description.push(ch);
+            }
         }
 
-        // TODO: support #R (rule).
+        pattern.metadata.description = if description.is_empty() {
+            None
+        } else {
+            Some(description)
+        };
 
-        // Remove all lines beginning with "#", except the ones with "#P" because they give information
-        // about the blocks.
-        let lines = file
-            .lines()
-            .filter(|x| !x.starts_with('#') || x.starts_with("#P"));
+        if lines.peek().map(|l| l.starts_with("#N")) == Some(true) {
+            lines.next();
+            pattern.metadata.rule = Rule::normal();
+        } else if lines.peek().map(|l| l.starts_with("#R")) == Some(true) {
+            let mut line = lines.next().unwrap().chars().skip(3).peekable();
+            pattern.metadata.rule = Rule::empty();
+
+            while line.peek().map(|ch| ch != &'/') == Some(true) {
+                let ch = line.next().unwrap();
+                pattern
+                    .metadata
+                    .rule
+                    .set_survival((ch as u8 - b'0') as usize, true);
+            }
+
+            // Read '/'.
+            line.next();
+
+            for ch in line {
+                pattern
+                    .metadata
+                    .rule
+                    .set_birth((ch as u8 - b'0') as usize, true);
+            }
+        }
 
         let mut y: isize = -1;
         let mut base_x: isize = 0;

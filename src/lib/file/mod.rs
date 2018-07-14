@@ -8,7 +8,7 @@ pub use self::life106::Life106;
 pub use self::plaintext::Plaintext;
 pub use self::rle::RLE;
 
-use super::CellState;
+use super::{CellState, Rule};
 use std::fmt;
 use std::fs::File;
 use std::io::Read;
@@ -83,6 +83,8 @@ pub struct Metadata {
     pub description: Option<String>,
     pub author: Option<String>,
     pub generation: Option<usize>,
+    // TODO: implement rule in GameOfLife.
+    pub rule: Rule,
 }
 
 // TODO: benchmark.

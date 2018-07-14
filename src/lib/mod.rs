@@ -2,6 +2,9 @@ extern crate rand;
 extern crate rayon;
 
 pub mod file;
+mod rule;
+
+pub use self::rule::Rule;
 
 use self::file::{Metadata, Pattern};
 use self::rayon::prelude::*;
