@@ -1,14 +1,14 @@
 use super::{Parse, Pattern, Serialise};
+use std::fmt;
 
 pub struct Life106;
 
 impl Serialise for Life106 {
-    fn serialise(output: &mut String, pattern: Pattern) -> Result<(), String> {
-        // TODO: allocate output before pushing cells.
-        *output = String::from("#Life 1.06");
+    fn serialise<W: fmt::Write>(output: &mut W, pattern: Pattern) -> Result<(), fmt::Error> {
+        write!(output, "#Life 1.06")?;
 
         for c in pattern.cells {
-            output.push_str(&format!("\n{} {}", c.0, c.1));
+            write!(output, "\n{} {}", c.0, c.1)?;
         }
 
         Ok(())

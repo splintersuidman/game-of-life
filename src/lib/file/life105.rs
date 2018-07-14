@@ -1,9 +1,10 @@
 use super::{Parse, Pattern, Serialise};
+use std::fmt;
 
 pub struct Life105;
 
 impl Serialise for Life105 {
-    fn serialise(output: &mut String, pattern: Pattern) -> Result<(), String> {
+    fn serialise<W: fmt::Write>(output: &mut W, pattern: Pattern) -> Result<(), fmt::Error> {
         // TODO: serialise.
         unimplemented!()
     }

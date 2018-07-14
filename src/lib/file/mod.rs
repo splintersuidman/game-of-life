@@ -11,6 +11,7 @@ pub use self::rle::RLE;
 use super::CellState;
 use std::fs::File;
 use std::io::Read;
+use std::fmt;
 
 pub trait Parse {
     fn parse<S: AsRef<str>>(file: S) -> Result<Pattern, String>;
@@ -19,7 +20,7 @@ pub trait Parse {
 
 pub trait Serialise {
     // TODO: change output to generic write object.
-    fn serialise(output: &mut String, pattern: Pattern) -> Result<(), String>;
+    fn serialise<W: fmt::Write>(output: &mut W, pattern: Pattern) -> Result<(), fmt::Error>;
 }
 
 #[derive(Default)]
@@ -73,7 +74,7 @@ impl Pattern {
         F::parse(file)
     }
 
-    pub fn serialise<F: Serialise>(self, output: &mut String) -> Result<(), String> {
+    pub fn serialise<F: Serialise>(self, output: &mut String) -> Result<(), fmt::Error> {
         F::serialise(output, self)
     }
 }
