@@ -120,8 +120,10 @@ impl GameOfLife {
 
     /// Update the board using the game of life rules.
     pub fn update(&mut self) {
+
+        let rule = &self.metadata.rule;
         // Count neighbours for all cells.
-        let mut neighbours: Vec<Vec<i32>> = iter::repeat(())
+        let mut neighbours: Vec<Vec<usize>> = iter::repeat(())
             .take(self.height)
             .map(|_| iter::repeat(0).take(self.width).collect())
             .collect();
@@ -156,10 +158,10 @@ impl GameOfLife {
             row.par_iter_mut().enumerate().for_each(|(x, cell)| {
                 let number_of_neighbours = neighbours[y][x];
                 if *cell == CellState::Alive {
-                    if number_of_neighbours < 2 || number_of_neighbours > 3 {
+                    if !rule.survival(number_of_neighbours) {
                         *cell = CellState::Dead;
                     }
-                } else if number_of_neighbours == 3 {
+                } else if rule.birth(number_of_neighbours) {
                     *cell = CellState::Alive;
                 }
             });
