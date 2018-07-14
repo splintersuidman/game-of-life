@@ -1,4 +1,4 @@
-use super::{Parse, Pattern, Serialise, Rule};
+use super::{Parse, Pattern, Rule, Serialise};
 use std::fmt;
 
 pub struct RLE;
