@@ -49,20 +49,20 @@ impl Parse for Life105 {
                 let mut data = line.split_whitespace().skip(1);
 
                 base_x = match data.next() {
-                Some(x) => match x.parse() {
-                    Ok(x) => x,
-                    Err(e) => return Err(format!("Could not read data for x: {}", e)),
-                }
-                None => return Err(String::from("Could not find data for x in line starting with `#P` while reading a Life 1.05 file.")),
-            };
+                    Some(x) => match x.parse() {
+                        Ok(x) => x,
+                        Err(e) => return Err(format!("Could not read data for x: {}", e)),
+                    }
+                    None => return Err(String::from("Could not find data for x in line starting with `#P` while reading a Life 1.05 file.")),
+                };
 
                 y = match data.next() {
-                Some(y) => match y.parse() {
-                    Ok(y) => y,
-                    Err(e) => return Err(format!("Could not read data for y: {}.", e))
-                },
-                None => return Err(String::from("Could not find data for x in line starting with `#P` while reading a Life 1.05 file.")),
-            };
+                    Some(y) => match y.parse() {
+                        Ok(y) => y,
+                        Err(e) => return Err(format!("Could not read data for y: {}.", e))
+                    },
+                    None => return Err(String::from("Could not find data for x in line starting with `#P` while reading a Life 1.05 file.")),
+                };
             } else {
                 for token in line.chars() {
                     match token {
