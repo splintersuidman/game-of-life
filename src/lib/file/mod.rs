@@ -86,7 +86,7 @@ pub struct Metadata {
     pub generation: Option<usize>,
 }
 
-// TODO: benchmark + test.
+// TODO: benchmark.
 impl From<CellList> for CellTable {
     fn from(list: CellList) -> CellTable {
         use std::iter;
@@ -96,9 +96,7 @@ impl From<CellList> for CellTable {
         let mut min_y = isize::max_value();
         let mut max_y = isize::min_value();
 
-        for (x, y) in list.cells.iter() {
-            let (x, y) = (*x, *y);
-
+        for &(x, y) in list.cells.iter() {
             if x < min_x {
                 min_x = x;
             }
@@ -130,7 +128,7 @@ impl From<CellList> for CellTable {
     }
 }
 
-// TODO: benchmark + test.
+// TODO: benchmark.
 impl From<CellTable> for CellList {
     fn from(table: CellTable) -> CellList {
         let mut list = CellList::default();

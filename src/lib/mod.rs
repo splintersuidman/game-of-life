@@ -3,7 +3,7 @@ extern crate rayon;
 
 pub mod file;
 
-use self::file::{Pattern, Metadata};
+use self::file::{Metadata, Pattern};
 use self::rayon::prelude::*;
 use rand::rngs::SmallRng;
 use rand::{FromEntropy, Rng};
@@ -177,9 +177,6 @@ impl GameOfLife {
             }
         }
 
-        Pattern {
-            cells,
-            metadata,
-        }
+        Pattern { cells, metadata }
     }
 }
