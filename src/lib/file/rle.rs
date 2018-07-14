@@ -1,4 +1,4 @@
-use super::{Parse, Pattern, Rule, Serialise};
+use super::{CellList, Cells, Parse, Pattern, Rule, Serialise};
 use std::fmt;
 
 pub struct RLE;
@@ -20,6 +20,7 @@ impl Parse for RLE {
     fn parse<S: AsRef<str>>(file: S) -> Result<Pattern, String> {
         let file = file.as_ref();
         let mut pattern = Pattern::default();
+        let mut cells = CellList::default();
 
         let mut lines = file.lines().peekable();
 
@@ -116,11 +117,11 @@ impl Parse for RLE {
                         // On state
                         if amount == 0 {
                             // Not preceded by a number
-                            pattern.cells.push((x, y));
+                            cells.push((x, y));
                             x += 1;
                         } else {
                             for i in 0..amount {
-                                pattern.cells.push((x + i, y));
+                                cells.push((x + i, y));
                             }
                             x += amount;
                             amount = 0;
@@ -145,6 +146,8 @@ impl Parse for RLE {
                 y += 1;
             }
         }
+
+        pattern.cells = Cells::List(cells);
 
         Ok(pattern)
     }

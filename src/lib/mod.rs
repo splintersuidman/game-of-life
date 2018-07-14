@@ -6,7 +6,7 @@ mod rule;
 
 pub use self::rule::Rule;
 
-use self::file::{Metadata, Pattern};
+use self::file::{CellList, Cells, Metadata, Pattern};
 use self::rayon::prelude::*;
 use rand::rngs::SmallRng;
 use rand::{FromEntropy, Rng};
@@ -106,7 +106,7 @@ impl GameOfLife {
 
         let origin = (self.width / 2, self.height / 2);
 
-        for (x, y) in pattern.cells {
+        for (x, y) in pattern.cells.into_cell_list().into_iter() {
             let x = (x + origin.0 as isize) as usize;
             let y = (y + origin.1 as isize) as usize;
 
@@ -120,7 +120,6 @@ impl GameOfLife {
 
     /// Update the board using the game of life rules.
     pub fn update(&mut self) {
-
         let rule = &self.metadata.rule;
         // Count neighbours for all cells.
         let mut neighbours: Vec<Vec<usize>> = iter::repeat(())
@@ -170,19 +169,24 @@ impl GameOfLife {
 
     /// Export the current board
     pub fn export(&self) -> Pattern {
-        let mut cells: Vec<(isize, isize)> = Vec::new();
         let metadata = self.metadata.clone();
 
-        let origin = (self.width as isize / 2, self.height as isize / 2);
+        let mut cells = CellList::default();
+
+        cells.center = (self.width as isize / 2, self.height as isize / 2);
+        let center = cells.center;
 
         for y in 0..self.width {
             for x in 0..self.height {
                 if self.board[y][x] == CellState::Alive {
-                    cells.push((x as isize - origin.0, y as isize - origin.1));
+                    cells.push((x as isize - center.0, y as isize - center.1));
                 }
             }
         }
 
-        Pattern { cells, metadata }
+        Pattern {
+            cells: Cells::List(cells),
+            metadata,
+        }
     }
 }

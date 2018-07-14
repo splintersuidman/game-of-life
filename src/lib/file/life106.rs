@@ -1,4 +1,4 @@
-use super::{Parse, Pattern, Serialise};
+use super::{CellList, Cells, Parse, Pattern, Serialise};
 use std::fmt;
 
 pub struct Life106;
@@ -7,7 +7,7 @@ impl Serialise for Life106 {
     fn serialise<W: fmt::Write>(output: &mut W, pattern: Pattern) -> Result<(), fmt::Error> {
         write!(output, "#Life 1.06")?;
 
-        for c in pattern.cells {
+        for c in pattern.cells.into_cell_list().into_iter() {
             write!(output, "\n{} {}", c.0, c.1)?;
         }
 
@@ -26,7 +26,7 @@ impl Parse for Life106 {
         // Skip first line, because it is the header.
         let lines = file.lines().skip(1);
 
-        let mut pattern = Pattern::default();
+        let mut cells = CellList::default();
 
         for line in lines.filter(|s| !s.is_empty()) {
             let mut line_split = line.split_whitespace();
@@ -49,8 +49,11 @@ impl Parse for Life106 {
                 Ok(v) => v,
             };
 
-            pattern.cells.push((x, y));
+            cells.push((x, y));
         }
+
+        let mut pattern = Pattern::default();
+        pattern.cells = Cells::List(cells);
 
         Ok(pattern)
     }

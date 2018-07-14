@@ -1,4 +1,4 @@
-use super::{Parse, Pattern, Serialise};
+use super::{CellList, Cells, Parse, Pattern, Serialise};
 use std::fmt;
 
 pub struct Plaintext;
@@ -48,13 +48,14 @@ impl Parse for Plaintext {
         }
 
         let lines = file.lines().skip_while(|x| x.starts_with('!'));
+        let mut cells = CellList::default();
 
         for (y, line) in lines.enumerate() {
             for (x, token) in line.chars().enumerate() {
                 match token {
                     // Cell is alive.
                     'O' => {
-                        pattern.cells.push((x as isize, y as isize));
+                        cells.push((x as isize, y as isize));
                     }
                     // Cell is dead.
                     '.' => {}
@@ -64,6 +65,8 @@ impl Parse for Plaintext {
                 }
             }
         }
+
+        pattern.cells = Cells::List(cells);
 
         Ok(pattern)
     }

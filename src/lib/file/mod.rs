@@ -23,22 +23,50 @@ pub trait Serialise {
     fn serialise<W: fmt::Write>(output: &mut W, pattern: Pattern) -> Result<(), fmt::Error>;
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct CellList {
     pub cells: Vec<(isize, isize)>,
+    // TODO: RENAME(origin).
     pub center: (isize, isize),
 }
 
-#[derive(Default)]
+impl CellList {
+    #[inline]
+    pub fn push(&mut self, value: (isize, isize)) {
+        self.cells.push(value)
+    }
+}
+
+#[derive(Clone, Default)]
 pub struct CellTable {
     pub cells: Vec<Vec<CellState>>,
     pub width: usize,
     pub height: usize,
 }
 
-#[derive(Default)]
+#[derive(Clone)]
+pub enum Cells {
+    List(CellList),
+    Table(CellTable),
+}
+
+impl Cells {
+    // Convenient because Into<T>::into does not accept type parameters.
+    #[inline]
+    pub fn into_cell_list(self) -> CellList {
+        self.into()
+    }
+
+    // Convenient because Into<T>::into does not accept type parameters.
+    #[inline]
+    pub fn into_cell_table(self) -> CellTable {
+        self.into()
+    }
+}
+
+#[derive(Clone, Default)]
 pub struct Pattern {
-    pub cells: Vec<(isize, isize)>,
+    pub cells: Cells,
     pub metadata: Metadata,
 }
 
@@ -145,5 +173,48 @@ impl From<CellTable> for CellList {
         }
 
         list
+    }
+}
+
+impl From<Cells> for CellTable {
+    fn from(cells: Cells) -> CellTable {
+        match cells {
+            Cells::List(list) => list.into(),
+            Cells::Table(table) => table,
+        }
+    }
+}
+
+impl From<Cells> for CellList {
+    fn from(cells: Cells) -> CellList {
+        match cells {
+            Cells::List(list) => list,
+            Cells::Table(table) => table.into(),
+        }
+    }
+}
+
+impl IntoIterator for CellList {
+    type Item = (isize, isize);
+    type IntoIter = ::std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.cells.into_iter()
+    }
+}
+
+impl IntoIterator for CellTable {
+    type Item = Vec<CellState>;
+    type IntoIter = ::std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.cells.into_iter()
+    }
+}
+
+impl Default for Cells {
+    fn default() -> Cells {
+        // This won't allocate, so not really a problem.
+        Cells::Table(CellTable::default())
     }
 }

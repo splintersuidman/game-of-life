@@ -1,4 +1,4 @@
-use super::{Parse, Pattern, Rule, Serialise};
+use super::{CellList, Cells, Parse, Pattern, Rule, Serialise};
 use std::fmt;
 
 pub struct Life105;
@@ -63,6 +63,8 @@ impl Parse for Life105 {
             }
         }
 
+        let mut cells = CellList::default();
+
         let mut y: isize = -1;
         let mut base_x: isize = 0;
         for line in lines {
@@ -93,7 +95,7 @@ impl Parse for Life105 {
                         '.' => {}
                         // Cell is alive.
                         '*' => {
-                            pattern.cells.push((x, y));
+                            cells.push((x, y));
                         }
                         c => {
                             return Err(format!("Unexpected character `{}` while reading a Life 1.05 file, expected `.` or `*`.", c));
@@ -103,6 +105,8 @@ impl Parse for Life105 {
                 }
             }
         }
+
+        pattern.cells = Cells::List(cells);
 
         Ok(pattern)
     }
