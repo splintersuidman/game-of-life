@@ -7,7 +7,7 @@ mod benches {
     extern crate game_of_life;
     extern crate test;
 
-    use self::game_of_life::parsers;
+    use self::game_of_life::file::*;
     use self::test::Bencher;
 
     const LIDKA_PLAINTEXT: &str = include_str!("../examples/lidka.cells");
@@ -17,21 +17,21 @@ mod benches {
 
     #[bench]
     fn bench_parse_plaintext(b: &mut Bencher) {
-        b.iter(|| parsers::plaintext::parse_plaintext_file(&LIDKA_PLAINTEXT));
+        b.iter(|| Plaintext::parse(&LIDKA_PLAINTEXT));
     }
 
     #[bench]
     fn bench_parse_life_106(b: &mut Bencher) {
-        b.iter(|| parsers::life_106::parse_life_106_file(&CORDERSHIP_GUN))
+        b.iter(|| Life106::parse(&CORDERSHIP_GUN))
     }
 
     #[bench]
     fn bench_parse_life_105(b: &mut Bencher) {
-        b.iter(|| parsers::life_105::parse_life_105_file(&BOMBER));
+        b.iter(|| Life105::parse(&BOMBER));
     }
 
     #[bench]
     fn bench_parse_rle(b: &mut Bencher) {
-        b.iter(|| parsers::rle::parse_rle_file(&PULSAR));
+        b.iter(|| RLE::parse(&PULSAR));
     }
 }

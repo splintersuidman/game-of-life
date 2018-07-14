@@ -21,11 +21,11 @@ impl Parse for RLE {
         let file = file.as_ref();
         let mut pattern = Pattern::default();
 
-        // Metadata
-        let metadata_lines = file.lines().take_while(|x| x.starts_with('#'));
+        let mut lines = file.lines().peekable();
 
-        for line in metadata_lines {
-            let mut linedata = line.chars().skip(1);
+        // Parse all metadata lines, beginning with a '#'.
+        while lines.peek().map(|l| l.starts_with('#')) == Some(true) {
+            let mut linedata = lines.next().unwrap().chars().skip(1);
             match linedata.next() {
                 Some('N') => {
                     // Name
@@ -60,9 +60,6 @@ impl Parse for RLE {
                 None => {}
             }
         }
-
-        // Remove all of the lines starting with `#`
-        let mut lines = file.lines().skip_while(|x| x.starts_with('#'));
 
         // x = m, y = n
         let _header = match lines.next() {
