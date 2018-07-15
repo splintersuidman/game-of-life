@@ -33,11 +33,11 @@ impl Serialise for RLE {
                 write!(output, "{}", i)?;
             }
         }
-        writeln!(output, "")?;
+        writeln!(output)?;
 
         let mut data: Vec<(usize, char)> = Vec::new();
 
-        for row in cells.into_iter() {
+        for row in cells {
             for cell in row {
                 let ch = if cell == CellState::Alive {
                     'o'

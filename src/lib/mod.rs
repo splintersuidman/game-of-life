@@ -106,7 +106,7 @@ impl GameOfLife {
 
         let origin = (self.width / 2, self.height / 2);
 
-        for (x, y) in pattern.cells.into_cell_list().into_iter() {
+        for (x, y) in pattern.cells.into_cell_list() {
             let x = (x + origin.0 as isize) as usize;
             let y = (y + origin.1 as isize) as usize;
 

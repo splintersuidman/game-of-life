@@ -30,7 +30,7 @@ impl GraphicsContext {
 
         unsafe {
             // NOTE: these will be used a number of times.
-            let mut success = gl::FALSE as GLint;
+            let mut success = GLint::from(gl::FALSE);
             let mut info_log = Vec::with_capacity(512);
 
             let vertex_shader = gl::CreateShader(gl::VERTEX_SHADER);
@@ -40,7 +40,7 @@ impl GraphicsContext {
 
             info_log.set_len(512 - 1);
             gl::GetShaderiv(vertex_shader, gl::COMPILE_STATUS, &mut success);
-            if success != gl::TRUE as GLint {
+            if success != GLint::from(gl::TRUE) {
                 gl::GetShaderInfoLog(
                     vertex_shader,
                     512,
@@ -58,7 +58,7 @@ impl GraphicsContext {
             gl::ShaderSource(fragment_shader, 1, &c_str_frag.as_ptr(), ptr::null());
             gl::CompileShader(fragment_shader);
             gl::GetShaderiv(fragment_shader, gl::COMPILE_STATUS, &mut success);
-            if success != gl::TRUE as GLint {
+            if success != GLint::from(gl::TRUE) {
                 gl::GetShaderInfoLog(
                     fragment_shader,
                     512,
@@ -76,7 +76,7 @@ impl GraphicsContext {
             gl::AttachShader(self.shader_program, fragment_shader);
             gl::LinkProgram(self.shader_program);
             gl::GetProgramiv(self.shader_program, gl::LINK_STATUS, &mut success);
-            if success != gl::TRUE as GLint {
+            if success != GLint::from(gl::TRUE) {
                 gl::GetProgramInfoLog(
                     self.shader_program,
                     512,

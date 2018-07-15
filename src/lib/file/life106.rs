@@ -7,7 +7,7 @@ impl Serialise for Life106 {
     fn serialise<W: fmt::Write>(output: &mut W, pattern: Pattern) -> Result<(), fmt::Error> {
         write!(output, "#Life 1.06")?;
 
-        for c in pattern.cells.into_cell_list().into_iter() {
+        for c in pattern.cells.into_cell_list() {
             write!(output, "\n{} {}", c.0, c.1)?;
         }
 

@@ -59,8 +59,8 @@ fn main() {
         window.with_fullscreen(Some(monitor))
     } else {
         window.with_dimensions(LogicalSize::new(
-            view.window_width as f64,
-            view.window_height as f64,
+            f64::from(view.window_width),
+            f64::from(view.window_height),
         ))
     };
     let context = glutin::ContextBuilder::new().with_vsync(true);

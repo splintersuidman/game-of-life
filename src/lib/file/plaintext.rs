@@ -27,9 +27,9 @@ impl Serialise for Plaintext {
 
         let cells: CellTable = pattern.cells.into();
 
-        for row in cells.into_iter() {
+        for row in cells {
             // Write newlines before writing line, to prevent a trailing newline.
-            writeln!(output, "")?;
+            writeln!(output)?;
             for cell in row {
                 if cell == CellState::Alive {
                     write!(output, "O")?;
