@@ -1,12 +1,27 @@
-use super::{CellList, Cells, Parse, Pattern, Serialise};
+use super::{CellList, CellState, CellTable, Cells, Parse, Pattern, Serialise};
 use std::fmt;
 
 pub struct Plaintext;
 
 impl Serialise for Plaintext {
     fn serialise<W: fmt::Write>(output: &mut W, pattern: Pattern) -> Result<(), fmt::Error> {
-        // TODO: serialise.
-        unimplemented!()
+        write!(output, "!Name: Exported by game-of-life")?;
+
+        let cells: CellTable = pattern.cells.into();
+
+        for row in cells.into_iter() {
+            // Write newlines before writing line, to prevent a trailing newline.
+            writeln!(output, "")?;
+            for cell in row {
+                if cell == CellState::Alive {
+                    write!(output, "O")?;
+                } else {
+                    write!(output, ".")?;
+                }
+            }
+        }
+
+        Ok(())
     }
 }
 

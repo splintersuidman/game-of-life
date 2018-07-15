@@ -130,7 +130,7 @@ impl Parse for RLE {
                     ch @ '0'...'9' => amount = amount * 10 + (ch as u8 - b'0') as isize,
                     '!' => {
                         // The end of this pattern was reached
-        pattern.cells = Cells::List(cells);
+                        pattern.cells = Cells::List(cells);
                         return Ok(pattern);
                     }
                     unknown => {
