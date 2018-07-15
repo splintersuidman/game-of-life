@@ -1,11 +1,11 @@
 // (bool, bool) = (survival, birth).
 #[derive(Debug, Clone, PartialEq)]
-pub struct Rule([(bool, bool); 9]);
+pub struct Rule([(bool, bool); 8]);
 
 impl Rule {
     #[inline]
     pub fn empty() -> Rule {
-        Rule([(false, false); 9])
+        Rule([(false, false); 8])
     }
 
     #[inline]
@@ -42,7 +42,6 @@ impl Default for Rule {
             (false, false),
             (true, false),
             (true, true),
-            (false, false),
             (false, false),
             (false, false),
             (false, false),
