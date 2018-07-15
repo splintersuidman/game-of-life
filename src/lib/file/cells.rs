@@ -9,7 +9,6 @@ pub enum Cells {
 #[derive(Clone, Default)]
 pub struct CellList {
     pub cells: Vec<(isize, isize)>,
-    // TODO: RENAME(origin).
     pub origin: (isize, isize),
 }
 

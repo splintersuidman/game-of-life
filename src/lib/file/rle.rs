@@ -1,12 +1,10 @@
-use super::{CellList, Cells, CellTable, Parse, Pattern, Rule, Serialise};
+use super::{CellList, Cells, CellTable, CellState, Parse, Pattern, Rule, Serialise};
 use std::fmt;
 
 pub struct RLE;
 
 impl Serialise for RLE {
     fn serialise<W: fmt::Write>(output: &mut W, pattern: Pattern) -> Result<(), fmt::Error> {
-        let cells: CellTable = pattern.cells.into();
-
         if let Some(name) = pattern.metadata.name {
             writeln!(output, "#N {}", name)?;
         }
@@ -21,11 +19,50 @@ impl Serialise for RLE {
             }
         }
 
-        let rule = format!("B{}/S{}", pattern.metadata.rule.display_birth(), pattern.metadata.rule.display_survival());
-        write!(output, "x = {}, y = {}, rule = {}", cells.width, cells.height, rule)?;
+        let cells: CellTable = pattern.cells.into();
 
-        // TODO: implement serialising cells.
-        unimplemented!();
+        let rule = format!("B{}/S{}", pattern.metadata.rule.display_birth(), pattern.metadata.rule.display_survival());
+        writeln!(output, "x = {}, y = {}, rule = {}", cells.width, cells.height, rule)?;
+
+        let mut data: Vec<(usize, char)> = Vec::new();
+
+        for row in cells.into_iter() {
+            for cell in row {
+                let ch = if cell == CellState::Alive {
+                    'o'
+                } else {
+                    'b'
+                };
+
+                if data.last().map(|v| v.1) == Some(ch) {
+                    data.last_mut().unwrap().0 += 1;
+                } else {
+                    data.push((1, ch));
+                }
+            }
+
+            let last = data.last().map(|v| v.1);
+            if last == Some('b') {
+                data.pop();
+            }
+            if last == Some('$') {
+                data.last_mut().unwrap().0 += 1;
+            } else {
+                data.push((1, '$'));
+            }
+        }
+
+        // The last newline(s) can be omitted.
+        data.pop();
+
+        // TODO: line limit?
+
+        for cells in data {
+            if cells.0 > 1 {
+                write!(output, "{}", cells.0)?;
+            }
+            write!(output, "{}", cells.1)?;
+        }
 
         write!(output, "!")
     }
