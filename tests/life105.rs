@@ -2,13 +2,13 @@ extern crate game_of_life;
 use game_of_life::file::{Life105, Parse};
 
 #[test]
-fn test_life_105_is_life_105_file() {
+fn test_life105_is_life105_file() {
     assert!(Life105::is_type(&"#Life 1.05\n#D Name: Some name"));
     assert!(!Life105::is_type(&"#Life 1.06\n#D Name: No name"));
 }
 
 #[test]
-fn test_life_105_correct_file() {
+fn test_life105_correct_file() {
     let file = "#Life 1.05
 #D Name: B-52 bomber
 #D Author: Noam Elkies
@@ -43,7 +43,7 @@ fn test_life_105_correct_file() {
 }
 
 #[test]
-fn test_life_105_incorrect_file() {
+fn test_life105_incorrect_file() {
     let file = "#Life 1.05
 #D Name: B-52 bomber
 #D Author: Noam Elkies

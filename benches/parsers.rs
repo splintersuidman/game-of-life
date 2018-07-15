@@ -21,12 +21,12 @@ mod benches {
     }
 
     #[bench]
-    fn bench_parse_life_106(b: &mut Bencher) {
+    fn bench_parse_life106(b: &mut Bencher) {
         b.iter(|| Life106::parse(&CORDERSHIP_GUN))
     }
 
     #[bench]
-    fn bench_parse_life_105(b: &mut Bencher) {
+    fn bench_parse_life105(b: &mut Bencher) {
         b.iter(|| Life105::parse(&BOMBER));
     }
 
