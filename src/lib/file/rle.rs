@@ -7,17 +7,17 @@ impl Serialise for RLE {
     fn serialise<W: fmt::Write>(output: &mut W, pattern: Pattern) -> Result<(), fmt::Error> {
         let cells: CellTable = pattern.cells.into();
 
-        if pattern.metadata.name.is_some() {
-            write!(output, "#N {}\n", pattern.metadata.name.unwrap())?;
+        if let Some(name) = pattern.metadata.name {
+            writeln!(output, "#N {}", name)?;
         }
 
-        if pattern.metadata.author.is_some() {
-            write!(output, "#O {}\n", pattern.metadata.author.unwrap())?;
+        if let Some(author) = pattern.metadata.author {
+            writeln!(output, "#O {}", author)?;
         }
 
-        if pattern.metadata.description.is_some() {
-            for line in pattern.metadata.description.unwrap().lines() {
-                write!(output, "#C {}\n", line)?;
+        if let Some(description) = pattern.metadata.description {
+            for line in description.lines() {
+                writeln!(output, "#C {}", line)?;
             }
         }
 
@@ -27,9 +27,7 @@ impl Serialise for RLE {
         // TODO: implement serialising cells.
         unimplemented!();
 
-        write!(output, "!")?;
-
-        Ok(())
+        write!(output, "!")
     }
 }
 
