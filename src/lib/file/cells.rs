@@ -1,5 +1,10 @@
-use super::super::CellState;
-use super::Cells;
+use super::CellState;
+
+#[derive(Clone)]
+pub enum Cells {
+    List(CellList),
+    Table(CellTable),
+}
 
 #[derive(Clone, Default)]
 pub struct CellList {

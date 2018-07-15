@@ -8,7 +8,7 @@ pub use self::life105::Life105;
 pub use self::life106::Life106;
 pub use self::plaintext::Plaintext;
 pub use self::rle::RLE;
-pub use self::cells::{CellList, CellTable};
+pub use self::cells::{Cells, CellList, CellTable};
 
 use super::{CellState, Rule};
 use std::fmt;
@@ -73,10 +73,4 @@ pub struct Metadata {
     pub author: Option<String>,
     pub generation: Option<usize>,
     pub rule: Rule,
-}
-
-#[derive(Clone)]
-pub enum Cells {
-    List(CellList),
-    Table(CellTable),
 }
