@@ -4,7 +4,7 @@ use std::fmt;
 pub struct RLE;
 
 impl Serialise for RLE {
-    fn serialise<W: fmt::Write>(output: &mut W, pattern: Pattern) -> Result<(), fmt::Error> {
+    fn serialise<W: fmt::Write>(_output: &mut W, _pattern: Pattern) -> Result<(), fmt::Error> {
         // TODO: serialise.
         unimplemented!()
     }

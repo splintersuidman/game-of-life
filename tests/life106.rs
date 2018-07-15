@@ -20,3 +20,7 @@ fn test_life_106_incorrect_file() {
     let file = "#Life 1.06\na b\nc d";
     assert!(Life106::parse(&file).is_err());
 }
+
+#[test]
+fn test_life_106_serialise() {
+}
