@@ -3,6 +3,32 @@ use std::fmt;
 
 pub struct RLE;
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum RLEChar {
+    Alive,
+    Dead,
+    Newline,
+}
+
+impl From<RLEChar> for char {
+    fn from(ch: RLEChar) -> char {
+        match ch {
+            RLEChar::Alive => 'o',
+            RLEChar::Dead => 'b',
+            RLEChar::Newline => '$',
+        }
+    }
+}
+
+impl From<CellState> for RLEChar {
+    fn from(state: CellState) -> RLEChar {
+        match state {
+            CellState::Alive => RLEChar::Alive,
+            CellState::Dead => RLEChar::Dead,
+        }
+    }
+}
+
 impl Serialise for RLE {
     fn serialise<W: fmt::Write>(output: &mut W, pattern: Pattern) -> Result<(), fmt::Error> {
         if let Some(name) = pattern.metadata.name {
@@ -39,11 +65,11 @@ impl Serialise for RLE {
         }
         writeln!(output)?;
 
-        let mut data: Vec<(usize, char)> = Vec::new();
+        let mut data: Vec<(usize, RLEChar)> = Vec::new();
 
         for row in cells {
             for cell in row {
-                let ch = if cell == CellState::Alive { 'o' } else { 'b' };
+                let ch = RLEChar::from(cell);
 
                 if data.last().map(|v| v.1) == Some(ch) {
                     data.last_mut().unwrap().0 += 1;
@@ -53,13 +79,13 @@ impl Serialise for RLE {
             }
 
             let last = data.last().map(|v| v.1);
-            if last == Some('b') {
+            if last == Some(RLEChar::Dead) {
                 data.pop();
             }
-            if last == Some('$') {
+            if last == Some(RLEChar::Newline) {
                 data.last_mut().unwrap().0 += 1;
             } else {
-                data.push((1, '$'));
+                data.push((1, RLEChar::Newline));
             }
         }
 
@@ -72,7 +98,7 @@ impl Serialise for RLE {
             if cells.0 > 1 {
                 write!(output, "{}", cells.0)?;
             }
-            write!(output, "{}", cells.1)?;
+            write!(output, "{}", char::from(cells.1))?;
         }
 
         write!(output, "!")
