@@ -21,8 +21,19 @@ impl Serialise for RLE {
 
         let cells: CellTable = pattern.cells.into();
 
-        let rule = format!("B{}/S{}", pattern.metadata.rule.display_birth(), pattern.metadata.rule.display_survival());
-        writeln!(output, "x = {}, y = {}, rule = {}", cells.width, cells.height, rule)?;
+        write!(output, "x = {}, y = {}, rule = B", cells.width, cells.height)?;
+        for i in 0..=8 {
+            if pattern.metadata.rule.birth(i) {
+                write!(output, "{}", i)?;
+            }
+        }
+        write!(output, "/S")?;
+        for i in 0..=8 {
+            if pattern.metadata.rule.survival(i) {
+                write!(output, "{}", i)?;
+            }
+        }
+        writeln!(output, "")?;
 
         let mut data: Vec<(usize, char)> = Vec::new();
 

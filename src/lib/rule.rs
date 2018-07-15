@@ -32,30 +32,6 @@ impl Rule {
     pub fn set_birth(&mut self, neighbours: usize, birth: bool) {
         self.0[neighbours].1 = birth;
     }
-
-    pub fn display_birth(&self) -> String {
-        let mut string = String::new();
-
-        for i in 0..self.0.len() {
-            if self.0[i].1 {
-                string.push((b'0' + i as u8) as char);
-            }
-        }
-
-        string
-    }
-
-    pub fn display_survival(&self) -> String {
-        let mut string = String::new();
-
-        for i in 0..self.0.len() {
-            if self.0[i].0 {
-                string.push((b'0' + i as u8) as char);
-            }
-        }
-
-        string
-    }
 }
 
 impl Default for Rule {
