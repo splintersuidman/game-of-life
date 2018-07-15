@@ -1,12 +1,35 @@
-use super::{CellList, Cells, Parse, Pattern, Rule, Serialise};
+use super::{CellList, Cells, CellTable, Parse, Pattern, Rule, Serialise};
 use std::fmt;
 
 pub struct RLE;
 
 impl Serialise for RLE {
-    fn serialise<W: fmt::Write>(_output: &mut W, _pattern: Pattern) -> Result<(), fmt::Error> {
-        // TODO: serialise.
-        unimplemented!()
+    fn serialise<W: fmt::Write>(output: &mut W, pattern: Pattern) -> Result<(), fmt::Error> {
+        let cells: CellTable = pattern.cells.into();
+
+        if pattern.metadata.name.is_some() {
+            write!(output, "#N {}\n", pattern.metadata.name.unwrap())?;
+        }
+
+        if pattern.metadata.author.is_some() {
+            write!(output, "#O {}\n", pattern.metadata.author.unwrap())?;
+        }
+
+        if pattern.metadata.description.is_some() {
+            for line in pattern.metadata.description.unwrap().lines() {
+                write!(output, "#C {}\n", line)?;
+            }
+        }
+
+        let rule = format!("B{}/S{}", pattern.metadata.rule.display_birth(), pattern.metadata.rule.display_survival());
+        write!(output, "x = {}, y = {}, rule = {}", cells.width, cells.height, rule)?;
+
+        // TODO: implement serialising cells.
+        unimplemented!();
+
+        write!(output, "!")?;
+
+        Ok(())
     }
 }
 
