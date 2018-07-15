@@ -17,7 +17,7 @@ impl Serialise for Plaintext {
             write!(output, "\n!Author: {}", author)?;
         }
 
-        if if let Some(description) = pattern.metadata.description {
+        if let Some(description) = pattern.metadata.description {
             for line in description.lines() {
                 write!(output, "\n!{}", line)?;
             }
