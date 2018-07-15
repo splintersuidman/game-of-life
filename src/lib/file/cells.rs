@@ -15,25 +15,52 @@ impl CellList {
     }
 }
 
+// TODO: benchmark.
+impl From<CellTable> for CellList {
+    fn from(table: CellTable) -> CellList {
+        let mut list = CellList::default();
+        // TODO: appropriate to say center = (width / 2, height / 2)?
+        list.center = (table.width as isize / 2, table.height as isize / 2);
+
+        for y in 0..table.width {
+            for x in 0..table.height {
+                if table.cells[y][x] == CellState::Alive {
+                    list.cells.push((
+                        x as isize - list.center.0,
+                        y as isize - list.center.1,
+                    ));
+                }
+            }
+        }
+
+        list
+    }
+}
+
+impl From<Cells> for CellList {
+    fn from(cells: Cells) -> CellList {
+        match cells {
+            Cells::List(list) => list,
+            Cells::Table(table) => table.into(),
+        }
+    }
+}
+
+impl IntoIterator for CellList {
+    type Item = (isize, isize);
+    type IntoIter = ::std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.cells.into_iter()
+    }
+}
+
+
 #[derive(Clone, Default)]
 pub struct CellTable {
     pub cells: Vec<Vec<CellState>>,
     pub width: usize,
     pub height: usize,
-}
-
-impl Cells {
-    // Convenient because Into<T>::into does not accept type parameters.
-    #[inline]
-    pub fn into_cell_list(self) -> CellList {
-        self.into()
-    }
-
-    // Convenient because Into<T>::into does not accept type parameters.
-    #[inline]
-    pub fn into_cell_table(self) -> CellTable {
-        self.into()
-    }
 }
 
 // TODO: benchmark.
@@ -78,26 +105,6 @@ impl From<CellList> for CellTable {
     }
 }
 
-// TODO: benchmark.
-impl From<CellTable> for CellList {
-    fn from(table: CellTable) -> CellList {
-        let mut list = CellList::default();
-        // TODO: appropriate to say center = (width / 2, height / 2)?
-        list.center = (table.width as isize / 2, table.height as isize / 2);
-
-        for y in 0..table.width {
-            for x in 0..table.height {
-                if table.cells[y][x] == CellState::Alive {
-                    list.cells
-                        .push((x as isize - list.center.0, y as isize - list.center.1));
-                }
-            }
-        }
-
-        list
-    }
-}
-
 impl From<Cells> for CellTable {
     fn from(cells: Cells) -> CellTable {
         match cells {
@@ -107,30 +114,27 @@ impl From<Cells> for CellTable {
     }
 }
 
-impl From<Cells> for CellList {
-    fn from(cells: Cells) -> CellList {
-        match cells {
-            Cells::List(list) => list,
-            Cells::Table(table) => table.into(),
-        }
-    }
-}
-
-impl IntoIterator for CellList {
-    type Item = (isize, isize);
-    type IntoIter = ::std::vec::IntoIter<Self::Item>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.cells.into_iter()
-    }
-}
-
 impl IntoIterator for CellTable {
     type Item = Vec<CellState>;
     type IntoIter = ::std::vec::IntoIter<Self::Item>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.cells.into_iter()
+    }
+}
+
+
+impl Cells {
+    // Convenient because Into<T>::into does not accept type parameters.
+    #[inline]
+    pub fn into_cell_list(self) -> CellList {
+        self.into()
+    }
+
+    // Convenient because Into<T>::into does not accept type parameters.
+    #[inline]
+    pub fn into_cell_table(self) -> CellTable {
+        self.into()
     }
 }
 
