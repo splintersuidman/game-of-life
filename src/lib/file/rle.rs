@@ -1,4 +1,4 @@
-use super::{CellList, Cells, CellTable, CellState, Parse, Pattern, Rule, Serialise};
+use super::{CellList, CellState, CellTable, Cells, Parse, Pattern, Rule, Serialise};
 use std::fmt;
 
 pub struct RLE;
@@ -21,7 +21,11 @@ impl Serialise for RLE {
 
         let cells: CellTable = pattern.cells.into();
 
-        write!(output, "x = {}, y = {}, rule = B", cells.width, cells.height)?;
+        write!(
+            output,
+            "x = {}, y = {}, rule = B",
+            cells.width, cells.height
+        )?;
         for i in 0..=8 {
             if pattern.metadata.rule.birth(i) {
                 write!(output, "{}", i)?;
@@ -39,11 +43,7 @@ impl Serialise for RLE {
 
         for row in cells {
             for cell in row {
-                let ch = if cell == CellState::Alive {
-                    'o'
-                } else {
-                    'b'
-                };
+                let ch = if cell == CellState::Alive { 'o' } else { 'b' };
 
                 if data.last().map(|v| v.1) == Some(ch) {
                     data.last_mut().unwrap().0 += 1;

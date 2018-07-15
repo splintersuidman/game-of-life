@@ -1,14 +1,14 @@
+mod cells;
 mod life105;
 mod life106;
 mod plaintext;
 mod rle;
-mod cells;
 
+pub use self::cells::{CellList, CellTable, Cells};
 pub use self::life105::Life105;
 pub use self::life106::Life106;
 pub use self::plaintext::Plaintext;
 pub use self::rle::RLE;
-pub use self::cells::{Cells, CellList, CellTable};
 
 use super::{CellState, Rule};
 use std::fmt;

@@ -34,10 +34,8 @@ impl From<CellTable> for CellList {
         for y in 0..table.width {
             for x in 0..table.height {
                 if table.cells[y][x] == CellState::Alive {
-                    list.cells.push((
-                        x as isize - list.origin.0,
-                        y as isize - list.origin.1,
-                    ));
+                    list.cells
+                        .push((x as isize - list.origin.0, y as isize - list.origin.1));
                 }
             }
         }
@@ -63,7 +61,6 @@ impl IntoIterator for CellList {
         self.cells.into_iter()
     }
 }
-
 
 #[derive(Clone, Default)]
 pub struct CellTable {
@@ -138,7 +135,6 @@ impl IntoIterator for CellTable {
         self.cells.into_iter()
     }
 }
-
 
 impl Cells {
     // Convenient because Into<T>::into does not accept type parameters.

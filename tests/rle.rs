@@ -1,5 +1,5 @@
 extern crate game_of_life;
-use game_of_life::file::{Parse, RLE, Serialise};
+use game_of_life::file::{Parse, Serialise, RLE};
 
 #[test]
 fn test_rle_correct_file() {

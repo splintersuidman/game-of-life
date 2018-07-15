@@ -6,11 +6,15 @@ pub struct Plaintext;
 impl Serialise for Plaintext {
     fn serialise<W: fmt::Write>(output: &mut W, pattern: Pattern) -> Result<(), fmt::Error> {
         // TODO: protect against newline in name.
-        write!(output, "!Name: {}", if let Some(name) = pattern.metadata.name {
-            name
-        } else {
-            String::from("Exported by game-of-life")
-        })?;
+        write!(
+            output,
+            "!Name: {}",
+            if let Some(name) = pattern.metadata.name {
+                name
+            } else {
+                String::from("Exported by game-of-life")
+            }
+        )?;
 
         // TODO: protect against newline in author.
         if let Some(author) = pattern.metadata.author {
