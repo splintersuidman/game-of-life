@@ -1,5 +1,5 @@
 extern crate game_of_life;
-use game_of_life::file::{Life106, Parse};
+use game_of_life::file::{Life106, Parse, Serialise};
 
 #[test]
 fn test_life_106_is_life_106_file() {
@@ -23,4 +23,15 @@ fn test_life_106_incorrect_file() {
 
 #[test]
 fn test_life_106_serialise() {
+    let input = "#Life 1.06
+0 -1
+1 0
+-1 1
+0 1
+1 1";
+    let pattern = Life106::parse(&input).unwrap();
+    let mut output = String::new();
+    Life106::serialise(&mut output, pattern).unwrap();
+
+    assert_eq!(&output, input)
 }
