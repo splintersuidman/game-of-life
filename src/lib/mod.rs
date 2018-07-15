@@ -173,13 +173,13 @@ impl GameOfLife {
 
         let mut cells = CellList::default();
 
-        cells.center = (self.width as isize / 2, self.height as isize / 2);
-        let center = cells.center;
+        cells.origin = (self.width as isize / 2, self.height as isize / 2);
+        let origin = cells.origin;
 
         for y in 0..self.width {
             for x in 0..self.height {
                 if self.board[y][x] == CellState::Alive {
-                    cells.push((x as isize - center.0, y as isize - center.1));
+                    cells.push((x as isize - origin.0, y as isize - origin.1));
                 }
             }
         }

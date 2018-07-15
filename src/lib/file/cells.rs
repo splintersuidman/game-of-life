@@ -10,10 +10,15 @@ pub enum Cells {
 pub struct CellList {
     pub cells: Vec<(isize, isize)>,
     // TODO: RENAME(origin).
-    pub center: (isize, isize),
+    pub origin: (isize, isize),
 }
 
 impl CellList {
+    #[inline]
+    pub fn new() -> CellList {
+        CellList::default()
+    }
+
     #[inline]
     pub fn push(&mut self, value: (isize, isize)) {
         self.cells.push(value)
@@ -24,15 +29,15 @@ impl CellList {
 impl From<CellTable> for CellList {
     fn from(table: CellTable) -> CellList {
         let mut list = CellList::default();
-        // TODO: appropriate to say center = (width / 2, height / 2)?
-        list.center = (table.width as isize / 2, table.height as isize / 2);
+        // TODO: appropriate to say origin = (width / 2, height / 2)?
+        list.origin = (table.width as isize / 2, table.height as isize / 2);
 
         for y in 0..table.width {
             for x in 0..table.height {
                 if table.cells[y][x] == CellState::Alive {
                     list.cells.push((
-                        x as isize - list.center.0,
-                        y as isize - list.center.1,
+                        x as isize - list.origin.0,
+                        y as isize - list.origin.1,
                     ));
                 }
             }
@@ -66,6 +71,13 @@ pub struct CellTable {
     pub cells: Vec<Vec<CellState>>,
     pub width: usize,
     pub height: usize,
+}
+
+impl CellTable {
+    #[inline]
+    pub fn new() -> CellTable {
+        CellTable::default()
+    }
 }
 
 // TODO: benchmark.
