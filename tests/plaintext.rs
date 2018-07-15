@@ -21,7 +21,10 @@ fn test_plaintext_incorrect_file() {
 
 #[test]
 fn test_plaintext_serialise() {
-    let input = "!Name: Exported by game-of-life
+    let input = "!Name: Glider
+!Author: Someone
+!This is a glider.
+!It was discovered early on and is frequently seen.
 .O.
 ..O
 OOO";

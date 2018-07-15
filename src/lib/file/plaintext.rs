@@ -5,7 +5,21 @@ pub struct Plaintext;
 
 impl Serialise for Plaintext {
     fn serialise<W: fmt::Write>(output: &mut W, pattern: Pattern) -> Result<(), fmt::Error> {
-        write!(output, "!Name: Exported by game-of-life")?;
+        // TODO: protect against newline in name.
+        write!(output, "!Name: {}", pattern.metadata.name.unwrap_or("Exported by game-of-life".to_string()))?;
+
+        // TODO: protect against newline in author.
+        if pattern.metadata.author.is_some() {
+            write!(output, "\n!Author: {}", pattern.metadata.author.unwrap())?;
+        }
+
+        if pattern.metadata.description.is_some() {
+            for line in pattern.metadata.description.unwrap().lines() {
+                write!(output, "\n!{}", line)?;
+            }
+        }
+
+        // TODO: possibly add rule and/or generation
 
         let cells: CellTable = pattern.cells.into();
 
