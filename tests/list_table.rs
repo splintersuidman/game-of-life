@@ -7,7 +7,7 @@ fn test_list_table() {
     let mut list_first: HashSet<(isize, isize)> = HashSet::new();
 
     let mut list = CellList::default();
-    list.center = (0, 0);
+    list.origin = (0, 0);
     list.cells = vec![(0, -1), (1, 0), (-1, 1), (0, 1), (1, 1)];
 
     for cell in list.cells.iter() {
