@@ -124,7 +124,7 @@ impl Parse for RLE {
             let mut linedata = lines.next().unwrap().chars().skip(1);
             match linedata.next() {
                 Some('N') => {
-                    // Name
+                    // Name.
                     let name: String = linedata.collect();
                     let name = name.trim();
                     if !name.is_empty() {
@@ -132,17 +132,18 @@ impl Parse for RLE {
                     }
                 }
                 Some('C') | Some('c') => {
-                    // Comment or description
+                    // Comment or description.
                     let description: String = linedata.collect();
                     let description = description.trim();
-                    if let Some(d) = pattern.metadata.description {
-                        pattern.metadata.description = Some(format!("{}\n{}", d, description));
+                    if let Some(ref mut d) = pattern.metadata.description {
+                        d.push('\n');
+                        d.push_str(description);
                     } else {
                         pattern.metadata.description = Some(String::from(description));
                     }
                 }
                 Some('O') => {
-                    // Author
+                    // Author.
                     let author: String = linedata.collect();
                     let author = author.trim();
                     pattern.metadata.author = Some(String::from(author));
@@ -187,7 +188,7 @@ impl Parse for RLE {
             None => return Err(String::from("The header for this `.rle` file could not be found because there were no (uncommented) lines.")),
         };
 
-        // TODO: process header information
+        // TODO: process header information.
 
         let data: String = lines.collect();
         let data = data.split('$');
@@ -199,9 +200,9 @@ impl Parse for RLE {
             for c in line.chars() {
                 match c {
                     'b' | '.' => {
-                        // Off state
+                        // Off state.
                         if amount == 0 {
-                            // Not preceded by a number
+                            // Not preceded by a number.
                             x += 1;
                         } else {
                             x += amount;
@@ -209,9 +210,9 @@ impl Parse for RLE {
                         }
                     }
                     'o' | 'A' => {
-                        // On state
+                        // On state.
                         if amount == 0 {
-                            // Not preceded by a number
+                            // Not preceded by a number.
                             cells.push((x, y));
                             x += 1;
                         } else {
@@ -224,7 +225,7 @@ impl Parse for RLE {
                     }
                     ch @ '0'...'9' => amount = amount * 10 + (ch as u8 - b'0') as isize,
                     '!' => {
-                        // The end of this pattern was reached
+                        // The end of this pattern was reached.
                         pattern.cells = Cells::List(cells);
                         return Ok(pattern);
                     }
