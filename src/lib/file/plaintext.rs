@@ -59,25 +59,26 @@ impl Parse for Plaintext {
 
         let mut metadata_lines = file.lines().take_while(|x| x.starts_with('!'));
 
-        // Process name (!Name: name)
+        // Process name (!Name: name).
         if let Some(name) = metadata_lines.next() {
-            // exlude the "!Name:" and remove surrounding whitespace
+            // Exclude the "!Name:" and remove surrounding whitespace.
             let name: &str = name[6..].trim();
             pattern.metadata.name = Some(String::from(name));
         }
 
-        // Process comments (lines starting with '!')
+        // Process comments (lines starting with '!').
         for description in metadata_lines {
-            // Check for other information
+            // Check for other information.
             if description.starts_with("!Author:") {
                 let description = description[8..].trim();
-                pattern.metadata.author = Some(String::from(description));
+                pattern.metadata.author = Some(description.to_string());
             } else {
-                // Default, this line is a description
+                // Default, this line is a description.
                 let description = description[1..].trim();
-                // and add to earlier description lines
-                if let Some(d) = pattern.metadata.description {
-                    pattern.metadata.description = Some(format!("{}\n{}", d, description));
+                // Add to earlier description lines.
+                if let Some(ref mut d) = pattern.metadata.description {
+                    d.push('\n');
+                    d.push_str(description);
                 } else {
                     pattern.metadata.description = Some(String::from(description));
                 }
@@ -91,9 +92,7 @@ impl Parse for Plaintext {
             for (x, token) in line.chars().enumerate() {
                 match token {
                     // Cell is alive.
-                    'O' => {
-                        cells.push((x as isize, y as isize));
-                    }
+                    'O' => cells.push((x as isize, y as isize)),
                     // Cell is dead.
                     '.' => {}
                     a => {
