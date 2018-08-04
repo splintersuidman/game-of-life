@@ -4,13 +4,10 @@ pub struct View {
     pub cell_width: f32,
     base_cell_width: f32,
 
-    pub y: usize,
-    pub x: usize,
-
     precise_y: f64,
     precise_x: f64,
 
-    pub capture_cursor: bool,
+    capture_cursor: bool,
 
     pub cells_on_width: usize,
     pub cells_on_height: usize,
@@ -23,6 +20,21 @@ pub struct View {
 }
 
 impl View {
+    /// Retrieves the rounded x coordinate.
+    pub fn get_x(&self) -> usize {
+        return self.precise_x.floor() as usize;
+    }
+
+    /// Retrieves the rounded y coordinate.
+    pub fn get_y(&self) -> usize {
+        return self.precise_y.floor() as usize;
+    }
+
+    /// Returns a bool indicating whether or not the cursor should be captured.
+    pub fn do_capture_cursor(&self) -> bool {
+        return self.capture_cursor;
+    }
+
     /// Checks whether it's neccessary to be able to move around the board.
     pub fn check_capture_cursor(&mut self) {
         if self.board_width as f32 * self.cell_width > self.window_width
@@ -53,16 +65,8 @@ impl View {
     /// Also captures the cursor if neccessary with `check_capture_cursor()` and makes sure everything is alright via `on_resize()`.
     /// Intended only for use on startup.
     pub fn determine_window_size(&mut self, screen_width: f32, screen_height: f32) {
-        self.window_width = if self.board_width as f32 * self.cell_width > screen_width {
-            screen_width
-        } else {
-            (self.board_width as f32 * self.cell_width)
-        };
-        self.window_height = if self.board_height as f32 * self.cell_width > screen_height {
-            screen_height
-        } else {
-            (self.board_height as f32 * self.cell_width)
-        };
+        self.window_width = (self.board_width as f32 * self.cell_width).min(screen_width);
+        self.window_height = (self.board_height as f32 * self.cell_width).min(screen_height);
 
         let (width, height) = (self.window_width, self.window_height);
 
@@ -89,9 +93,6 @@ impl View {
         let cells_on_height = (window_height as f32 / cell_width).ceil() as usize;
 
         Self {
-            y: 0,
-            x: 0,
-
             precise_y: 0.0,
             precise_x: 0.0,
 
@@ -135,6 +136,7 @@ impl View {
 
         if self.cells_on_height > self.board_height {
             self.cell_width = self.window_height / self.board_height as f32;
+            self.cells_on_width = (self.window_width / self.cell_width) as usize;
             self.cells_on_height = (self.window_height / self.cell_width) as usize;
         }
 
@@ -146,29 +148,14 @@ impl View {
     pub fn on_mouse_move(&mut self, mouse_x: f64, mouse_y: f64) {
         if self.capture_cursor {
             // Prevent y from moving outside of the board and update it.
-            if self.precise_y - mouse_y < 0.0 {
-                self.precise_y = 0.0;
-            } else if self.precise_y - mouse_y + self.cells_on_height as f64
-                > self.board_height as f64
-            {
-                self.precise_y = (self.board_height - self.cells_on_height) as f64;
-            } else {
-                self.precise_y -= mouse_y;
-            }
+            self.precise_y = (self.precise_y - mouse_y)
+                .max(0.0)
+                .min((self.board_height - self.cells_on_height) as f64);
 
             // Prevent x from moving outside of the board and update it.
-            if self.precise_x - mouse_x < 0.0 {
-                self.precise_x = 0.0;
-            } else if self.precise_x - mouse_x + self.cells_on_width as f64
-                > self.board_width as f64
-            {
-                self.precise_x = (self.board_width - self.cells_on_width) as f64;
-            } else {
-                self.precise_x -= mouse_x;
-            }
-
-            self.y = self.precise_y as usize;
-            self.x = self.precise_x as usize;
+            self.precise_x = (self.precise_x - mouse_x)
+                .max(0.0)
+                .min((self.board_width - self.cells_on_width) as f64);
         }
     }
 
@@ -204,12 +191,10 @@ impl View {
         }
 
         // Check if zooming further in is possible
-        if self.base_cell_width > self.window_width {
-            self.base_cell_width = self.window_width;
-        }
-        if self.base_cell_width > self.window_height {
-            self.base_cell_width = self.window_height;
-        }
+        self.base_cell_width = self
+            .base_cell_width
+            .min(self.window_width)
+            .min(self.window_height);
 
         let width = self.window_width;
         let height = self.window_height;

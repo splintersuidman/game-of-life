@@ -54,17 +54,18 @@ impl Renderer {
     pub fn render(&self, config: &Config, view: &View, game_of_life: &GameOfLife) {
         self.clear_screen(config.background);
 
-        assert!(view.cells_on_width - 1 + view.x < view.board_width);
-        assert!(view.cells_on_height - 1 + view.y < view.board_height);
+        assert!(view.cells_on_width - 1 + view.get_x() < view.board_width);
+        assert!(view.cells_on_height - 1 + view.get_y() < view.board_height);
 
         for board_y in 0..view.cells_on_height {
             for board_x in 0..view.cells_on_width {
-                if game_of_life.board[board_y + view.y][board_x + view.x] == CellState::Alive
+                if game_of_life.board[board_y + view.get_y()][board_x + view.get_x()]
+                    == CellState::Alive
                     || (config.view_border
-                        && (board_y + view.y == 0
-                            || board_y + view.y + 1 == view.board_height
-                            || board_x + view.x == 0
-                            || board_x + view.x + 1 == view.board_width))
+                        && (board_y + view.get_y() == 0
+                            || board_y + view.get_y() + 1 == view.board_height
+                            || board_x + view.get_x() == 0
+                            || board_x + view.get_x() + 1 == view.board_width))
                 {
                     let square = Square::simple(view, board_x, board_y);
                     self.draw_square(&square, config.foreground);
