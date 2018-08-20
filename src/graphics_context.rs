@@ -140,8 +140,6 @@ impl GraphicsContext {
             gl::EnableVertexAttribArray(0);
 
             gl::BindBuffer(gl::ARRAY_BUFFER, 0);
-
-            gl::BindVertexArray(0);
         }
 
         Ok(())
@@ -175,7 +173,6 @@ impl GraphicsContext {
             let color_square = gl::GetUniformLocation(self.shader_program, color_str.as_ptr());
             gl::Uniform4f(color_square, color[0], color[1], color[2], color[3]);
 
-            gl::BindVertexArray(self.vao);
             gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, ptr::null());
         }
     }

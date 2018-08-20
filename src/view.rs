@@ -21,18 +21,18 @@ pub struct View {
 
 impl View {
     /// Retrieves the rounded x coordinate.
-    pub fn get_x(&self) -> usize {
-        return self.precise_x.floor() as usize;
+    pub fn round_x(&self) -> usize {
+        self.precise_x.floor() as usize
     }
 
     /// Retrieves the rounded y coordinate.
-    pub fn get_y(&self) -> usize {
-        return self.precise_y.floor() as usize;
+    pub fn round_y(&self) -> usize {
+        self.precise_y.floor() as usize
     }
 
     /// Returns a bool indicating whether or not the cursor should be captured.
-    pub fn do_capture_cursor(&self) -> bool {
-        return self.capture_cursor;
+    pub fn capture_cursor(&self) -> bool {
+        self.capture_cursor
     }
 
     /// Checks whether it's neccessary to be able to move around the board.

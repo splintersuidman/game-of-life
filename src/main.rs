@@ -73,7 +73,7 @@ fn main() {
     let renderer = Renderer::new(&gl_window).unwrap();
 
     // Capture the cursor if appropriate.
-    if view.do_capture_cursor() {
+    if view.capture_cursor() {
         gl_window.window().grab_cursor(true).unwrap();
         gl_window.window().hide_cursor(true);
     }
@@ -150,7 +150,7 @@ fn main() {
                                 // Toggle capture_cursor.
                                 view.toggle_capture_cursor();
 
-                                if view.do_capture_cursor() {
+                                if view.capture_cursor() {
                                     gl_window.window().grab_cursor(true).unwrap();
                                     gl_window.window().hide_cursor(true);
                                 } else {
