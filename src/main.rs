@@ -3,6 +3,7 @@ extern crate clap;
 extern crate game_of_life;
 extern crate gl;
 extern crate glutin;
+extern crate rgl;
 
 mod config;
 mod graphics_context;
