@@ -1,5 +1,6 @@
 use super::gl;
 use super::gl::types::*;
+use super::rgl;
 
 use super::cgmath::prelude::*;
 use super::cgmath::Matrix4;
@@ -57,6 +58,7 @@ impl GraphicsContext {
             let c_str_frag = CString::new(FRAGMENT_SHADER_SOURCE).unwrap();
             gl::ShaderSource(fragment_shader, 1, &c_str_frag.as_ptr(), ptr::null());
             gl::CompileShader(fragment_shader);
+            // Because of this line I couldn't use rgl::Program
             gl::GetShaderiv(fragment_shader, gl::COMPILE_STATUS, &mut success);
             if success != GLint::from(gl::TRUE) {
                 gl::GetShaderInfoLog(
@@ -104,16 +106,20 @@ impl GraphicsContext {
                 [-1.0, 1.0, 0.0],
             ];
             let indices = [
-                0, 1, 2, // first triangle
-                2, 3, 0, // second triangle
+                0,
+                1,
+                2, // first triangle
+                2,
+                3,
+                0, // second triangle
             ];
-            let (mut vbo, mut ebo) = (0, 0);
+            let mut ebo = 0;
             gl::GenVertexArrays(1, &mut self.vao);
-            gl::GenBuffers(1, &mut vbo);
+            let vbo = rgl::gen_buffer();
             gl::GenBuffers(1, &mut ebo);
             gl::BindVertexArray(self.vao);
 
-            gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
+            rgl::bind_buffer(rgl::Target::ArrayBuffer, vbo);
             gl::BufferData(
                 gl::ARRAY_BUFFER,
                 (vertices_count * mem::size_of::<GLfloat>()) as GLsizeiptr,
@@ -146,8 +152,8 @@ impl GraphicsContext {
     }
 
     pub fn clear_color(red: f32, green: f32, blue: f32, alpha: f32) {
+        rgl::clear_color(red, green, blue, alpha);
         unsafe {
-            gl::ClearColor(red, green, blue, alpha);
             gl::Clear(gl::COLOR_BUFFER_BIT);
         }
     }
