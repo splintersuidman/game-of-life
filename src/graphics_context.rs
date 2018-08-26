@@ -7,7 +7,6 @@ use super::cgmath::Matrix4;
 use super::glutin::{GlContext, GlWindow};
 use std::ffi::{CStr, CString};
 use std::mem;
-use std::os::raw::c_void;
 use std::ptr;
 
 const VERTEX_SHADER_SOURCE: &[u8] = include_bytes!("./shaders/cell_vertex.glsl");
@@ -94,7 +93,6 @@ impl GraphicsContext {
             gl::DeleteShader(fragment_shader);
 
             // Using vertices and indices a square is drawn that covers the entire screen.
-            let vertices_count = 3 * 4;
             let vertices: [[f32; 3]; 4] = [
                 // top left
                 [-1.0, -1.0, 0.0],
@@ -120,30 +118,23 @@ impl GraphicsContext {
             gl::BindVertexArray(self.vao);
 
             rgl::bind_buffer(rgl::Target::ArrayBuffer, vbo);
-            gl::BufferData(
-                gl::ARRAY_BUFFER,
-                (vertices_count * mem::size_of::<GLfloat>()) as GLsizeiptr,
-                &vertices[0] as *const f32 as *const c_void,
-                gl::STATIC_DRAW,
-            );
+            rgl::buffer_data(rgl::Target::ArrayBuffer, &vertices, rgl::Usage::StaticDraw);
 
             gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, ebo);
-            gl::BufferData(
-                gl::ELEMENT_ARRAY_BUFFER,
-                (indices.len() * mem::size_of::<GLint>()) as GLsizeiptr,
-                &indices[0] as *const i32 as *const c_void,
-                gl::STATIC_DRAW,
+            rgl::buffer_data(
+                rgl::Target::ElementArrayBuffer,
+                &indices,
+                rgl::Usage::StaticDraw,
             );
 
-            gl::VertexAttribPointer(
+            rgl::vertex_attrib_pointer(
                 0,
                 3,
-                gl::FLOAT,
-                gl::FALSE,
+                rgl::Type::Float,
+                false,
                 3 * mem::size_of::<GLfloat>() as GLsizei,
-                ptr::null(),
             );
-            gl::EnableVertexAttribArray(0);
+            rgl::buffers::enable_vertex_attrib_array(0);
 
             gl::BindBuffer(gl::ARRAY_BUFFER, 0);
         }
